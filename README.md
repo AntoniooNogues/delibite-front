@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Delibite - MVP
 
-## Getting Started
+¡Bienvenido a **Delibite**, una plataforma web diseñada para la compra de comida preparada y gestionada de forma personalizada!
 
-First, run the development server:
+## 🚀 Características principales
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Gestión de usuarios
+- **Roles y permisos**:
+  - **Cliente**: Puede buscar en el catálogo y realizar compras.
+  - **Supervisor**: Accede a administración para gestionar productos y visibilidad de reseñas.
+  - **Administrador**: Gestión completa, incluyendo usuarios y análisis estadísticos.
+- **Autenticación**: Inicio de sesión seguro mediante usuario y contraseña.
+- **Registro**: Registro de nuevos usuarios con datos personales detallados.
+- **Recuperación de contraseña**: Mediante código enviado por correo electrónico.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Catálogo de productos
+- Más de **65 platos disponibles**:
+  - **60 platos principales**.
+  - **5 postres**.
+- **Filtros inteligentes**: Excluyen alérgenos según el perfil del usuario.
+- **Buscador avanzado**: Encuentra platos específicos rápidamente.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Gestión de pedidos
+- **Carrito de compra**:
+  - Añadir platos o packs.
+  - Modificar cantidad de productos.
+  - Confirmación de pedidos.
+- **Pasarela de pago segura**.
+- **Suscripción semanal**:
+  - Configuración de menú personalizado.
+  - Notificaciones por correo.
+  - Flexibilidad para cambios y cancelaciones.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Reseñas y valoraciones
+- Valora los platos del pedido entregado (0-5 estrellas).
+- Deja descripciones detalladas sobre tu experiencia.
 
-## Learn More
+## 🛠️ Requisitos técnicos
+- **Symfony**: Framework principal para el backend.
+- **Base de datos**: MySQL o PostgreSQL.
+- **PHP**: Versión 8.0 o superior.
 
-To learn more about Next.js, take a look at the following resources:
+## 📖 Cómo usar para un proyecto React 19
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Clonar el repositorio**
+  ```bash
+  git clone https://github.com/tuusuario/delibite.git
+  cd delibite
+  ```
+2. **Instalar dependencias**
+Primero, asegúrate de tener Node.js y npm instalados. Luego, instala las dependencias del proyecto.
+  ```bash
+  npm install
+  ```
+3. **Configurar variables de entorno (.env)**
+Crea un archivo .env en la raíz del proyecto y configura las variables necesarias, como la API base, clave de la base de datos, o cualquier otra configuración que tu aplicación necesite. Por ejemplo:
+  ```bash
+  REACT_APP_API_URL="http://localhost:5000/api"
+  ```
+4. **Ejecutar el servidor de desarrollo**
+Inicia el servidor de desarrollo de React:
+  ```bash
+  npm start
+  ```
+Esto levantará el servidor de desarrollo de React en http://localhost:3000.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📝 Créditos
+Proyecto desarrollado por:  
+- **Antonio Nogues Gómez** - [anogues23@sgmail.com](mailto:anogues23@gmail.com)  
+- **Rodrigo Jaén Cobos** - [rjaenc18@gmail.com](mailto:rjaenc18@gmail.com)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
