@@ -1,6 +1,17 @@
 @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Lora&display=swap');
 
+:root {
+    --blanco-puro: #FFFFFF; /* Blanco puro */
+    --gris-claro-calido: #ADABAC; /* Gris claro con un tono calido */
+    --gris-medio: #7B7B7B; /* Gris medio */
+    --gris-oscuro: #4E4E4E; /* Gris oscuro */
+    --negro-puro: #000000; /* Negro puro */
+    --verde-azulado: #70A288; /* Verde azulado suave */
+    --gris-muy-claro: #D9D9D9; /* Gris muy claro */
+    --verde-azulado-80: rgba(112, 162, 136, 0.8); /* Verde azulado suave al 80% */
+}
+
 html{
     font-family: Lora, Poppins, sans-serif;
     background-color: #EFEFEF;
