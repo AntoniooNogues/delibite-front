@@ -18,7 +18,7 @@ export default function NavbarReducido() {
     const pathname = usePathname()
 
     return (
-        <Disclosure as="nav" className="mt-6 bg-(--gris-registro)">
+        <Disclosure as="nav" className="pt-6 bg-(--gris-registro)">
             <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 w-3/4 bg-white rounded-4xl">
                 <div className="relative flex h-16 items-center justify-start">
                     <div className="sm:flex-none flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
