@@ -4,15 +4,27 @@
 
 :root {
     --blanco-puro: #FFFFFF; /* Blanco puro */
+    --gris-muy-claro: #D9D9D9; /* Gris muy claro */
     --gris-claro-calido: #ADABAC; /* Gris claro con un tono calido */
     --gris-medio: #7B7B7B; /* Gris medio */
     --gris-oscuro: #4E4E4E; /* Gris oscuro */
     --negro-puro: #000000; /* Negro puro */
-    --verde-azulado: #70A288; /* Verde azulado suave */
-    --gris-muy-claro: #D9D9D9; /* Gris muy claro */
     --verde-azulado-80: rgba(112, 162, 136, 0.8); /* Verde azulado suave al 80% */
 
+    /*Paleta de colores: referencia #70a288*/
+    --oxley-50: #f2f7f4;
+    --oxley-100: #dfece3;
+    --oxley-200: #c0daca;
+    --oxley-300: #97bea9;
+    --verde-azulado: #70a288;
+    --oxley-500: #498065;
     --primary-dark: #366550;
+    --oxley-700: #2b5140;
+    --oxley-800: #244134;
+    --oxley-900: #1e362c;
+    --oxley-950: #101e19;
+
+
 }
 
 html{
