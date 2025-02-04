@@ -19,6 +19,9 @@ export default function RootLayout({
         <head>
             <link rel="icon" href="/logo.svg"/>
             <title>Delibite</title>
+            <style>
+                @import url(&#39;https://fonts.googleapis.com/css2?family=Limelight&display=swap&#39;);
+            </style>
         </head>
         <body className="antialiased">
         {children}
