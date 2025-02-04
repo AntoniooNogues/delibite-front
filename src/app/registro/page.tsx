@@ -1,9 +1,14 @@
 "use client";
 import "../globals.css"
 import NavbarReducido from "@/components/NavbarReducido";
+import Alergenos from "@/components/Alergenos";
+import { registro } from "@/lib/usuario";
 
-import { useState } from "react";
+
+import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { EyeIcon } from "@heroicons/react/24/solid";
+import {EyeSlashIcon} from "@heroicons/react/16/solid";
 
 // Definir la interfaz para los datos del formulario
 interface FormData {
@@ -12,13 +17,13 @@ interface FormData {
     email: string;
     dni: string;
     telefono: string;
-    fechaNacimiento: string;
+    fecha_nacimiento: string;
     direccion: string;
-    codigoPostal: string;
-    ciudad: string;
-    pais: string;
-    contrasena: string;
+    codigo_postal: string;
+    username: string;
+    password: string;
     confirmarContrasena: string;
+    imagen: string;
 }
 
 export default function Registro() {
@@ -30,26 +35,185 @@ export default function Registro() {
         email: "",
         dni: "",
         telefono: "",
-        fechaNacimiento: "",
+        fecha_nacimiento: "",
         direccion: "",
-        codigoPostal: "",
-        ciudad: "",
-        pais: "",
-        contrasena: "",
+        codigo_postal: "",
+        username: "",
+        password: "",
         confirmarContrasena: "",
+        imagen: "",
     });
+    const handleSubmit = async () => {
+        try {
+            const formDataToSend = new FormData();
+            Object.entries(formData).forEach(([key, value]) => {
+                formDataToSend.append(key, value);
+            });
+            const result = await registro(formDataToSend, selectedAlergenos);
+            console.log('Registro exitoso:', result);
+        } catch (error) {
+            console.error('Error al registrar:', error);
+            // Aquí puedes manejar el error, como mostrar un mensaje al usuario
+        }
+    };
+
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
+    const [notification, setNotification] = useState<string | null>(null);
+    const [selectedAlergenos, setSelectedAlergenos] = useState<string[]>([]);
+
+    const validateField = (name: string, value: string) => {
+        let error = "";
+
+        switch (name) {
+            case "nombre":
+            case "apellidos":
+                if (!value.trim()) error = "Este campo es obligatorio";
+                break;
+
+            case "email":
+                if (!value) error = "El email es obligatorio";
+                else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
+                    error = "Correo electrónico no válido";
+                break;
+
+            case "dni":
+                if (!/^\d{8}[A-Za-z]$/.test(value))
+                    error = "DNI no válido (8 números y 1 letra)";
+                break;
+
+            case "telefono":
+                if (!/^\d{9}$/.test(value))
+                    error = "Número de teléfono inválido (9 dígitos)";
+                break;
+
+            case "fechaNacimiento":
+                if (!value) error = "La fecha de nacimiento es obligatoria";
+                break;
+
+            case "password":
+                if (value.length < 6) error = "La contraseña debe tener al menos 6 caracteres";
+                break;
+
+            case "confirmarContrasena":
+                if (value !== formData.password) error = "Las contraseñas no coinciden";
+                break;
+
+            default:
+                break;
+        }
+
+        setErrors((prev) => ({ ...prev, [name]: error }));
+
+        if (error) {
+            setNotification(error);
+            setTimeout(() => setNotification(null), 3000); // Ocultar después de 3s
+        }
+    };
+
+    const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 
     // Manejo de cambios en los inputs
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+
+        validateField(e.target.name, e.target.value);
     };
 
-    const nextStep = () => setStep((prev) => (prev < 4 ? prev + 1 : prev));
+    const nextStep = () => {
+        const newErrors: Partial<FormData> = {};
+        const errorMessages: string[] = [];
+
+        // Validar todos los campos requeridos del paso actual
+        if (step === 1) {
+            if (!formData.nombre.trim()) {
+                newErrors.nombre = "Este campo es obligatorio";
+                errorMessages.push("El nombre es obligatorio");
+            }
+            if (!formData.email) {
+                newErrors.email = "El email es obligatorio";
+                errorMessages.push("El email es obligatorio");
+            }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+                newErrors.email = "Correo electrónico no válido";
+                errorMessages.push("Correo electrónico no válido");
+            }
+            if (!formData.dni) {
+                newErrors.dni = "El DNI es obligatorio";
+                errorMessages.push("El DNI es obligatorio");
+            } else if (!/^\d{8}[A-Za-z]$/.test(formData.dni)) {
+                newErrors.dni = "DNI no válido (8 números y 1 letra)";
+                errorMessages.push("DNI no válido (8 números y 1 letra)");
+            }
+            if (!formData.telefono) {
+                newErrors.telefono = "El teléfono es obligatorio";
+                errorMessages.push("El teléfono es obligatorio");
+            } else if (!/^\d{9}$/.test(formData.telefono)) {
+                newErrors.telefono = "Número de teléfono inválido (9 dígitos)";
+                errorMessages.push("Número de teléfono inválido (9 dígitos)");
+            }
+            if (!formData.fecha_nacimiento) {
+                newErrors.fecha_nacimiento = "La fecha de nacimiento es obligatoria";
+                errorMessages.push("La fecha de nacimiento es obligatoria");
+            }
+            if (!formData.direccion.trim()) {
+                newErrors.direccion = "La dirección es obligatoria";
+                errorMessages.push("La dirección es obligatoria");
+            }
+            if (!formData.codigo_postal.trim()) {
+                newErrors.codigo_postal = "El código postal es obligatorio";
+                errorMessages.push("El código postal es obligatorio");
+            }
+        }
+
+        if (step === 2) {
+            if (!formData.username) {
+                newErrors.username = "El nombre de usuario es obligatorio";
+                errorMessages.push("El nombre de usuario es obligatorio");
+            }
+            if (formData.password.length < 6) {
+                newErrors.password = "La contraseña debe tener al menos 6 caracteres";
+                errorMessages.push("La contraseña debe tener al menos 6 caracteres");
+            }
+            if (formData.confirmarContrasena !== formData.password) {
+                newErrors.confirmarContrasena = "Las contraseñas no coinciden";
+                errorMessages.push("Las contraseñas no coinciden");
+            }
+        }
+
+        // Si hay errores, no avanza y muestra los errores
+        if (errorMessages.length > 0) {
+            setNotification(errorMessages.join(", "));
+            setTimeout(() => setNotification(null), 2000);
+            return;
+        }
+
+        // Si todo está bien, avanzar de paso
+        setStep((prev) => (prev < 4 ? prev + 1 : prev));
+    };
     const prevStep = () => setStep((prev) => (prev > 1 ? prev - 1 : prev));
 
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
+
+    const toggleConfirmPasswordVisibility = () => {
+        setShowConfirmPassword(!showConfirmPassword);
+    };
     return (
         <div className="h-screen flex flex-col w-screen bg-(--gris-registro)">
             <NavbarReducido/>
+            {notification && (
+                <motion.div
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 50 }}
+                    transition={{ duration: 0.3 }}
+                    className="fixed top-5 right-5 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg"
+                >
+                    {notification}
+                </motion.div>
+            )}
             <div className="flex-grow flex items-center justify-center shadow-lg">
                 <div className="flex justify-center items-stretch">
                     <div className="bg-(--verde-azulado-80) w-1/4 p-8 rounded-l-lg text-white">
@@ -58,17 +222,19 @@ export default function Registro() {
                         </div>
                         <div className="pt-8">
                             <h3 className="text-2xl">Come saludable, vive mejor</h3>
-                            <p className="text-lg text-justify pt-4">
+                            <p className="text-md text-justify pt-4">
                                 Regístrate en Delibite y descubre nuestra selección de platos saludables
                                 y packs diseñados para tu bienestar. Comidas deliciosas,
                                 nutritivas y listas para disfrutar.
                                 ¡Simplifica tu día y cuida de tu salud con cada bocado!
                             </p>
                         </div>
-                        <div className="pt-8">
-                            <p className="text-md">Si ya dispones de una cuenta, pulsa aqui. <a href="#"
-                                                                                                className="text-black">Iniciar
-                                Sesión.</a></p>
+                        <div className="pt-8 mt-auto">
+                            <p className="text-sm">Si ya dispones de una cuenta, pulsa aqui.
+                                <a href="#" className="text-black">
+                                    &nbsp;Iniciar Sesión.
+                                </a>
+                            </p>
                         </div>
                     </div>
                     <div className="bg-white p-8  rounded-r-lg w-2/4 max-w-4xl">
@@ -80,7 +246,7 @@ export default function Registro() {
                                     key={num}
                                     className={`flex items-center justify-center w-10 h-10 rounded-full text-lg font-semibold border-2 ${
                                         step >= num
-                                            ? "bg-gray-200 border-(--verde-azulado)"
+                                            ? "bg-(--verde-azulado) text-white border-gray-400 shadow-lg"
                                             : "bg-gray-200 border-gray-400"
                                     }`}
                                 >
@@ -99,19 +265,21 @@ export default function Registro() {
                             {step === 1 && (
                                 <div>
                                     <h2 className="text-xl font-bold mb-4">Datos personales</h2>
-                                    <div className="grid grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-2 gap-6">
                                         <input
                                             name="nombre"
                                             value={formData.nombre}
                                             onChange={handleChange}
-                                            className="border p-2 rounded"
+                                            onBlur={(e) => validateField(e.target.name, e.target.value)}
+                                            className="border p-2 rounded shadow-lg"
                                             placeholder="Nombre"
                                         />
                                         <input
                                             name="apellidos"
                                             value={formData.apellidos}
                                             onChange={handleChange}
-                                            className="border p-2 rounded"
+                                            onBlur={(e) => validateField(e.target.name, e.target.value)}
+                                            className="border p-2 rounded shadow-lg"
                                             placeholder="Apellidos"
                                         />
                                         <input
@@ -119,29 +287,49 @@ export default function Registro() {
                                             type="email"
                                             value={formData.email}
                                             onChange={handleChange}
-                                            className="border p-2 rounded"
+                                            onBlur={(e) => validateField(e.target.name, e.target.value)}
+                                            className="border p-2 rounded shadow-lg"
                                             placeholder="Correo electrónico"
                                         />
                                         <input
                                             name="dni"
                                             value={formData.dni}
                                             onChange={handleChange}
-                                            className="border p-2 rounded"
+                                            onBlur={(e) => validateField(e.target.name, e.target.value)}
+                                            className="border p-2 rounded shadow-lg"
                                             placeholder="DNI"
                                         />
                                         <input
                                             name="telefono"
                                             value={formData.telefono}
                                             onChange={handleChange}
-                                            className="border p-2 rounded"
+                                            onBlur={(e) => validateField(e.target.name, e.target.value)}
+                                            className="border p-2 rounded shadow-lg"
                                             placeholder="Teléfono"
                                         />
                                         <input
-                                            name="fechaNacimiento"
+                                            name="fecha_nacimiento"
                                             type="date"
-                                            value={formData.fechaNacimiento}
+                                            value={formData.fecha_nacimiento}
+                                            onBlur={(e) => validateField(e.target.name, e.target.value)}
                                             onChange={handleChange}
-                                            className="border p-2 rounded"
+                                            className="border p-2 rounded shadow-lg"
+                                        />
+                                        <input
+                                            name="direccion"
+                                            value={formData.direccion}
+                                            onChange={handleChange}
+                                            onBlur={(e) => validateField(e.target.name, e.target.value)}
+                                            className="border p-2 rounded shadow-lg"
+                                            placeholder="Dirección"
+                                        />
+                                        <input
+                                            name="codigo_postal"
+                                            value={formData.codigo_postal}
+                                            onChange={handleChange}
+                                            onBlur={(e) => validateField(e.target.name, e.target.value)}
+                                            className="border p-2 rounded shadow-lg"
+                                            placeholder="Código postal"
                                         />
                                     </div>
                                 </div>
@@ -149,61 +337,66 @@ export default function Registro() {
 
                             {step === 2 && (
                                 <div>
-                                    <h2 className="text-xl font-bold mb-4">Dirección</h2>
-                                    <div className="grid grid-cols-2 gap-4">
+                                    <h2 className="text-xl font-bold mb-4">Detalles de cuenta</h2>
+                                    <div className="grid grid-cols-1 gap-4">
                                         <input
-                                            name="direccion"
-                                            value={formData.direccion}
+                                            name="username"
+                                            type="text"
+                                            value={formData.username}
                                             onChange={handleChange}
+                                            onBlur={(e) => validateField(e.target.name, e.target.value)}
                                             className="border p-2 rounded"
-                                            placeholder="Dirección"
+                                            placeholder="Nombre de usuario"
                                         />
-                                        <input
-                                            name="codigoPostal"
-                                            value={formData.codigoPostal}
-                                            onChange={handleChange}
-                                            className="border p-2 rounded"
-                                            placeholder="Código postal"
-                                        />
-                                        <input
-                                            name="ciudad"
-                                            value={formData.ciudad}
-                                            onChange={handleChange}
-                                            className="border p-2 rounded"
-                                            placeholder="Ciudad"
-                                        />
-                                        <input
-                                            name="pais"
-                                            value={formData.pais}
-                                            onChange={handleChange}
-                                            className="border p-2 rounded"
-                                            placeholder="País"
-                                        />
+                                        <div className="relative">
+                                            <input
+                                                name="password"
+                                                type={showPassword ? "text" : "password"}
+                                                value={formData.password}
+                                                onChange={handleChange}
+                                                className="border p-2 rounded w-full"
+                                                placeholder="Contraseña"
+                                            />
+                                            <div
+                                                className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                                                onClick={togglePasswordVisibility}
+                                            >
+                                                {showPassword ? (
+                                                    <EyeSlashIcon className="h-5 w-5 text-gray-500"/>
+                                                ) : (
+                                                    <EyeIcon className="h-5 w-5 text-gray-500"/>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <div className="relative">
+                                            <input
+                                                name="confirmarContrasena"
+                                                type={showConfirmPassword ? "text" : "password"}
+                                                value={formData.confirmarContrasena}
+                                                onChange={handleChange}
+                                                className="border p-2 rounded w-full"
+                                                placeholder="Confirmar contraseña"
+                                            />
+                                            <div
+                                                className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                                                onClick={toggleConfirmPasswordVisibility}
+                                            >
+                                                {showConfirmPassword ? (
+                                                    <EyeSlashIcon className="h-5 w-5 text-(--verde-azulado)"/>
+                                                ) : (
+                                                    <EyeIcon className="h-5 w-5 text-gray-500"/>
+                                                )}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             )}
 
                             {step === 3 && (
-                                <div>
-                                    <h2 className="text-xl font-bold mb-4">Detalles de cuenta</h2>
-                                    <div className="grid grid-cols-1 gap-4">
-                                        <input
-                                            name="contraseña"
-                                            type="password"
-                                            value={formData.contrasena}
-                                            onChange={handleChange}
-                                            className="border p-2 rounded"
-                                            placeholder="Contraseña"
-                                        />
-                                        <input
-                                            name="confirmarContraseña"
-                                            type="password"
-                                            value={formData.confirmarContrasena}
-                                            onChange={handleChange}
-                                            className="border p-2 rounded"
-                                            placeholder="Confirmar contraseña"
-                                        />
-                                    </div>
+                                <div className="">
+                                    <h2 className="text-xl font-bold mb-4">Selecciona tus alérgenos</h2>
+                                    <Alergenos selectedAlergenos={selectedAlergenos}
+                                               setSelectedAlergenos={setSelectedAlergenos}/>
                                 </div>
                             )}
 
@@ -211,6 +404,16 @@ export default function Registro() {
                                 <div>
                                     <h2 className="text-xl font-bold mb-4">Confirmación</h2>
                                     <p>Revisa tu información antes de enviar el formulario.</p>
+                                    <div className="mt-4 grid grid-cols-2 gap-2">
+                                        {Object.entries(formData)
+                                            .filter(([key]) => key !== "confirmarContrasena" && key !== "imagen")
+                                            .map(([key, value]) => (
+                                                <div key={key} className="mb-2">
+                                                    <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong>
+                                                    &nbsp;{key === "password" ? value.slice(0, 0) + "****" : value}
+                                                </div>
+                                            ))}
+                                    </div>
                                 </div>
                             )}
                         </motion.div>
@@ -228,12 +431,12 @@ export default function Registro() {
                             {step < 4 ? (
                                 <button
                                     onClick={nextStep}
-                                    className="px-4 py-2 bg-(--verde-azulado) text-white rounded"
+                                    className="px-4 py-2 bg-(--verde-azulado) text-white rounded drop-shadow-xl"
                                 >
                                     Siguiente
                                 </button>
                             ) : (
-                                <button className="px-4 py-2 bg-blue-500 text-white rounded">
+                                <button  onClick={handleSubmit} className="px-4 py-2 bg-blue-500 text-white rounded">
                                     Finalizar
                                 </button>
                             )}
