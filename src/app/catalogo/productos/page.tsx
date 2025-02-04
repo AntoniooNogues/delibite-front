@@ -5,6 +5,9 @@ import { getCatalogo } from '@/lib/catalogo';
 import Image from "next/image";
 import { motion } from "framer-motion";
 import type { Catalogo } from './types';
+import { useRouter } from 'next/navigation';
+import LoadingComponent from "@/lib/Loading-Component";
+import CantidadControl from '@/lib/BotonAddPlato-Component';
 
 const Hero = ({ scrollToCategory }: { scrollToCategory: () => void }) => {
     return (
@@ -89,6 +92,18 @@ const CategoriaLista = ({ titulo, items }: { titulo: string; items: Catalogo[] }
         });
     };
 
+    const router = useRouter();
+
+    const quitarAcentos = (str: string) => {
+        return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    };
+
+    const redireccionarDetallesPlato = (nombre: string, id: number) => {
+        nombre = quitarAcentos(nombre).replace(/\s+/g, '-').toLowerCase();
+        router.push(`/catalogo/${nombre}`);
+        localStorage.setItem('platoId', id.toString());
+    };
+
     return (
         <>
             <header className="my-8">
@@ -98,7 +113,7 @@ const CategoriaLista = ({ titulo, items }: { titulo: string; items: Catalogo[] }
                 {items.map((item) => (
                     <li key={item.plato_id} className="relative border border-gray-300 rounded-2xl shadow-md bg-white overflow-hidden min-h-[360px] flex flex-col h-full">
                         <div className="relative">
-                            <Image src="/1.jpg" alt={item.nombre} width={1080} height={400} className="w-full h-50 object-cover" />
+                            <Image src="/1.jpg" alt={item.nombre} width={1080} height={400} className="w-full h-50 object-cover" onClick={() => redireccionarDetallesPlato(item.nombre, item.plato_id)}/>
                             <span className="absolute top-2 right-4 bg-white p-1 rounded-full">
                                 <Image src={`/modoEmpleo/${item.modo_empleo}.svg`} width={18} height={18} alt={item.modo_empleo} title={item.modo_empleo} className="w-5 h-5" />
                             </span>
@@ -114,32 +129,13 @@ const CategoriaLista = ({ titulo, items }: { titulo: string; items: Catalogo[] }
                                 </span>
                                 )}
                             </p>
-                            <div className="mt-auto flex flex-col justify-between ">
-                                <p className="text-left text-[#9c8302] text-[22px] font-medium py-2">{item.precio}€</p>
-                                {cantidad[item.plato_id] ? (
-                                    <div className="flex items-center justify-between mt-4 patron rounded-full">
-                                        <button
-                                            className="text-white font-bold rounded-full px-4 py-2 cursor-pointer border-2 border-(--verde-azulado) bg-(--verde-azulado) hover:scale-105 transition duration-300 ease-in-out"
-                                            onClick={() => handleCantidadChange(item.plato_id, (cantidad[item.plato_id] || 1) - 1)}
-                                        >
-                                            -
-                                        </button>
-                                        <span className="mx-4 font-extrabold rounded-full px-4 py-2 bg-white">{cantidad[item.plato_id]}</span>
-                                        <button
-                                            className="text-white font-bold rounded-full px-4 py-2 cursor-pointer border-2 border-(--verde-azulado) bg-(--verde-azulado) hover:scale-105 transition duration-300 ease-in-out"
-                                            onClick={() => handleCantidadChange(item.plato_id, (cantidad[item.plato_id] || 1) + 1)}
-                                        >
-                                            +
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <button
-                                        className="text-white w-full font-bold rounded-full px-6 py-2 cursor-pointer border-2 border-(--verde-azulado) bg-(--verde-azulado) hover:scale-105 transition duration-300 ease-in-out mt-4"
-                                        onClick={() => handleCantidadChange(item.plato_id, 1)}
-                                    >
-                                        Añadir
-                                    </button>
-                                )}
+                            <div className="mt-auto flex flex-row justify-between items-center ">
+                                <p className="text-left text-[#9c8302] text-[22px] font-medium p-2">{item.precio}€</p>
+                                <CantidadControl
+                                    itemId={item.plato_id}
+                                    cantidad={cantidad[item.plato_id] || 0}
+                                    handleCantidadChange={handleCantidadChange}
+                                />
                             </div>
                         </div>
                     </li>
@@ -148,6 +144,7 @@ const CategoriaLista = ({ titulo, items }: { titulo: string; items: Catalogo[] }
         </>
     );
 };
+
 
 
 
@@ -174,20 +171,13 @@ export default function Catalogo() {
     const principales = useMemo(() => data.filter(item => item.tipo === "PRINCIPAL"), [data]);
     const postres = useMemo(() => data.filter(item => item.tipo === "POSTRE"), [data]);
 
-
     const scrollToCategory = () => {
         categoryRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
     if (loading) {
-        return (
-            <div className="h-screen flex items-center justify-center">
-                <div className="w-10 h-10 border-4 border-t-(--verde-azulado) border-(--primary-dark) rounded-full animate-spin"></div>
-            </div>
-        );
+        return <LoadingComponent></LoadingComponent>;
     }
-
-
 
     return (
         <div className="container mx-auto max-w-full p-6">
