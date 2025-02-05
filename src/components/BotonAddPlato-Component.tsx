@@ -14,7 +14,7 @@ const CantidadControl: React.FC<CantidadControlProps> = ({ itemId, cantidad, han
     return (
         <>
             {cantidad ? (
-                <div className="flex items-center justify-between bg-(--oxley-400) rounded-full p-2">
+                <div className="flex items-center justify-between bg-(--oxley-400) rounded-full ">
                     <button
                         className="bg-(--oxley-500) text-(--oxley-50) rounded-full transition transform hover:bg-(--primary-dark) hover:scale-105 active:bg-(--oxley-700) active:scale-95"
                         onClick={() => handleCantidadChange(itemId, cantidad - 1)}

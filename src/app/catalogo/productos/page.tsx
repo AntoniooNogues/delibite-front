@@ -133,7 +133,7 @@ const CategoriaLista = ({ titulo, items }: { titulo: string; items: Catalogo[] }
                                 )}
                             </p>
                             <div className="mt-auto flex flex-row justify-between items-center ">
-                                <p className="text-left text-gray-700 text-[22px] font-medium p-2">{item.precio}€</p>
+                                <p className="text-left text-gray-700 text-[22px] font-medium ">{item.precio}€</p>
                                 <CantidadControl
                                     itemId={item.plato_id}
                                     cantidad={cantidad[item.plato_id] || 0}
