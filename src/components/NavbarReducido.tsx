@@ -22,6 +22,8 @@ export default function NavbarReducido() {
     const router = useRouter()
 
     return (
+
+
         <Disclosure as="nav" className="pt-6 bg-(--gris-registro)">
             <motion.div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 w-3/4 bg-white rounded-4xl" initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.8 }}>
                 <div className="relative flex h-16 items-center justify-start">
