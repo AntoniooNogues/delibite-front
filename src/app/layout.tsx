@@ -18,10 +18,8 @@ export default function RootLayout({
         <html lang="es">
         <head>
             <link rel="icon" href="/logo.svg"/>
+            <link rel="preconnect" href="https://fonts.gstatic.com"/>
             <title>Delibite</title>
-            <style>
-                @import url(&#39;https://fonts.googleapis.com/css2?family=Limelight&display=swap&#39;);
-            </style>
         </head>
         <body className="antialiased">
         {children}

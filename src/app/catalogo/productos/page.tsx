@@ -6,26 +6,27 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import type { Catalogo } from './types';
 import { useRouter } from 'next/navigation';
-import LoadingComponent from "@/lib/Loading-Component";
-import CantidadControl from '@/lib/BotonAddPlato-Component';
+import LoadingComponent from "@/components/Loading-Component";
+import CantidadControl from '@/components/BotonAddPlato-Component';
+import Navbar from "@/components/Navbar";
 
 const Hero = ({ scrollToCategory }: { scrollToCategory: () => void }) => {
     return (
-        <div className="flex flex-col lg:flex-row items-center justify-between px-10 md:px-16 lg:px-24 py-12">
-            <div className="max-w-lg text-center lg:text-left">
-                <h1 className="text-5xl font-bold text-[var(--primary-dark)] leading-tight">
-                    Sabores Saludables, Vida Equilibrada
+        <div className="flex flex-col lg:flex-row items-center justify-between lg:p-10 gap-6">
+            <div className="text-center lg:text-left lg:w-1/2 w-full px-4 lg:px-8">
+                <h1 className="text-4xl lg:text-5xl font-bold text-[var(--primary-dark)] leading-tight">
+                    Sabor y bienestar en cada bocado.
                 </h1>
-                <p className="text-lg lg:text-xl text-[var(--verde-azulado)] mt-4 lg:text-justify">
-                    Ingredientes frescos, recetas balanceadas y todo el sabor que necesitas para disfrutar sin culpa. ¡Elige bienestar en cada bocado!
+                <p className="text-lg lg:text-xl text-[var(--verde-azulado)] mt-4">
+                    Ingredientes frescos, recetas balanceadas y todo el sabor que necesitas para disfrutar sin culpa. ¡Disfruta lo mejor para tu bienestar en cada bocado!
                 </p>
                 <button className="my-6 px-6 py-3 bg-[var(--verde-azulado)] text-white rounded-full hover:scale-105 transition-all duration-300" onClick={scrollToCategory}>
                     Ver Menú
                 </button>
             </div>
-            <div className="flex justify-center items-center mt-6 md:mt-0">
-                <Image src={"/catalogo/papas_arrugas.webp"} alt="Hero" width={600} height={600} className="rounded-2xl " />
-            </div>
+            <motion.div className="flex justify-center items-center mt-6 lg:mt-0 w-full lg:w-1/2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.4 }}>
+                <Image src={"/catalogo/papas_arrugas.webp"} alt="Hero" width={600} height={600} title="Plato 12: papas arrugas con mojo" className="rounded-2xl" priority layout="responsive" placeholder="blur" blurDataURL="/catalogo/papas_arrugas_blur.webp" quality={75} />
+            </motion.div>
         </div>
     );
 }
@@ -72,7 +73,7 @@ const PasosServicio = () => {
 
 
                     <h3 className="text-lg font-semibold text-[var(--primary-dark)]">{paso.titulo}</h3>
-                    <p className="text-[var(--gris-medio)] mt-2">{paso.descripcion}</p>
+                    <p className="text-gray-800 mt-2">{paso.descripcion}</p>
                 </motion.div>
             ))}
         </div>
@@ -106,20 +107,22 @@ const CategoriaLista = ({ titulo, items }: { titulo: string; items: Catalogo[] }
 
     return (
         <>
-            <header className="my-8">
-                <p className="text-2xl font-bold text-[var(--verde-azulado)]">{titulo}<span className="text-(--primary-dark) border-1 py-1 px-4 border-(--primary-dark) rounded-full mx-2 ">{items.length}</span>: </p>
+            <header className="my-8 flex flex-row gap-0 items-center">
+                <p className="text-2xl text-(--primary-dark)">{titulo}</p>
+                <p className="text-2xl text-(--oxley-700) border-2 p-2 border-(--primary-dark) rounded-full mx-2 w-10 h-10 flex items-center justify-center">{items.length}</p>
+                <p>: </p>
             </header>
-            <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-stretch justify-center mx-6 sm:mx-2 my-4 gap-6">
-                {items.map((item) => (
-                    <li key={item.plato_id} className="relative border border-gray-300 rounded-2xl shadow-md bg-white overflow-hidden min-h-[360px] flex flex-col h-full">
+            <main className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-stretch justify-center mx-6 sm:mx-2 my-4 gap-6" >
+                {items.map((item, index) => (
+                    <motion.div key={item.plato_id} className="relative border border-gray-300 rounded-2xl shadow-md bg-white overflow-hidden min-h-[360px] flex flex-col h-full" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.1 }} transition={{ delay: index * 0.5 }}>
                         <div className="relative">
-                            <Image src="/1.jpg" alt={item.nombre} width={1080} height={400} className="w-full h-50 object-cover" onClick={() => redireccionarDetallesPlato(item.nombre, item.plato_id)}/>
+                            <Image src="/1.jpg" alt={item.nombre} width={1080} height={400} className="w-full h-50 object-cover" onClick={() => redireccionarDetallesPlato(item.nombre, item.plato_id)} quality={75} />
                             <span className="absolute top-2 right-4 bg-white p-1 rounded-full">
                                 <Image src={`/modoEmpleo/${item.modo_empleo}.svg`} width={18} height={18} alt={item.modo_empleo} title={item.modo_empleo} className="w-5 h-5" />
                             </span>
                         </div>
                         <div className="p-4 flex flex-col flex-grow">
-                            <p className="flex items-center text-xl font-semibold text-gray-900 max-w-full truncate">
+                            <p className="flex items-center text-xl font-semibold text-gray-700 max-w-full truncate">
                                 {item.nombre}
                                 {item.alergenos?.length > 0 && (
                                     <span className="mx-4 flex gap-4 my-2">
@@ -130,7 +133,7 @@ const CategoriaLista = ({ titulo, items }: { titulo: string; items: Catalogo[] }
                                 )}
                             </p>
                             <div className="mt-auto flex flex-row justify-between items-center ">
-                                <p className="text-left text-[#9c8302] text-[22px] font-medium p-2">{item.precio}€</p>
+                                <p className="text-left text-gray-700 text-[22px] font-medium ">{item.precio}€</p>
                                 <CantidadControl
                                     itemId={item.plato_id}
                                     cantidad={cantidad[item.plato_id] || 0}
@@ -138,9 +141,9 @@ const CategoriaLista = ({ titulo, items }: { titulo: string; items: Catalogo[] }
                                 />
                             </div>
                         </div>
-                    </li>
+                    </motion.div>
                 ))}
-            </ul>
+            </main>
         </>
     );
 };
@@ -180,17 +183,20 @@ export default function Catalogo() {
     }
 
     return (
-        <div className="container mx-auto max-w-full p-6">
-            <Hero scrollToCategory={scrollToCategory} />
-            <PasosServicio />
-            <div className={"my-8"} ref={categoryRef}>
-                <h1 className="text-4xl text-center py-4 my-2">Selecciona los platos de tu primer menú.</h1>
-                <p className="text-xl text-center">Los platos cambian de manera semanal y están disponibles solo hasta el sábado a las 17:30 h.</p>
+        <main>
+            <Navbar />
+            <div className="container mx-auto max-w-full p-6">
+                <Hero scrollToCategory={scrollToCategory} />
+                <PasosServicio />
+                <div className={"my-8"} ref={categoryRef}>
+                    <h1 className="text-4xl text-center py-4 my-2 text-gray-700">Selecciona los platos de tu primer menú.</h1>
+                    <p className="text-xl text-center text-gray-600">Los platos cambian de manera semanal y están disponibles solo hasta el sábado a las 17:30 h.</p>
+                </div>
+                <div>
+                    <CategoriaLista titulo="Principales" items={principales} />
+                    <CategoriaLista titulo="Postres" items={postres} />
+                </div>
             </div>
-            <div>
-                <CategoriaLista titulo="Principales" items={principales} />
-                <CategoriaLista titulo="Postres" items={postres} />
-            </div>
-        </div>
+        </main>
     );
 }
