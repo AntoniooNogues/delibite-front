@@ -1,15 +1,13 @@
-export async function registro(formData: FormData, alergenos: string[]) {
+
+export async function registro(formData: { [key: string]: string; }) {
     try {
-        const data = {
-            ...formData,
-            ...alergenos
-        }
+        console.log(formData)
         const response = await fetch('/api/registro/', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify(data),
+            body: JSON.stringify(formData),
         });
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
