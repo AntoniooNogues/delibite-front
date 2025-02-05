@@ -2,14 +2,15 @@
 
 import React, { useEffect, useState } from 'react';
 import { getPlatoById } from '@/lib/platos';
-import LoadingComponent from '@/lib/Loading-Component';
+import LoadingComponent from '@/components/Loading-Component';
 import Image from 'next/image';
-import CantidadControl from "@/lib/BotonAddPlato-Component";
+import CantidadControl from "@/components/BotonAddPlato-Component";
 import {Plato} from "@/app/catalogo/[nombre]/plato";
 import { ArrowLeftCircleIcon } from '@heroicons/react/20/solid';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import Navbar from "@/components/Navbar";
 
 
 
@@ -96,7 +97,7 @@ const PlatoDetalle = () => {
                             Puede contener trazas de los siguientes alergenos:
                             {plato.alergenos.map((x, index) => (
                                 <span key={x.alergeno_id} className="text-(--negro-puro)">
-                                    {index === plato.alergenos.length - 1 ? `y ${x.nombre}.` : ` ${x.nombre}, `}
+                                    {plato.alergenos.length === 1 ? ` ${x.nombre}.` : index === plato.alergenos.length - 1 ? `y ${x.nombre}.` : ` ${x.nombre}, `}
                                 </span>
                             ))}
                         </p>
@@ -195,6 +196,7 @@ const PlatoDetalle = () => {
 export default function PlatoDetalleComponent() {
     return (
         <main>
+            <Navbar />
             <PlatoDetalle />
         </main>
     );

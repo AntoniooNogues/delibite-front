@@ -6,8 +6,9 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import type { Catalogo } from './types';
 import { useRouter } from 'next/navigation';
-import LoadingComponent from "@/lib/Loading-Component";
-import CantidadControl from '@/lib/BotonAddPlato-Component';
+import LoadingComponent from "@/components/Loading-Component";
+import CantidadControl from '@/components/BotonAddPlato-Component';
+import Navbar from "@/components/Navbar";
 
 const Hero = ({ scrollToCategory }: { scrollToCategory: () => void }) => {
     return (
@@ -180,17 +181,20 @@ export default function Catalogo() {
     }
 
     return (
-        <div className="container mx-auto max-w-full p-6">
-            <Hero scrollToCategory={scrollToCategory} />
-            <PasosServicio />
-            <div className={"my-8"} ref={categoryRef}>
-                <h1 className="text-4xl text-center py-4 my-2">Selecciona los platos de tu primer menú.</h1>
-                <p className="text-xl text-center">Los platos cambian de manera semanal y están disponibles solo hasta el sábado a las 17:30 h.</p>
+        <main>
+            <Navbar />
+            <div className="container mx-auto max-w-full p-6">
+                <Hero scrollToCategory={scrollToCategory} />
+                <PasosServicio />
+                <div className={"my-8"} ref={categoryRef}>
+                    <h1 className="text-4xl text-center py-4 my-2">Selecciona los platos de tu primer menú.</h1>
+                    <p className="text-xl text-center">Los platos cambian de manera semanal y están disponibles solo hasta el sábado a las 17:30 h.</p>
+                </div>
+                <div>
+                    <CategoriaLista titulo="Principales" items={principales} />
+                    <CategoriaLista titulo="Postres" items={postres} />
+                </div>
             </div>
-            <div>
-                <CategoriaLista titulo="Principales" items={principales} />
-                <CategoriaLista titulo="Postres" items={postres} />
-            </div>
-        </div>
+        </main>
     );
 }
