@@ -8,7 +8,7 @@ import { motion } from 'framer-motion'
 
 const navigation = [
     { name: 'Suscripción', href: '#', current: false },
-    { name: 'Catálogo', href: '#', current: false },
+    { name: 'Catálogo', href: '/catalogo/productos', current: false },
     { name: 'Packs', href: '#', current: false },
 ]
 
