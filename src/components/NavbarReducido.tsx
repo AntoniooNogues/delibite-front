@@ -3,6 +3,8 @@ import "../app/globals.css"
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import {usePathname} from 'next/navigation'
+import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion'
 
 const navigation = [
     { name: 'Suscripción', href: '#', current: false },
@@ -17,12 +19,14 @@ function classNames(...classes: string[]) {
 export default function NavbarReducido() {
     const pathname = usePathname()
 
+    const router = useRouter()
+
     return (
         <Disclosure as="nav" className="pt-6 bg-(--gris-registro)">
-            <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 w-3/4 bg-white rounded-4xl">
+            <motion.div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 w-3/4 bg-white rounded-4xl" initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.8 }}>
                 <div className="relative flex h-16 items-center justify-start">
                     <div className="sm:flex-none flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
-                        <span className="text-4xl text-(--verde-azulado)" style={{ fontFamily: 'Limelight, sans-serif' }}>delibite</span>
+                        <span className="text-4xl text-(--verde-azulado) cursor-pointer" style={{ fontFamily: 'Limelight, sans-serif' }} onClick={() => router.push('/')}>delibite</span>
                     </div>
                     <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
                         {/* Mobile menu button */}
@@ -41,7 +45,7 @@ export default function NavbarReducido() {
                                     href={item.href}
                                     aria-current={pathname === item.href ? 'page' : undefined}
                                     className={classNames(
-                                        pathname === item.href ? 'bg-(--verde-azulado-80) text-white' : 'text-black hover:bg-(--verde-azulado-80) hover:text-white',
+                                        pathname === item.href ? 'bg-(--verde-azulado-80) text-white' : 'text-black hover:bg-(--verde-azulado-80) active:bg-(--oxley-500)  hover:text-white',
                                         'rounded-md px-3 py-2 text-xl font-medium',
                                     )}
                                 >
@@ -51,7 +55,7 @@ export default function NavbarReducido() {
                         </div>
                     </div>
                 </div>
-            </div>
+            </motion.div>
 
             <DisclosurePanel className="sm:hidden">
                 <div className="space-y-1 px-2 pt-2 pb-3">
