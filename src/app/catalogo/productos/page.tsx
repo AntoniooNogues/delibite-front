@@ -25,7 +25,7 @@ const Hero = ({ scrollToCategory }: { scrollToCategory: () => void }) => {
                 </button>
             </div>
             <motion.div className="flex justify-center items-center mt-6 lg:mt-0 w-full lg:w-1/2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.4 }}>
-                <Image src={"/catalogo/papas_arrugas.webp"} alt="Hero" width={600} height={600} className="rounded-2xl" priority layout="responsive" placeholder="blur" blurDataURL="/catalogo/papas_arrugas_blur.webp" quality={75} />
+                <Image src={"/catalogo/papas_arrugas.webp"} alt="Hero" width={600} height={600} title="Plato 12: papas arrugas con mojo" className="rounded-2xl" priority layout="responsive" placeholder="blur" blurDataURL="/catalogo/papas_arrugas_blur.webp" quality={75} />
             </motion.div>
         </div>
     );
@@ -114,7 +114,7 @@ const CategoriaLista = ({ titulo, items }: { titulo: string; items: Catalogo[] }
             </header>
             <main className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-stretch justify-center mx-6 sm:mx-2 my-4 gap-6" >
                 {items.map((item, index) => (
-                    <motion.div key={item.plato_id} className="relative border border-gray-300 rounded-2xl shadow-md bg-white overflow-hidden min-h-[360px] flex flex-col h-full" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.1 }} transition={{ delay: index * 0.2 }}>
+                    <motion.div key={item.plato_id} className="relative border border-gray-300 rounded-2xl shadow-md bg-white overflow-hidden min-h-[360px] flex flex-col h-full" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.1 }} transition={{ delay: index * 0.5 }}>
                         <div className="relative">
                             <Image src="/1.jpg" alt={item.nombre} width={1080} height={400} className="w-full h-50 object-cover" onClick={() => redireccionarDetallesPlato(item.nombre, item.plato_id)} quality={75} />
                             <span className="absolute top-2 right-4 bg-white p-1 rounded-full">
