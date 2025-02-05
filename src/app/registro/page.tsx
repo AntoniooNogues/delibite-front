@@ -9,6 +9,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { EyeIcon } from "@heroicons/react/24/solid";
 import {EyeSlashIcon} from "@heroicons/react/16/solid";
+import { useRouter  } from "next/navigation";
 
 // Definir la interfaz para los datos del formulario
 interface FormData {
@@ -28,6 +29,7 @@ interface FormData {
 
 export default function Registro() {
     const [step, setStep] = useState<number>(1);
+    const router = useRouter();
 
     const [formData, setFormData] = useState<FormData>({
         nombre: "",
@@ -49,8 +51,24 @@ export default function Registro() {
             Object.entries(formData).forEach(([key, value]) => {
                 formDataToSend.append(key, value);
             });
-            const result = await registro(formDataToSend, selectedAlergenos);
-            console.log('Registro exitoso:', result);
+            formDataToSend.append('alergenos', JSON.stringify(selectedAlergenos));
+
+            const jsonObject: { [key: string]: string } = {};
+            formDataToSend.forEach((value, key) => {
+                if (typeof value === "string") {
+                    jsonObject[key] = value;
+                }
+            });
+
+            const result = await registro(jsonObject);
+            console.log('Result from registro:', result); // Log the result for debugging
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+
+            if (result && result.message === 'Usuario registrado con éxito') {
+                router.push(`/login`);
+            } else {
+                console.error('Registro result is falsy, not redirecting.');
+            }
         } catch (error) {
             console.error('Error al registrar:', error);
             // Aquí puedes manejar el error, como mostrar un mensaje al usuario
