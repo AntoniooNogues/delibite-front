@@ -5,18 +5,14 @@ import { getPlatoById } from '@/lib/platos';
 import LoadingComponent from '@/components/Loading-Component';
 import Image from 'next/image';
 import CantidadControl from "@/components/BotonAddPlato-Component";
-import {Plato} from "@/app/catalogo/[nombre]/plato";
+import { Plato } from "@/app/catalogo/[nombre]/plato";
 import { ArrowLeftCircleIcon } from '@heroicons/react/20/solid';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import Navbar from "@/components/Navbar";
 
-
-
-const PlatoDetalle = () => {
-    const id = localStorage.getItem('platoId');
-    const [plato, setPlato] = useState<Plato | null>(null);
+const PlatoDetalle = ({ plato }: { plato: Plato }) => {
     const [cantidad, setCantidad] = useState<{ [key: number]: number }>({});
     const [isOpen, setIsOpen] = useState(false);
 
@@ -31,29 +27,11 @@ const PlatoDetalle = () => {
         });
     };
 
-    useEffect(() => {
-        if (id) {
-            const fetchPlato = async () => {
-                try {
-                    const data = await getPlatoById(Number(id));
-                    setPlato(data);
-                } catch (error) {
-                    console.error('Error al buscar el producto:', error);
-                }
-            };
-            fetchPlato().then(r => console.log('Plato encontrado:', r));
-        }
-    }, [id]);
-
-    if (!plato) {
-        return <LoadingComponent />;
-    }
-
     return (
         <div className="w-full max-w-7xl mx-auto my-6 bg-white rounded-[80px] shadow-md mt-10 p-0">
             <header className="flex flex-col md:flex-row text-(--gris-oscuro) mb-10">
                 <div className="w-1/2 relative">
-                    <Image src="/1.jpg" alt="Sopa criolla limeña" className="border border-transparent rounded-tl-[80px] w-full h-full object-cover" width={1080} height={400}/>
+                    <Image src="/1.jpg" alt="Sopa criolla limeña" className="border border-transparent rounded-tl-[80px] w-full h-full object-cover" width={1080} height={400} />
                     <motion.button
                         className="absolute top-10 left-[50px] rounded-full hover:scale-105 transition-all duration-300 gap-2 w-fit"
                         initial={{ y: -100, opacity: 0 }}
@@ -107,44 +85,44 @@ const PlatoDetalle = () => {
                 <div className="w-1/2 lg:px-10 flex flex-col items-center">
                     <table className="w-full border border-transparent text-(--gris-oscuro)">
                         <thead>
-                            <tr>
-                                <th className="text-xl font-semibold text-left ">Valor Nutricional</th>
-                                <th className="p-2 text-(--gris-claro-calido) text-right ">Ración 465.00 g</th>
-                            </tr>
+                        <tr>
+                            <th className="text-xl font-semibold text-left ">Valor Nutricional</th>
+                            <th className="p-2 text-(--gris-claro-calido) text-right ">Ración 465.00 g</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            <tr className="border-b">
-                                <td className="p-2">Calorias</td>
-                                <td className="p-2 text-right text-black">{plato.calorias}</td>
-                            </tr>
-                            <tr className="border-b">
-                                <td className="p-2">Azucares</td>
-                                <td className="p-2 text-right text-black">{plato.azucares}</td>
-                            </tr>
-                            <tr className="border-b">
-                                <td className="p-2">Carbohidratos</td>
-                                <td className="p-2 text-right text-black">{plato.carbohidratos}</td>
-                            </tr>
-                            <tr className="border-b">
-                                <td className="p-2">Fibra</td>
-                                <td className="p-2 text-right text-black">{plato.fibra}</td>
-                            </tr>
-                            <tr className="border-b">
-                                <td className="p-2">Sal</td>
-                                <td className="p-2 text-right text-black">{plato.sal}</td>
-                            </tr>
-                            <tr className="border-b">
-                                <td className="p-2">Grasas</td>
-                                <td className="p-2 text-right text-black">{plato.grasas}</td>
-                            </tr>
-                            <tr className="border-b">
-                                <td className="p-2">Grasas Saturadas</td>
-                                <td className="p-2 text-right text-black">{plato.grasas_saturadas}</td>
-                            </tr>
-                            <tr className="border-b p-2">
-                                <td className="p-2">Proteína</td>
-                                <td className="p-2 text-right text-black">{plato.proteina}</td>
-                            </tr>
+                        <tr className="border-b">
+                            <td className="p-2">Calorias</td>
+                            <td className="p-2 text-right text-black">{plato.calorias}</td>
+                        </tr>
+                        <tr className="border-b">
+                            <td className="p-2">Azucares</td>
+                            <td className="p-2 text-right text-black">{plato.azucares}</td>
+                        </tr>
+                        <tr className="border-b">
+                            <td className="p-2">Carbohidratos</td>
+                            <td className="p-2 text-right text-black">{plato.carbohidratos}</td>
+                        </tr>
+                        <tr className="border-b">
+                            <td className="p-2">Fibra</td>
+                            <td className="p-2 text-right text-black">{plato.fibra}</td>
+                        </tr>
+                        <tr className="border-b">
+                            <td className="p-2">Sal</td>
+                            <td className="p-2 text-right text-black">{plato.sal}</td>
+                        </tr>
+                        <tr className="border-b">
+                            <td className="p-2">Grasas</td>
+                            <td className="p-2 text-right text-black">{plato.grasas}</td>
+                        </tr>
+                        <tr className="border-b">
+                            <td className="p-2">Grasas Saturadas</td>
+                            <td className="p-2 text-right text-black">{plato.grasas_saturadas}</td>
+                        </tr>
+                        <tr className="border-b p-2">
+                            <td className="p-2">Proteína</td>
+                            <td className="p-2 text-right text-black">{plato.proteina}</td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -194,10 +172,27 @@ const PlatoDetalle = () => {
 };
 
 export default function PlatoDetalleComponent() {
+    const [plato, setPlato] = useState<Plato | null>(null);
+
+    useEffect(() => {
+        const id = localStorage.getItem('platoId');
+        if (id) {
+            const fetchPlato = async () => {
+                try {
+                    const data = await getPlatoById(Number(id));
+                    setPlato(data);
+                } catch (error) {
+                    console.error('Error al buscar el producto:', error);
+                }
+            };
+            fetchPlato();
+        }
+    }, []);
+
     return (
         <main>
             <Navbar />
-            <PlatoDetalle />
+            {!plato ? <LoadingComponent /> : <PlatoDetalle plato={plato} />}
         </main>
     );
 }

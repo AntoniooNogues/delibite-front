@@ -1,6 +1,7 @@
 export interface Catalogo {
     plato_id: number;
     nombre: string;
+    calorias:number;
     precio: number;
     tipo: string;
     modo_empleo: string;

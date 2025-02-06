@@ -22,7 +22,7 @@ export default function Navbar() {
     const router = useRouter();
     return (
         <Disclosure as="nav" className="pt-3 sticky top-0 z-50">
-            <motion.div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 w-3/4 bg-white rounded-4xl drop-shadow-lg" initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.8 }} >
+            <motion.div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 w-3/4 bg-white rounded-4xl drop-shadow-lg" initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.4 }} >
                 <div className="relative flex h-16 items-center ">
                     <div className="sm:flex-none flex-1 flex items-center justify-center sm:items-stretch sm:justify-start mr-3">
                         <span className="text-4xl text-(--verde-azulado) cursor-pointer" style={{ fontFamily: "Limelight, sans-serif" }} onClick={() => router.push('/')}>
