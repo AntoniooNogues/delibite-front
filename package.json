@@ -15,6 +15,7 @@
     "@heroicons/react": "^2.2.0",
     "@tailwindcss/postcss": "^4.0.0",
     "autoprefixer": "^10.4.20",
+    "axios": "^1.7.9",
     "buffer": "^6.0.3",
     "cloudinary": "^2.5.1",
     "cloudinary-react": "^1.8.1",
