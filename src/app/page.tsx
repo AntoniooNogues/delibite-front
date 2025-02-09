@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar"
 import Image from "next/image";
 import Footer from "@/components/Footer";
+import Carrito from "@/components/Carrito";
 
 export default function Home() {
     return (
@@ -12,6 +13,7 @@ export default function Home() {
             </div>
 
             <br/>
+            <Carrito></Carrito>
             <Footer></Footer>
         </div>
     );
