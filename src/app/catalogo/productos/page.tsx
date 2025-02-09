@@ -13,6 +13,8 @@ import InputLabel from "@/components/LabelInput-Component";
 import {Box, Slider} from "@mui/material";
 import { ArchiveBoxXMarkIcon } from "@heroicons/react/20/solid";
 import { debounce } from 'lodash';
+import Carrito from "@/components/Carrito";
+import Cookies from "js-cookie";
 
 
 const Hero = ({ scrollToCategory }: { scrollToCategory: () => void }) => {
@@ -87,12 +89,27 @@ const PasosServicio = () => {
 const CategoriaLista = ({ titulo, items, subheader }: { titulo: string; items: Catalogo[]; subheader: string }) => {
     const [cantidad, setCantidad] = useState<{ [key: number]: number }>({});
 
-    const handleCantidadChange = (id: number, value: number) => {
+    const handleCantidadChange = (id: number, nombre: string, precio:number, value: number) => {
         setCantidad(prev => {
             const newCantidad = { ...prev, [id]: value };
             if (newCantidad[id] <= 0) {
                 delete newCantidad[id];
             }
+
+            // Retrieve existing cookie data
+            const carrito = Cookies.get("carrito");
+            const carritoObj = carrito ? JSON.parse(carrito) : {};
+
+            // Update the carrito object
+            if (value > 0) {
+                carritoObj[id] = { nombre, precio, cantidad: value };
+            } else {
+                delete carritoObj[id];
+            }
+
+            // Save updated carrito object to cookies
+            Cookies.set("carrito", JSON.stringify(carritoObj), { expires: 7 });
+
             return newCantidad;
         });
     };
@@ -147,7 +164,7 @@ const CategoriaLista = ({ titulo, items, subheader }: { titulo: string; items: C
                                 <CantidadControl
                                     itemId={item.plato_id}
                                     cantidad={cantidad[item.plato_id] || 0}
-                                    handleCantidadChange={handleCantidadChange}
+                                    handleCantidadChange={(id, value) => handleCantidadChange(item.plato_id, item.nombre, item.precio, value)}
                                 />
                             </div>
                         </div>
@@ -340,6 +357,7 @@ export default function Catalogo() {
                     </>
                 )}
             </div>
+            <Carrito></Carrito>
         </main>
     );
 }
