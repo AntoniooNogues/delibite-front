@@ -1,16 +1,19 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { getPlatoById } from '@/lib/platos';
 import LoadingComponent from '@/components/Loading-Component';
 import Image from 'next/image';
 import CantidadControl from "@/components/BotonAddPlato-Component";
-import { Plato } from "@/app/catalogo/[nombre]/plato";
+import { Plato } from "@/interfaces/plato";
 import { ArrowLeftCircleIcon } from '@heroicons/react/20/solid';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import Navbar from "@/components/Navbar";
+import NotificacionComponent from "@/components/Notificacion-Component";
+import { Notificaciones } from '@/interfaces/Notificaciones';
+import axiosClient from "@/lib/axiosClient";
+import axios from "axios";
 
 const PlatoDetalle = ({ plato }: { plato: Plato }) => {
     const [cantidad, setCantidad] = useState<{ [key: number]: number }>({});
@@ -31,7 +34,7 @@ const PlatoDetalle = ({ plato }: { plato: Plato }) => {
         <div className="w-full max-w-7xl mx-auto my-6 bg-white rounded-[80px] shadow-md mt-10 p-0">
             <header className="flex flex-col md:flex-row text-(--gris-oscuro) mb-10">
                 <div className="w-1/2 relative">
-                    <Image src="/1.jpg" alt="Sopa criolla limeña" className="border border-transparent rounded-tl-[80px] w-full h-full object-cover" width={1080} height={400} />
+                    <Image src={plato.url} alt="Sopa criolla limeña" className="border border-transparent rounded-tl-[80px] w-full h-full object-cover" width={1080} height={400} />
                     <motion.button
                         className="absolute top-10 left-[50px] rounded-full hover:scale-105 transition-all duration-300 gap-2 w-fit"
                         initial={{ y: -100, opacity: 0 }}
@@ -39,7 +42,7 @@ const PlatoDetalle = ({ plato }: { plato: Plato }) => {
                         transition={{ duration: 0.8 }}
                         onClick={() => router.push('/catalogo/productos')}
                     >
-                        <ArrowLeftCircleIcon className="h-12 w-12 text-(--verde-azulado)" />
+                        <ArrowLeftCircleIcon className="h-12 w-12 text-(--verde-azulado) bg-white p-0 rounded-full hover:scale-105 active:scale-95 transform" />
                     </motion.button>
                 </div>
 
@@ -173,26 +176,43 @@ const PlatoDetalle = ({ plato }: { plato: Plato }) => {
 
 export default function PlatoDetalleComponent() {
     const [plato, setPlato] = useState<Plato | null>(null);
+    const [notificacion, setNotificacion] = useState<Notificaciones>();
 
     useEffect(() => {
-        const id = localStorage.getItem('platoId');
-        if (id) {
-            const fetchPlato = async () => {
-                try {
-                    const data = await getPlatoById(Number(id));
-                    setPlato(data);
-                } catch (error) {
-                    console.error('Error al buscar el producto:', error);
+        const fetchPlato = async () => {
+            try {
+                let id = localStorage.getItem('platoId');
+                const response = await axiosClient.get(`/plato/${id}/`);
+                let data = response.data;
+
+                setPlato(data);
+            } catch (error) {
+                if (axios.isAxiosError(error) && error.response) {
+                    setNotificacion({ titulo: error.response.data.titulo, mensaje: error.response.data.mensaje, code: error.response.data.code, tipo: error.response.data.tipo });
+                } else {
+                    setNotificacion({ titulo: 'Error', mensaje: 'Error al crear el plato: Error desconocido', code: 500, tipo: 'error' });
                 }
-            };
-            fetchPlato();
-        }
+            }
+        };
+
+        fetchPlato();
     }, []);
 
     return (
         <main>
             <Navbar />
-            {!plato ? <LoadingComponent /> : <PlatoDetalle plato={plato} />}
+            {!plato ?
+                <div className="flex justify-center items-center h-screen">
+                    <LoadingComponent />
+                </div> :
+                <PlatoDetalle plato={plato} />
+            }
+            {notificacion && (
+                <NotificacionComponent
+                    Notificaciones={notificacion}
+                    onClose={() => setNotificacion(undefined)}
+                />
+            )}
         </main>
     );
 }
