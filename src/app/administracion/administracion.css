@@ -1,0 +1,37 @@
+.bg-pattern {
+    position: relative;
+    inset: 0;
+    background: var(--oxley-900);
+}
+
+.bg-pattern::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background:
+            url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><filter id="a"><feTurbulence type="fractalNoise" baseFrequency="11.5" numOctaves="20" result="turbulence"/><feComposite operator="in" in="turbulence" in2="SourceAlpha" result="composite"/><feColorMatrix in="composite" type="luminanceToAlpha"/><feBlend in="SourceGraphic" in2="composite" mode="color-burn"/></filter></defs><g filter="url(%23a)"><path fill="%23244134" d="M0 0h100v100H0z"/><path d="M0 0v100h100V0Z" stroke-width="2" stroke="%2397bea9" fill="none"/><path fill="%2397bea9" d="M50 0h1v100h-1z"/><path fill="%2397bea9" d="M0 50h100v1H0z"/></g></svg>');
+    mask: linear-gradient(#0004, #000);
+}
+
+.bg-pattern > div {
+    position: relative;
+    z-index: 10;
+}
+
+.notification {
+    z-index: 100;
+    position: fixed;
+}
+
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px var(--oxley-800) inset !important;
+    -webkit-text-fill-color: var(--oxley-50) !important;
+}
+
+
+
