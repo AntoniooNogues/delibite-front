@@ -1,9 +1,8 @@
 'use client';
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { getCatalogo } from '@/lib/catalogo';
 import Image from "next/image";
 import { motion } from "framer-motion";
-import type { Catalogo } from './types';
+import type { Catalogo } from '@/interfaces/Catalogo';
 import { useRouter } from 'next/navigation';
 import LoadingComponent from "@/components/Loading-Component";
 import CantidadControl from '@/components/BotonAddPlato-Component';
@@ -13,9 +12,11 @@ import InputLabel from "@/components/LabelInput-Component";
 import {Box, Slider} from "@mui/material";
 import { ArchiveBoxXMarkIcon } from "@heroicons/react/20/solid";
 import { debounce } from 'lodash';
+import axiosClient from "@/lib/axiosClient";
+import axios from "axios";
+import NotificacionComponent from "@/components/Notificacion-Component";
+import { Notificaciones } from '@/interfaces/Notificaciones';
 import Carrito from "@/components/Carrito";
-import Cookies from "js-cookie";
-
 
 const Hero = ({ scrollToCategory }: { scrollToCategory: () => void }) => {
     return (
@@ -143,7 +144,11 @@ const CategoriaLista = ({ titulo, items, subheader }: { titulo: string; items: C
                 {items.map((item) => (
                     <div key={item.plato_id} className="relative border border-gray-300 rounded-2xl shadow-md bg-white overflow-hidden min-h-[360px] flex flex-col h-full">
                         <div className="relative">
-                            <Image src="/1.jpg" alt={item.nombre} width={1080} height={400} className="w-full h-50 object-cover" onClick={() => redireccionarDetallesPlato(item.nombre, item.plato_id)} quality={75} />
+                            {item.url ? (
+                                <Image src={item.url} alt={item.nombre} width={1080} height={400} className="w-full h-50 object-cover" onClick={() => redireccionarDetallesPlato(item.nombre, item.plato_id)} quality={75} />
+                            ) : (
+                                <Image src={"/no_foto.avif"} alt={item.nombre} width={1080} height={400} className="w-full h-50 object-cover" onClick={() => redireccionarDetallesPlato(item.nombre, item.plato_id)} quality={75} />
+                            )}
                             <span className="absolute top-2 right-4 bg-white p-1 rounded-full">
                                 <Image src={`/modoEmpleo/${item.modo_empleo}.svg`} width={18} height={18} alt={item.modo_empleo} title={item.modo_empleo} className="w-5 h-5" />
                             </span>
@@ -154,7 +159,7 @@ const CategoriaLista = ({ titulo, items, subheader }: { titulo: string; items: C
                                 {item.alergenos?.length > 0 && (
                                     <span className="mx-4 flex gap-4 my-2">
                                     {item.alergenos.map((x) => (
-                                        <Image key={x.alergeno_id} src={`/alergenos/${x.alergeno_id}.svg`} width={24} height={24} alt={x.nombre} title={x.nombre} className="w-6 h-6" />
+                                        <Image key={x.alergeno_id} src={`/alergenos/${x.alergeno_id}.svg`} alt={x.nombre} width={24} height={24} className="w-6 h-6" />
                                     ))}
                                 </span>
                                 )}
@@ -174,7 +179,6 @@ const CategoriaLista = ({ titulo, items, subheader }: { titulo: string; items: C
         </>
     );
 };
-
 
 const Filtros = ({ setSelectedGoal, priceMax, priceMin, setPriceRange }: {
     setSelectedGoal: React.Dispatch<React.SetStateAction<string | null>>,
@@ -289,25 +293,32 @@ const Filtros = ({ setSelectedGoal, priceMax, priceMin, setPriceRange }: {
 
 
 export default function Catalogo() {
-    const [data, setData] = useState<Catalogo[]>([]);
+    const [catalogo, setCatalogo] = useState<Catalogo[]>([]);
     const [loading, setLoading] = useState(true);
     const categoryRef = useRef<HTMLDivElement>(null);
     const [selectedGoal, setSelectedGoal] = useState<string | null>(null);
     const [priceRange, setPriceRange] = useState<number[]>([0, 100]);
+    const [notificacion, setNotificacion] = useState<Notificaciones>();
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const catalogoData = await getCatalogo();
-                setData(catalogoData);
-            } catch (error) {
-                console.error("Error al obtener el catálogo:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchData().then();
+        fetchData();
     }, []);
+
+    const fetchData = async () => {
+        try {
+            const response = await axiosClient.get<Catalogo[]>(`/catalogo/cargar`);
+            setCatalogo(response.data);
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
+                setNotificacion({ titulo: error.response.data.titulo, mensaje: error.response.data.mensaje, code: error.response.data.code, tipo: error.response.data.tipo });
+            } else {
+                setNotificacion({ titulo: 'Error', mensaje: 'Error al crear el plato: Error desconocido', code: 500, tipo: 'error' });
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
 
     const filterByGoalAndPrice = (item: Catalogo) => {
         const isPriceInRange = item.precio >= priceRange[0] && item.precio <= priceRange[1];
@@ -321,16 +332,26 @@ export default function Catalogo() {
         return isPriceInRange && isGoalMatched;
     };
 
-    const principales = useMemo(() => data.filter(item => item.tipo === "PRINCIPAL" && filterByGoalAndPrice(item)), [data, selectedGoal, priceRange]);
-    const postres = useMemo(() => data.filter(item => item.tipo === "POSTRE" && filterByGoalAndPrice(item)), [data, selectedGoal, priceRange]);
+    console.log(catalogo);
+
+
+
+    const principales = useMemo((): Catalogo[] => {
+        return Object.values(catalogo).filter((item: Catalogo) => item.tipo === "PRINCIPAL" && filterByGoalAndPrice(item));
+    }, [catalogo, selectedGoal, priceRange]);
+
+    const postres = useMemo((): Catalogo[] => {
+        return Object.values(catalogo).filter((item: Catalogo) => item.tipo === "POSTRE" && filterByGoalAndPrice(item));
+    }, [catalogo, selectedGoal, priceRange]);
 
     const scrollToCategory = () => {
         categoryRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
-    const precios = useMemo(() => data.map(item => item.precio), [data]);
+    console.log("Estado de catalogo: ", catalogo);
+    const precios = useMemo(() => catalogo.map(item => item.precio), [catalogo]);
     const precioMaximo = useMemo(() => (Math.ceil(Math.max(...precios))), [precios]);
-    const precioMinimo = useMemo(() => (Math.ceil(Math.min(...precios))), [precios]);
+    const precioMinimo = useMemo(() => (Math.floor(Math.min(...precios))), [precios]);
 
     return (
         <main>
@@ -357,6 +378,12 @@ export default function Catalogo() {
                     </>
                 )}
             </div>
+            {notificacion && (
+                <NotificacionComponent
+                    Notificaciones={notificacion}
+                    onClose={() => setNotificacion(undefined)}
+                />
+            )}
             <Carrito></Carrito>
         </main>
     );

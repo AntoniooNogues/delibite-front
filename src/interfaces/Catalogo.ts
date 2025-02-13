@@ -5,6 +5,7 @@ export interface Catalogo {
     precio: number;
     tipo: string;
     modo_empleo: string;
+    url: string;
     alergenos: Alergenos[];
 }
 

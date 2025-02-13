@@ -1,4 +1,4 @@
-import {Alergenos} from "@/app/catalogo/productos/types";
+import {Alergenos} from "@/interfaces/Catalogo";
 
 export interface Plato {
     plato_id: number;
@@ -16,5 +16,6 @@ export interface Plato {
     grasas: number;
     grasas_saturadas: number;
     proteina: number;
+    url: string;
     alergenos: Alergenos[];
 }
