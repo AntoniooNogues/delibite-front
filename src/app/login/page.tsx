@@ -7,6 +7,11 @@ import { EyeSlashIcon } from "@heroicons/react/16/solid";
 import { EyeIcon } from "@heroicons/react/24/solid";
 import { login } from "@/lib/usuario";
 import { useRouter } from "next/navigation";
+import axiosClient from "@/lib/axiosClient";
+import NotificacionComponent from "@/components/Notificacion-Component";
+import { Notificaciones } from '@/interfaces/Notificaciones';
+import axios from "axios";
+import Cookies from "js-cookie";
 
 interface UserFormData {
     username: string;
@@ -15,7 +20,7 @@ interface UserFormData {
 
 export default function Login() {
     const router = useRouter();
-
+    const [notificacion, setNotificacion] = useState<Notificaciones>();
     const [formData, setFormData] = useState<UserFormData>({
         username: "",
         password: "",
@@ -23,43 +28,40 @@ export default function Login() {
 
     const Submit = async () => {
         try {
-            const result = await login({
-                username: formData.username,
-                password: formData.password
-            });
-            if (result && result.token) {
-                localStorage.setItem('token', result.token);
-                router.push(`/`);
-            } else {
-                console.error('Login result is falsy or token is missing, not redirecting.');
+            const respuesta = await axiosClient.post('/login_check', formData);
+            if (respuesta && respuesta.data.token) {
+                Cookies.set('token', respuesta.data.token);
             }
-        } catch (error) {
-            console.error('Error during login:', error);
+            setNotificacion({ titulo: 'Éxito', mensaje: 'Inicio de sesión exitoso', code: 200, tipo: 'success' });
+            setTimeout(() => {
+                router.push(`/`);
+            }, 2000);
+        }catch (error){
+            if (axios.isAxiosError(error) && error.response) {
+                setNotificacion({ titulo: error.response.data.titulo, mensaje: error.response.data.mensaje , code: error.response.data.code, tipo: error.response.data.tipo });
+            } else {
+                setNotificacion({ titulo: 'Error', mensaje: 'Error al crear el plato: Error desconocido', code: 500, tipo: 'error' });
+            }
         }
     };
 
-    const [errors, setErrors] = useState<{ [key: string]: string }>({});
-    const [notification, setNotification] = useState<string | null>(null);
-
     const validateCampo = (name: string, value: string) => {
-        let error = "";
+        let error:Notificaciones = { titulo: 'Error en el campo', mensaje: '', code: 400, tipo: 'error' };
 
         switch (name) {
             case "username":
-                if (!value) error = "El correo electrónico es obligatorio";
+                if (!value) error.mensaje = "El correo electrónico es obligatorio";
                 break;
             case "password":
-                if (!value) error = "La contraseña es obligatoria";
+                if (!value) error.mensaje = "La contraseña es obligatoria";
                 break;
             default:
                 break;
         }
 
-        setErrors((prev) => ({ ...prev, [name]: error }));
 
         if (error) {
-            setNotification(error);
-            setTimeout(() => setNotification(null), 3000); // Ocultar después de 3s
+            setNotificacion(error);
         }
     };
 
@@ -75,17 +77,6 @@ export default function Login() {
     return (
         <div className="bg-(--gris-registro) min-h-screen flex flex-col">
             <NavbarReducido />
-            {notification && (
-                <motion.div
-                    initial={{ opacity: 0, x: 50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 50 }}
-                    transition={{ duration: 0.3 }}
-                    className="fixed top-5 right-5 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg"
-                >
-                    {notification}
-                </motion.div>
-            )}
             <div className="flex-grow flex items-center justify-center">
                 <div className="px-10 py-8 rounded-4xl bg-(--verde-azulado-80) min-w-sm">
                     <motion.div
@@ -141,6 +132,12 @@ export default function Login() {
                     </motion.div>
                 </div>
             </div>
+            {notificacion && (
+                <NotificacionComponent
+                    Notificaciones={notificacion}
+                    onClose={() => setNotificacion(undefined)}
+                />
+            )}
         </div>
     );
 }

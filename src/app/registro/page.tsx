@@ -2,14 +2,15 @@
 import "../globals.css"
 import NavbarReducido from "@/components/NavbarReducido";
 import Alergenos from "@/components/Alergenos";
-import { registro } from "@/lib/usuario";
-
-
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { EyeIcon } from "@heroicons/react/24/solid";
 import {EyeSlashIcon} from "@heroicons/react/16/solid";
 import { useRouter  } from "next/navigation";
+import axiosClient from "@/lib/axiosClient";
+import NotificacionComponent from "@/components/Notificacion-Component";
+import { Notificaciones } from '@/interfaces/Notificaciones';
+import axios from "axios";
 
 // Definir la interfaz para los datos del formulario
 interface FormData {
@@ -30,7 +31,7 @@ interface FormData {
 export default function Registro() {
     const [step, setStep] = useState<number>(1);
     const router = useRouter();
-
+    const [notificacion, setNotificacion] = useState<Notificaciones>();
     const [formData, setFormData] = useState<FormData>({
         nombre: "",
         apellidos: "",
@@ -46,85 +47,80 @@ export default function Registro() {
         imagen: "",
     });
     const handleSubmit = async () => {
-        try {
-            const formDataToSend = new FormData();
-            Object.entries(formData).forEach(([key, value]) => {
-                formDataToSend.append(key, value);
-            });
-            formDataToSend.append('alergenos', JSON.stringify(selectedAlergenos));
+        const formDataToSend = new FormData();
+        Object.entries(formData).forEach(([key, value]) => {
+            formDataToSend.append(key, value);
+        });
+        formDataToSend.append('alergenos', JSON.stringify(selectedAlergenos));
 
-            const jsonObject: { [key: string]: string } = {};
-            formDataToSend.forEach((value, key) => {
-                if (typeof value === "string") {
-                    jsonObject[key] = value;
-                }
-            });
-
-            const result = await registro(jsonObject);
-            console.log('Result from registro:', result); // Log the result for debugging
-            // eslint-disable-next-line react-hooks/rules-of-hooks
-
-            if (result && result.message === 'Usuario registrado con éxito') {
-                router.push(`/login`);
-            } else {
-                console.error('Registro result is falsy, not redirecting.');
+        const jsonObject: { [key: string]: string } = {};
+        formDataToSend.forEach((value, key) => {
+            if (typeof value === "string") {
+                jsonObject[key] = value;
             }
-        } catch (error) {
-            console.error('Error al registrar:', error);
-            // Aquí puedes manejar el error, como mostrar un mensaje al usuario
+        });
+
+        try {
+            console.log(jsonObject);
+            const respuesta = await axiosClient.post("/registro/" , jsonObject);
+            setNotificacion({ titulo: respuesta.data.titulo, mensaje: respuesta.data.mensaje, code: respuesta.data.code, tipo: respuesta.data.code });
+            setTimeout(() => {
+                router.push("/login");
+            }, 2500);
+        }catch (error){
+            if (axios.isAxiosError(error) && error.response) {
+                setNotificacion({ titulo: error.response.data.titulo, mensaje: error.response.data.mensaje , code: error.response.data.code, tipo: error.response.data.tipo });
+            } else {
+                setNotificacion({ titulo: 'Error', mensaje: 'Error al crear el plato: Error desconocido', code: 500, tipo: 'error' });
+            }
         }
     };
 
-    const [errors, setErrors] = useState<{ [key: string]: string }>({});
-    const [notification, setNotification] = useState<string | null>(null);
     const [selectedAlergenos, setSelectedAlergenos] = useState<string[]>([]);
 
     const validateField = (name: string, value: string) => {
-        let error = "";
+        let error:Notificaciones = { titulo: 'Error en el campo', mensaje: '', code: 400, tipo: 'error' };
 
         switch (name) {
             case "nombre":
             case "apellidos":
-                if (!value.trim()) error = "Este campo es obligatorio";
+                if (!value.trim()) error.mensaje = "Este campo es obligatorio. ";
                 break;
 
             case "email":
-                if (!value) error = "El email es obligatorio";
+                if (!value) error.mensaje += "El email es obligatorio. ";
                 else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
-                    error = "Correo electrónico no válido";
+                    error.mensaje += "Correo electrónico no válido. ";
                 break;
 
             case "dni":
                 if (!/^\d{8}[A-Za-z]$/.test(value))
-                    error = "DNI no válido (8 números y 1 letra)";
+                    error.mensaje += "DNI no válido (8 números y 1 letra). ";
                 break;
 
             case "telefono":
                 if (!/^\d{9}$/.test(value))
-                    error = "Número de teléfono inválido (9 dígitos)";
+                    error.mensaje += "Número de teléfono inválido (9 dígitos). ";
                 break;
 
             case "fechaNacimiento":
-                if (!value) error = "La fecha de nacimiento es obligatoria";
+                if (!value) error.mensaje += "La fecha de nacimiento es obligatoria. ";
                 break;
 
             case "password":
-                if (value.length < 6) error = "La contraseña debe tener al menos 6 caracteres";
+                if (value.length < 6) error.mensaje += "La contraseña debe tener al menos 6 caracteres. ";
                 break;
 
             case "confirmarContrasena":
-                if (value !== formData.password) error = "Las contraseñas no coinciden";
+                if (value !== formData.password) error.mensaje += "Las contraseñas no coinciden. ";
                 break;
 
             default:
                 break;
         }
 
-        setErrors((prev) => ({ ...prev, [name]: error }));
-
         if (error) {
-            setNotification(error);
-            setTimeout(() => setNotification(null), 3000); // Ocultar después de 3s
+            setNotificacion(error);
         }
     };
 
@@ -137,78 +133,10 @@ export default function Registro() {
 
         validateField(e.target.name, e.target.value);
     };
-
-    const nextStep = () => {
-        const newErrors: Partial<FormData> = {};
-        const errorMessages: string[] = [];
-
-        // Validar todos los campos requeridos del paso actual
-        if (step === 1) {
-            if (!formData.nombre.trim()) {
-                newErrors.nombre = "Este campo es obligatorio";
-                errorMessages.push("El nombre es obligatorio");
-            }
-            if (!formData.email) {
-                newErrors.email = "El email es obligatorio";
-                errorMessages.push("El email es obligatorio");
-            }
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-                newErrors.email = "Correo electrónico no válido";
-                errorMessages.push("Correo electrónico no válido");
-            }
-            if (!formData.dni) {
-                newErrors.dni = "El DNI es obligatorio";
-                errorMessages.push("El DNI es obligatorio");
-            } else if (!/^\d{8}[A-Za-z]$/.test(formData.dni)) {
-                newErrors.dni = "DNI no válido (8 números y 1 letra)";
-                errorMessages.push("DNI no válido (8 números y 1 letra)");
-            }
-            if (!formData.telefono) {
-                newErrors.telefono = "El teléfono es obligatorio";
-                errorMessages.push("El teléfono es obligatorio");
-            } else if (!/^\d{9}$/.test(formData.telefono)) {
-                newErrors.telefono = "Número de teléfono inválido (9 dígitos)";
-                errorMessages.push("Número de teléfono inválido (9 dígitos)");
-            }
-            if (!formData.fecha_nacimiento) {
-                newErrors.fecha_nacimiento = "La fecha de nacimiento es obligatoria";
-                errorMessages.push("La fecha de nacimiento es obligatoria");
-            }
-            if (!formData.direccion.trim()) {
-                newErrors.direccion = "La dirección es obligatoria";
-                errorMessages.push("La dirección es obligatoria");
-            }
-            if (!formData.codigo_postal.trim()) {
-                newErrors.codigo_postal = "El código postal es obligatorio";
-                errorMessages.push("El código postal es obligatorio");
-            }
-        }
-
-        if (step === 2) {
-            if (!formData.username) {
-                newErrors.username = "El nombre de usuario es obligatorio";
-                errorMessages.push("El nombre de usuario es obligatorio");
-            }
-            if (formData.password.length < 6) {
-                newErrors.password = "La contraseña debe tener al menos 6 caracteres";
-                errorMessages.push("La contraseña debe tener al menos 6 caracteres");
-            }
-            if (formData.confirmarContrasena !== formData.password) {
-                newErrors.confirmarContrasena = "Las contraseñas no coinciden";
-                errorMessages.push("Las contraseñas no coinciden");
-            }
-        }
-
-        // Si hay errores, no avanza y muestra los errores
-        if (errorMessages.length > 0) {
-            setNotification(errorMessages.join(", "));
-            setTimeout(() => setNotification(null), 2000);
-            return;
-        }
-
-        // Si todo está bien, avanzar de paso
+    function nextStep() {
         setStep((prev) => (prev < 4 ? prev + 1 : prev));
-    };
+    }
+
     const prevStep = () => setStep((prev) => (prev > 1 ? prev - 1 : prev));
 
     const togglePasswordVisibility = () => {
@@ -218,20 +146,12 @@ export default function Registro() {
     const toggleConfirmPasswordVisibility = () => {
         setShowConfirmPassword(!showConfirmPassword);
     };
+
+
+
     return (
         <div className="h-screen flex flex-col w-screen bg-(--gris-registro)">
             <NavbarReducido/>
-            {notification && (
-                <motion.div
-                    initial={{ opacity: 0, x: 50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 50 }}
-                    transition={{ duration: 0.3 }}
-                    className="fixed top-5 right-5 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg"
-                >
-                    {notification}
-                </motion.div>
-            )}
             <div className="flex-grow flex items-center justify-center shadow-lg">
                 <div className="flex justify-center items-stretch">
                     <div className="bg-(--verde-azulado-80) w-1/4 p-8 rounded-l-lg text-white">
@@ -462,6 +382,12 @@ export default function Registro() {
                     </div>
                 </div>
             </div>
+            {notificacion && (
+                <NotificacionComponent
+                    Notificaciones={notificacion}
+                    onClose={() => setNotificacion(undefined)}
+                />
+            )}
         </div>
     );
 }

@@ -1,4 +1,5 @@
-import axios, { AxiosResponse, AxiosError, InternalAxiosRequestConfig, AxiosRequestHeaders } from "axios";
+import axios, {AxiosError, InternalAxiosRequestConfig, AxiosRequestHeaders } from "axios";
+import Cookies from "js-cookie";
 
 const axiosClient = axios.create({
     baseURL: "/api/",
@@ -10,7 +11,7 @@ const axiosClient = axios.create({
 // Interceptor de peticiones
 axiosClient.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
-        const token = localStorage.getItem("token");
+        const token = Cookies.get("token");
         if (token) {
             if (!config.headers) {
                 config.headers = {} as AxiosRequestHeaders;
@@ -22,17 +23,5 @@ axiosClient.interceptors.request.use(
     (error: AxiosError) => Promise.reject(error)
 );
 
-// Interceptor de respuestas
-axiosClient.interceptors.response.use(
-    (response: AxiosResponse) => response,
-    (error: AxiosError) => {
-        if (error.response?.status === 401) {
-            console.log("Sesión expirada, redirigiendo...");
-            localStorage.removeItem("token");
-            window.location.href = "/login";
-        }
-        return Promise.reject(error);
-    }
-);
 
 export default axiosClient;
