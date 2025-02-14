@@ -26,7 +26,13 @@
     --oxley-900: #1e362c;
     --oxley-950: #101e19;
 
+    --danger-100: #ff7047;
+    --danger-200: #ff5636;
+    --danger-400: #fe3c25;
+    --danger-600: #fe2313;
+    --danger-800: #fe0902;
 
+    --azul-visa: #0E4595;
 }
 
 html {
