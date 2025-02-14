@@ -1,17 +1,17 @@
 "use client";
 
 import NavbarReducido from "@/components/NavbarReducido";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { EyeSlashIcon } from "@heroicons/react/16/solid";
 import { EyeIcon } from "@heroicons/react/24/solid";
-import { login } from "@/lib/usuario";
 import { useRouter } from "next/navigation";
 import axiosClient from "@/lib/axiosClient";
 import NotificacionComponent from "@/components/Notificacion-Component";
 import { Notificaciones } from '@/interfaces/Notificaciones';
 import axios from "axios";
 import Cookies from "js-cookie";
+import Link from "next/link";
 
 interface UserFormData {
     username: string;
@@ -25,6 +25,14 @@ export default function Login() {
         username: "",
         password: "",
     });
+
+    useEffect(() => {
+        const storedNotificacion = localStorage.getItem("notificacion");
+        if (storedNotificacion) {
+            setNotificacion(JSON.parse(storedNotificacion));
+            localStorage.removeItem("notificacion");
+        }
+    }, []);
 
     const Submit = async () => {
         try {
@@ -46,7 +54,7 @@ export default function Login() {
     };
 
     const validateCampo = (name: string, value: string) => {
-        let error:Notificaciones = { titulo: 'Error en el campo', mensaje: '', code: 400, tipo: 'error' };
+        const error:Notificaciones = { titulo: 'Error en el campo', mensaje: '', code: 400, tipo: 'error' };
 
         switch (name) {
             case "username":
@@ -78,7 +86,7 @@ export default function Login() {
         <div className="bg-(--gris-registro) min-h-screen flex flex-col">
             <NavbarReducido />
             <div className="flex-grow flex items-center justify-center">
-                <div className="px-10 py-8 rounded-4xl bg-(--verde-azulado-80) min-w-sm">
+                <div className="px-10 py-8 rounded-lg bg-(--verde-azulado-80) min-w-sm">
                     <motion.div
                         initial={{ opacity: 0, x: 50 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -126,7 +134,7 @@ export default function Login() {
                                 Entrar
                             </button>
                             <div className="text-center mt-4">
-                                <a href="/registro" className="text-sm">Es mi primera vez y quiero unirme</a>
+                                <Link href="/registro" className="text-sm">Es mi primera vez y quiero unirme</Link>
                             </div>
                         </div>
                     </motion.div>
