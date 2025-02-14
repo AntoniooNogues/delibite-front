@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { PlusCircleIcon } from '@heroicons/react/20/solid';
 import { MinusCircleIcon } from "@heroicons/react/20/solid";
 
@@ -6,11 +6,19 @@ import { MinusCircleIcon } from "@heroicons/react/20/solid";
 
 interface CantidadControlProps {
     itemId: number;
-    cantidad: number;
+    cantidadInicial: number;
     handleCantidadChange: (id: number, value: number) => void;
+    width: number;
+    height: number;
 }
 
-const CantidadControl: React.FC<CantidadControlProps> = ({ itemId, cantidad, handleCantidadChange }) => {
+const CantidadControl: React.FC<CantidadControlProps> = ({ itemId, cantidadInicial, handleCantidadChange, width, height }) => {
+    const [cantidad, setCantidad] = useState(cantidadInicial);
+
+    useEffect(() => {
+        setCantidad(cantidadInicial);
+    }, [cantidadInicial]);
+
     return (
         <>
             {cantidad ? (
@@ -19,9 +27,9 @@ const CantidadControl: React.FC<CantidadControlProps> = ({ itemId, cantidad, han
                         className="bg-(--oxley-500) text-(--oxley-50) rounded-full transition transform hover:bg-(--primary-dark) hover:scale-105 active:bg-(--oxley-700) active:scale-95"
                         onClick={() => handleCantidadChange(itemId, cantidad - 1)}
                     >
-                        <MinusCircleIcon className="h-10 w-10"/>
+                        <MinusCircleIcon style={{width, height}}/>
                     </button>
-                    <span className="mx-4 font-extrabold rounded-full bg-white w-10 h-10 flex items-center justify-center">
+                    <span className="mx-4 font-extrabold rounded-full bg-white flex items-center justify-center" style={{ width, height }}>
                         {cantidad}
                     </span>
 
@@ -29,7 +37,7 @@ const CantidadControl: React.FC<CantidadControlProps> = ({ itemId, cantidad, han
                         className="bg-(--oxley-500) text-(--oxley-50) rounded-full transition transform hover:bg-(--primary-dark) hover:scale-105 active:bg-(--oxley-700) active:scale-95"
                         onClick={() => handleCantidadChange(itemId, cantidad + 1)}
                     >
-                        <PlusCircleIcon className="h-10 w-10"/>
+                        <PlusCircleIcon style={{ width, height }}/>
                     </button>
                 </div>
 
@@ -38,7 +46,7 @@ const CantidadControl: React.FC<CantidadControlProps> = ({ itemId, cantidad, han
                     className="bg-(--oxley-500) text-(--oxley-50) rounded-full transition transform hover:bg-(--primary-dark) hover:scale-105 active:bg-(--oxley-700) active:scale-95"
                     onClick={() => handleCantidadChange(itemId, 1)}
                 >
-                    <PlusCircleIcon className="h-10 w-10"/>
+                    <PlusCircleIcon style={{ width, height }}/>
                 </button>
             )}
         </>

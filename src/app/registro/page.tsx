@@ -11,6 +11,7 @@ import axiosClient from "@/lib/axiosClient";
 import NotificacionComponent from "@/components/Notificacion-Component";
 import { Notificaciones } from '@/interfaces/Notificaciones';
 import axios from "axios";
+import Link from "next/link";
 
 // Definir la interfaz para los datos del formulario
 interface FormData {
@@ -79,7 +80,7 @@ export default function Registro() {
     const [selectedAlergenos, setSelectedAlergenos] = useState<string[]>([]);
 
     const validateField = (name: string, value: string) => {
-        let error:Notificaciones = { titulo: 'Error en el campo', mensaje: '', code: 400, tipo: 'error' };
+        const error:Notificaciones = { titulo: 'Error en el campo', mensaje: '', code: 400, tipo: 'error' };
 
         switch (name) {
             case "nombre":
@@ -169,9 +170,9 @@ export default function Registro() {
                         </div>
                         <div className="pt-8 mt-auto">
                             <p className="text-sm">Si ya dispones de una cuenta, pulsa aqui.
-                                <a href="#" className="text-black">
+                                <Link href="/login" className="text-black">
                                     &nbsp;Iniciar Sesión.
-                                </a>
+                                </Link>
                             </p>
                         </div>
                     </div>
