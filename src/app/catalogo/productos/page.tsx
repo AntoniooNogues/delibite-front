@@ -17,6 +17,7 @@ import axios from "axios";
 import NotificacionComponent from "@/components/Notificacion-Component";
 import { Notificaciones } from '@/interfaces/Notificaciones';
 import Carrito from "@/components/Carrito";
+import Cookies from "js-cookie";
 
 const Hero = ({ scrollToCategory }: { scrollToCategory: () => void }) => {
     return (
@@ -90,7 +91,31 @@ const PasosServicio = () => {
 const CategoriaLista = ({ titulo, items, subheader }: { titulo: string; items: Catalogo[]; subheader: string }) => {
     const [cantidad, setCantidad] = useState<{ [key: number]: number }>({});
 
-    const handleCantidadChange = (id: number, nombre: string, precio:number, value: number) => {
+    useEffect(() => {
+        const carritoGuardado = Cookies.get("carrito");
+        if (carritoGuardado) {
+            const carrito = JSON.parse(carritoGuardado);
+            const initialCantidad = Object.fromEntries(
+                Object.entries(carrito).map(([id, item]) => [parseInt(id), (item as { cantidad: number }).cantidad])
+            );
+            setCantidad(initialCantidad);
+        }
+        const handleCarritoUpdate = (event: CustomEvent) => {
+            const carrito = event.detail;
+            const updateCantidad = Object.fromEntries(
+                Object.entries(carrito).map(([id, item]) => [parseInt(id), (item as { cantidad: number }).cantidad])
+            );
+            setCantidad(updateCantidad);
+        };
+        window.addEventListener("actualizacionCarrito", handleCarritoUpdate as EventListener);
+        return () => {
+            window.removeEventListener("actualizacionCarrito", handleCarritoUpdate as EventListener);
+        };
+    }, []);
+
+
+
+    const handleCantidadChange = (id: number, nombre: string, precio: number, value: number) => {
         setCantidad(prev => {
             const newCantidad = { ...prev, [id]: value };
             if (newCantidad[id] <= 0) {
@@ -110,6 +135,10 @@ const CategoriaLista = ({ titulo, items, subheader }: { titulo: string; items: C
 
             // Save updated carrito object to cookies
             Cookies.set("carrito", JSON.stringify(carritoObj), { expires: 7 });
+
+            // Dispatch custom event to notify other components
+            const event = new CustomEvent("actualizacionCarrito", { detail: carritoObj });
+            window.dispatchEvent(event);
 
             return newCantidad;
         });
@@ -168,8 +197,10 @@ const CategoriaLista = ({ titulo, items, subheader }: { titulo: string; items: C
                                 <p className="text-left text-gray-700 text-[22px] font-medium ">{item.precio}€</p>
                                 <CantidadControl
                                     itemId={item.plato_id}
-                                    cantidad={cantidad[item.plato_id] || 0}
+                                    cantidadInicial={cantidad[item.plato_id] || 0}
                                     handleCantidadChange={(id, value) => handleCantidadChange(item.plato_id, item.nombre, item.precio, value)}
+                                    width={35}
+                                    height={35}
                                 />
                             </div>
                         </div>
