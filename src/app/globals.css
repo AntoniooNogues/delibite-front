@@ -38,6 +38,8 @@
 html {
     font-family: Lora, Poppins, sans-serif;
     background-color: #EFEFEF;
+    scrollbar-width: thin;
+    scrollbar-color: var(--verde-azulado-80) var(--oxley-100);
 }
 
 .fondo {

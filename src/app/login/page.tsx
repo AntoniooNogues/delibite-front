@@ -47,9 +47,8 @@ export default function Login() {
         }catch (error){
             if (axios.isAxiosError(error) && error.response) {
                 setNotificacion({ titulo: error.response.data.titulo, mensaje: error.response.data.mensaje , code: error.response.data.code, tipo: error.response.data.tipo });
-            } else {
-                setNotificacion({ titulo: 'Error', mensaje: 'Error al crear el plato: Error desconocido', code: 500, tipo: 'error' });
             }
+            setNotificacion({ titulo: 'Error', mensaje: 'Error al crear el plato: Error desconocido', code: 500, tipo: 'error' });
         }
     };
 
@@ -67,9 +66,9 @@ export default function Login() {
                 break;
         }
 
-
-        if (error) {
+        if (error.mensaje) {
             setNotificacion(error);
+            return false;
         }
     };
 
@@ -130,7 +129,7 @@ export default function Login() {
                         </div>
                         <div className="mt-2">
                             <a href="#" className="text-sm">¿Olvidaste tu contraseña?</a>
-                            <button onClick={Submit} className="px-4 py-2 mt-8 text-lg w-full bg-white rounded-4xl">
+                            <button onClick={Submit} className="mt-6 w-full px-4 py-2 bg-white text-black rounded-full  hover:scale-105 active:scale-95 transition-transform text-xl drop-shadow-md">
                                 Entrar
                             </button>
                             <div className="text-center mt-4">

@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
     return (
@@ -7,7 +8,8 @@ export default function Footer() {
             <div className="w-full md:w-3/4">
                 <div className="flex flex-col md:flex-row items-center justify-between w-full pt-2">
                     <div className="mb-4 md:mb-0">
-                        <Link href="/">
+                        <Link href="/" className="flex flex-row gap-4 items-center">
+                            <Image src="/logo-sinFondo.png" alt="Delibite logo" width={100} height={100} className="h-15 w-15 rounded-full bg-white transition transform active:scale-95 hover:scale-105    "/>
                             <p className="text-4xl text-white transition transform active:scale-95 hover:scale-105"
                                style={{fontFamily: 'Limelight, sans-serif'}}>delibite</p>
                         </Link>
