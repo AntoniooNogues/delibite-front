@@ -14,6 +14,7 @@ import NotificacionComponent from "@/components/Notificacion-Component";
 import { Notificaciones } from '@/interfaces/Notificaciones';
 import axiosClient from "@/lib/axiosClient";
 import axios from "axios";
+import Footer from "@/components/Footer";
 
 const PlatoDetalle = ({ plato }: { plato: Plato }) => {
     const [cantidad, setCantidad] = useState<{ [key: number]: number }>({});
@@ -62,8 +63,10 @@ const PlatoDetalle = ({ plato }: { plato: Plato }) => {
                         <p className="font-semibold text-xl">{plato.precio}€</p>
                         <CantidadControl
                             itemId={plato.plato_id}
-                            cantidad={cantidad[plato.plato_id] || 0}
+                            cantidadInicial={cantidad[plato.plato_id] || 0}
                             handleCantidadChange={handleCantidadChange}
+                            width={40}
+                            height={40}
                         />
                     </div>
                 </div>
@@ -134,9 +137,9 @@ const PlatoDetalle = ({ plato }: { plato: Plato }) => {
                 <div className="w-full mx-20 border border-gray-300 overflow-hidden rounded-[30px]">
                     <button
                         onClick={() => setIsOpen(!isOpen)}
-                        className="w-full flex justify-between items-center p-4 bg-(--verde-azulado) hover:bg-(--oxley-500) active:bg-(--primary-dark) transition "
+                        className="w-full flex justify-between items-center p-4 bg-(--oxley-200) hover:bg-(--oxley-300) active:bg-(--verde-azulado) transition "
                     >
-                        <span className="text-lg font-semibold">Modo de empleo</span>
+                        <span className="text-lg font-semibold text-gray-800"><span className="text-lg font-semibold text-gray-800">Modo de empleo {plato.modo_empleo == 'FRIO' && '❄️'} {plato.modo_empleo == 'CALIENTE' && '🔥'}</span></span>
                         <ChevronDownIcon className={`w-5 h-5 transition-transform ${isOpen ? "rotate-180 transition duration-1000" : "rotate-0 transition duration-1000"}`} />
                     </button>
 
@@ -147,8 +150,7 @@ const PlatoDetalle = ({ plato }: { plato: Plato }) => {
                                     <li>Mantener refrigerado entre 2º y 4ºC.</li>
                                     <li>Consumir antes de la fecha de caducidad indicada en el envase.</li>
                                     <li>Una vez abierto, consumir en las próximas 24 horas.</li>
-                                    <li>Para calentar, sigue las instrucciones de cada táper.</li>
-                                    <li>Abre una esquina del envase y caliéntalo en el microondas el tiempo indicado. ¡Listo para disfrutar!</li>
+                                    <li>No congelar el producto si no está indicado en el envase.</li>
                                 </ul>
                             </div>
                         </div>
@@ -157,6 +159,9 @@ const PlatoDetalle = ({ plato }: { plato: Plato }) => {
                         <div className={`overflow-hidden transition-[max-height] duration-300 ${isOpen ? "max-h-60" : "max-h-0"}`}>
                             <div className="p-4 text-gray-700 whitespace-pre-line">
                                 <ul>
+                                    <li>Mantener refrigerado entre 2º y 4ºC.</li>
+                                    <li>Consumir antes de la fecha de caducidad indicada en el envase.</li>
+                                    <li>Una vez abierto, consumir en las próximas 24 horas.</li>
                                     <li>Para calentar, sigue las instrucciones de cada táper.</li>
                                     <li>Abre una esquina del envase y caliéntalo en el microondas el tiempo indicado. ¡Listo para disfrutar!</li>
                                 </ul>
@@ -205,7 +210,11 @@ export default function PlatoDetalleComponent() {
                 <div className="flex justify-center items-center h-screen">
                     <LoadingComponent />
                 </div> :
-                <PlatoDetalle plato={plato} />
+                <div>
+                    <PlatoDetalle plato={plato} />
+                    <Footer />
+                </div>
+
             }
             {notificacion && (
                 <NotificacionComponent
@@ -213,6 +222,7 @@ export default function PlatoDetalleComponent() {
                     onClose={() => setNotificacion(undefined)}
                 />
             )}
+
         </main>
     );
 }

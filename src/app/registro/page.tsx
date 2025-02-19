@@ -63,10 +63,10 @@ export default function Registro() {
 
         try {
             console.log(jsonObject);
-            const respuesta = await axiosClient.post("/registro/" , jsonObject);
+            const respuesta = await axiosClient.post("/usuario/registro/" , jsonObject);
             setNotificacion({ titulo: respuesta.data.titulo, mensaje: respuesta.data.mensaje, code: respuesta.data.code, tipo: respuesta.data.code });
             setTimeout(() => {
-                router.push("/login");
+                router.push("/verificar-cuenta/");
             }, 2500);
         }catch (error){
             if (axios.isAxiosError(error) && error.response) {
