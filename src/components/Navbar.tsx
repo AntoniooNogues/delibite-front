@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import React, {useEffect, useState} from "react";
 import Cookies from "js-cookie";
 import {jwtDecode} from "jwt-decode";
+import Link from "next/link";
 
 const navigation = [
     { name: "Suscripción", href: "#", current: false },
@@ -101,15 +102,15 @@ export default function Navbar() {
                                         <MenuItems className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-b-3xl z-50">
                                             <MenuItem>
                                                 {({ focus }) => (
-                                                    <a
-                                                        href="#"
+                                                    <Link
+                                                        href="/perfil"
                                                         className={classNames(
                                                             focus ? "bg-gray-100" : "",
                                                             "block px-4 py-2 text-sm text-gray-700"
                                                         )}
                                                     >
                                                         Perfil
-                                                    </a>
+                                                    </Link>
                                                 )}
                                             </MenuItem>
                                             <MenuItem>
