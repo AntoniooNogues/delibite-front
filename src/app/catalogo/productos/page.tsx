@@ -18,6 +18,8 @@ import NotificacionComponent from "@/components/Notificacion-Component";
 import { Notificaciones } from '@/interfaces/Notificaciones';
 import Carrito from "@/components/Carrito";
 import Cookies from "js-cookie";
+import Footer from "@/components/Footer";
+
 
 const Hero = ({ scrollToCategory }: { scrollToCategory: () => void }) => {
     return (
@@ -169,7 +171,7 @@ const CategoriaLista = ({ titulo, items, subheader }: { titulo: string; items: C
                 </div>
             </header>
 
-            <main className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-stretch justify-center mx-6 sm:mx-2 my-4 gap-6" >
+            <main className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 items-stretch justify-center mx-6 sm:mx-2 my-4 gap-6" >
                 {items.map((item) => (
                     <div key={item.plato_id} className="relative border border-gray-300 rounded-2xl shadow-md bg-white overflow-hidden min-h-[360px] flex flex-col h-full">
                         <div className="relative">
@@ -178,21 +180,21 @@ const CategoriaLista = ({ titulo, items, subheader }: { titulo: string; items: C
                             ) : (
                                 <Image src={"/no_foto.avif"} alt={item.nombre} width={1080} height={400} className="w-full h-50 object-cover" onClick={() => redireccionarDetallesPlato(item.nombre, item.plato_id)} quality={75} />
                             )}
-                            <span className="absolute top-2 right-4 bg-white p-1 rounded-full">
-                                <Image src={`/modoEmpleo/${item.modo_empleo}.svg`} width={18} height={18} alt={item.modo_empleo} title={item.modo_empleo} className="w-5 h-5" />
+                            <span className="absolute top-2 right-4 p-1 rounded-full bg-white border-(--verde-azulado) border-2">
+                                <Image src={`/modoEmpleo/${item.modo_empleo}.svg`} width={18} height={18} alt={item.modo_empleo} title={item.modo_empleo} className="w-8 h-8 objet-contain " />
                             </span>
                         </div>
                         <div className="p-4 flex flex-col flex-grow">
                             <p className="flex items-center text-xl font-semibold text-gray-700 max-w-full truncate">
                                 {item.nombre}
-                                {item.alergenos?.length > 0 && (
-                                    <span className="mx-4 flex gap-4 my-2">
-                                    {item.alergenos.map((x) => (
-                                        <Image key={x.alergeno_id} src={`/alergenos/${x.alergeno_id}.svg`} alt={x.nombre} width={24} height={24} className="w-6 h-6" />
-                                    ))}
-                                </span>
-                                )}
                             </p>
+                            {item.alergenos?.length > 0 && (
+                                <div className="flex gap-4 my-4">
+                                    {item.alergenos.map((x) => (
+                                        <Image key={x.alergeno_id} src={`/alergenos/${x.alergeno_id}.svg`} alt={x.nombre} width={24} height={24} className="w-7 h-7" />
+                                    ))}
+                                </div>
+                            )}
                             <div className="mt-auto flex flex-row justify-between items-center ">
                                 <p className="text-left text-gray-700 text-[22px] font-medium ">{item.precio}€</p>
                                 <CantidadControl
@@ -276,32 +278,33 @@ const Filtros = ({ setSelectedGoal, priceMax, priceMin, setPriceRange }: {
 
     return (
         <main className="flex flex-col gap-2">
-            <p className="text-2xl text-(--primary-dark) pb-4">Filtra por tipo de plato, ingredientes o preferencias y encuentra tu comida ideal.</p>
-            <div id="filtros" className="flex flex-row items-center lg:gap-8">
-               <div className={"w-fit"}>
-                   <button className="my-2 p-3 bg-white text-(--primary-dark) font-bold rounded-xl w-fit flex flex-row gap-4 drop-shadow-xl hover:scale-105 active:scale-95 transition-all duration-300" onClick={resetFilters}>
+            <p className="text-2xl text-left text-(--primary-dark) pb-4 max-md:text-center">Filtra por tipo de plato, ingredientes o preferencias y encuentra tu comida ideal.</p>
+            <div id="filtros" className="flex flex-row items-center gap-5 lg:gap-8 max-md:flex-col">
+               <div className="w-fit flex flex-row gap-4">
+                   <button className="my-2 p-3 bg-white text-(--primary-dark) font-bold rounded-xl  drop-shadow-xl hover:scale-105 active:scale-95 transition-all duration-300" onClick={resetFilters}>
                        <ArchiveBoxXMarkIcon className="h-6 w-6 text-(--verde-azulado)" />
                    </button>
-               </div>
-                <div className="w-fit">
-                    <button ref={buttonRef} className="my-2 px-2 py-3 bg-white text-(--primary-dark) font-bold rounded-xl  w-fit flex flex-row gap-4 drop-shadow-xl" onClick={handleButtonClick}>
+                   <div className="w-fit">
+                       <button ref={buttonRef} className="my-2 px-2 py-3 bg-white text-(--primary-dark) font-bold rounded-xl  w-fit flex flex-row gap-4 drop-shadow-xl" onClick={handleButtonClick}>
                         <span className="relative h-6 w-6 flex items-center justify-center">
                           <FlagIcon className="h-6 w-6 text-(--verde-azulado)"/>
                         </span>
-                        {selectedGoal ? selectedGoal : "Objetivo nutricional"}
-                        {selectedGoal ? (<span>
+                           {selectedGoal ? selectedGoal : "Objetivo nutricional"}
+                           {selectedGoal ? (<span>
                         <XMarkIcon className="h-6 w-6 text-(--oxley-900)" onClick={clearGoal}/></span>) : (<span>
                             <ChevronDownIcon
                                 className={`h-6 w-6 text-(--oxley-900) ${showInputs ? 'rotate-180 transition-300' : ''}`}/></span>)}
-                    </button>
-                    {showInputs && !selectedGoal && (
-                        <motion.div className="z-10 absolute px-2 py-3 bg-white text-gray-700 rounded-xl flex flex-col gap-4 drop-shadow-xl" style={{width: inputWidth}} initial={{opacity: 0, y: -20}} animate={{opacity: 1, y: 0}} exit={{opacity: 0, y: -20}} transition={{duration: 0.3}}>
-                            <InputLabel label={ "Alimentación balanceada"} name={ "radioGroup"} type={ "radio"} onChange={()=> handleGoalChange("Balanceada")}/>
-                            <InputLabel label={ "Reducir grasa"} name={ "radioGroup"} type={ "radio"} onChange={()=> handleGoalChange("Reducir grasa")}/>
-                            <InputLabel label={ "Aumentar músculo"} name={ "radioGroup"} type={ "radio"} onChange={()=> handleGoalChange("Aumentar músculo")}/>
-                        </motion.div>)}
-                </div>
-                <div className="w-full md:w-1/2 flex flex-col items-start">
+                       </button>
+                       {showInputs && !selectedGoal && (
+                           <motion.div className="z-10 absolute px-2 py-3 bg-white text-gray-700 rounded-xl flex flex-col gap-4 drop-shadow-xl" style={{width: inputWidth}} initial={{opacity: 0, y: -20}} animate={{opacity: 1, y: 0}} exit={{opacity: 0, y: -20}} transition={{duration: 0.3}}>
+                               <InputLabel label={ "Alimentación balanceada"} name={ "radioGroup"} type={ "radio"} onChange={()=> handleGoalChange("Balanceada")}/>
+                               <InputLabel label={ "Reducir grasa"} name={ "radioGroup"} type={ "radio"} onChange={()=> handleGoalChange("Reducir grasa")}/>
+                               <InputLabel label={ "Aumentar músculo"} name={ "radioGroup"} type={ "radio"} onChange={()=> handleGoalChange("Aumentar músculo")}/>
+                           </motion.div>)}
+                   </div>
+               </div>
+
+                <div className="w-full md:w-1/2 flex flex-col items-start max-md:items-center">
                     <label htmlFor="price-slider" className="text-gray-900 text-sm font-bold pb-1">
                         Rango de Precios (€):
                     </label>
@@ -409,6 +412,7 @@ export default function Catalogo() {
                     </>
                 )}
             </div>
+            <Footer />
             {notificacion && (
                 <NotificacionComponent
                     Notificaciones={notificacion}

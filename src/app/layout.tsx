@@ -17,7 +17,7 @@ export default function RootLayout({
     return (
         <html lang="es">
         <head>
-            <link rel="icon" href="/logo.svg"/>
+            <link rel="icon" href="/logo.jpg"/>
             <link rel="preconnect" href="https://fonts.gstatic.com"/>
             <title>Delibite</title>
         </head>

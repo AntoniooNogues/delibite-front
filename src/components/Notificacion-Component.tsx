@@ -17,7 +17,7 @@ export default function NotificacionComponent({ Notificaciones, onClose }: Notif
         const timer = setTimeout(() => {
             setVisible(false);
             onClose();
-        }, 5000);
+        }, 3500);
         return () => clearTimeout(timer);
     }, [onClose]);
 
