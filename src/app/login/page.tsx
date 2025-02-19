@@ -85,8 +85,8 @@ export default function Login() {
     return (
         <div className="bg-(--gris-registro) min-h-screen flex flex-col">
             <NavbarReducido />
-            <div className="flex-grow flex items-center justify-center">
-                <div className="px-10 py-8 rounded-lg bg-(--verde-azulado-80) min-w-sm">
+            <div className="flex-grow flex items-center justify-center w-full">
+                <div className="px-10 py-6  rounded-lg  w-1/3">
                     <motion.div
                         initial={{ opacity: 0, x: 50 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -94,7 +94,7 @@ export default function Login() {
                         transition={{ duration: 0.3 }}
                     >
                         <span className="text-center">
-                            <h2 className="text-3xl font-bold text-white mb-4 pb-8">Hola de nuevo</h2>
+                            <h2 className="text-3xl font-bold  mb-4 pb-8">Hola de nuevo</h2>
                         </span>
 
                         <div className="flex flex-col gap-8">
@@ -130,10 +130,11 @@ export default function Login() {
                         </div>
                         <div className="mt-2">
                             <a href="#" className="text-sm">¿Olvidaste tu contraseña?</a>
-                            <button onClick={Submit} className="px-4 py-2 mt-8 text-lg w-full bg-white rounded-4xl">
+                            <button onClick={Submit} className="px-4 py-2 mt-8 text-lg w-full bg-(--verde-azulado) rounded-4xl
+                             hover:bg-(--oxley-500) active:bg-(--oxley-700) hover:text-white transition transform active:scale-95 hover:scale-105">
                                 Entrar
                             </button>
-                            <div className="text-center mt-4">
+                            <div className="text-center mt-6">
                                 <Link href="/registro" className="text-sm">Es mi primera vez y quiero unirme</Link>
                             </div>
                         </div>
