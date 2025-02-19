@@ -362,7 +362,8 @@ export default function Registro() {
                             {step > 1 && (
                                 <button
                                     onClick={prevStep}
-                                    className="px-4 py-2 bg-gray-400 text-white rounded"
+                                    className="px-4 py-2 bg-gray-400 text-white rounded
+                                    hover:bg-gray-500 active:bg-gray-600 hover:text-white transition transform active:scale-95 hover:scale-105"
                                 >
                                     Atrás
                                 </button>
@@ -370,12 +371,13 @@ export default function Registro() {
                             {step < 4 ? (
                                 <button
                                     onClick={nextStep}
-                                    className="px-4 py-2 bg-(--verde-azulado) text-white rounded drop-shadow-xl"
+                                    className="px-4 py-2 bg-(--verde-azulado) text-white rounded drop-shadow-xl ml-auto
+                                    hover:bg-(--oxley-500) active:bg-(--oxley-700) hover:text-white transition transform active:scale-95 hover:scale-105"
                                 >
                                     Siguiente
                                 </button>
                             ) : (
-                                <button  onClick={handleSubmit} className="px-4 py-2 bg-blue-500 text-white rounded">
+                                <button  onClick={handleSubmit} className=" px-4 py-2 rounded-lg text-white bg-(--verde-azulado) hover:bg-(--oxley-500) active:bg-(--oxley-700) hover:text-white transition transform active:scale-95 hover:scale-105">
                                     Finalizar
                                 </button>
                             )}
