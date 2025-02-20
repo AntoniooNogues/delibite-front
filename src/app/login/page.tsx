@@ -100,11 +100,11 @@ export default function Login() {
                             <input
                                 name="username"
                                 value={formData.username}
-                                type="email"
+                                type="text"
                                 onChange={handleChange}
                                 onBlur={(e) => validateCampo(e.target.name, e.target.value)}
                                 className="border p-2 bg-white rounded shadow-lg"
-                                placeholder="Correo electrónico"
+                                placeholder="Nombre de usuario"
                             />
                             <div className="relative">
                                 <input
