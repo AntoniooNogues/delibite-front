@@ -17,7 +17,7 @@ const Facturacion: React.FC = () => {
     useEffect(() => {
         const fetchAddress = async () => {
             try {
-                const response = await axiosClient.get('/registro/getUsuario');
+                const response = await axiosClient.get('/usuario/getUsuario');
                 if (response.data) {
                     setDireccion(response.data.direccion);
                     setCodigoPostal(response.data.codigo_postal);
@@ -51,7 +51,7 @@ const Facturacion: React.FC = () => {
             return;
         }
         try {
-            await axios.post('/registro/facturacion', { direccion, codigoPostal });
+            await axios.post('/usuario/facturacion', { direccion, codigoPostal });
             setNotificacion({
                 titulo: "Perfil actualizado con éxito",
                 mensaje: "Se ha actualizado su perfil correctamente",
