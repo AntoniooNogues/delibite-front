@@ -26,7 +26,7 @@ const DatosPersonalesPage: React.FC = () => {
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const response = await axiosClient.get('/registro/getUsuario');
+                const response = await axiosClient.get('/usuario/getUsuario');
                 setUser(response.data);
                 setFormData({
                     nombre: response.data.nombre,
@@ -59,7 +59,7 @@ const DatosPersonalesPage: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            await axiosClient.put('/registro/editar', formData);
+            await axiosClient.put('/usuario/editar', formData);
             setNotificacion({
                 titulo: "Perfil actualizado con éxito",
                 mensaje: "Se ha actualizado su perfil correctamente",
@@ -89,7 +89,7 @@ const DatosPersonalesPage: React.FC = () => {
             return;
         }
         try {
-            await axiosClient.post('/registro/cambiarContrasena', {
+            await axiosClient.post('/usuario/cambiarContrasena', {
                 currentPassword,
                 newPassword
             });
