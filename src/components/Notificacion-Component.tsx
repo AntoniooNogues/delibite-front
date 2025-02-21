@@ -29,7 +29,7 @@ export default function NotificacionComponent({ Notificaciones, onClose }: Notif
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="fixed bottom-4 right-4 bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4 z-10"
+            className="fixed bottom-4 right-4 bg-white p-4 rounded-lg shadow-lg flex items-center space-x-4 z-[100]"
         >
             {icon}
             <div>
