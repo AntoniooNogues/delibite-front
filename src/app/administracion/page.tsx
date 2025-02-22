@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import AdminLayout from "@/components/AdminLayout";
-import { HomeInterface } from "@/interfaces/AdministracionHome";
+import { HomeInterface } from "@/interfaces/Administracion-Interfaces";
 import { motion } from 'framer-motion';
 import LoadingComponent from "@/components/Loading-Component";
 import axiosClient from "@/lib/axiosClient";

@@ -4,3 +4,7 @@ export interface HomeInterface {
     valoracion_media_platos: number;
     usuarios_activos_ultimos_7_dias: number;
 }
+
+export interface Pack {
+
+}
