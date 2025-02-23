@@ -113,7 +113,7 @@ const DatosPersonalesPage: React.FC = () => {
     };
     return (
         <PerfilLayout>
-            <div className="bg-white rounded-xl px-8 py-6 w-full">
+            <div className=" rounded-xl px-8 py-6 w-full">
                 {user ? (
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="flex items-center space-x-6 mb-4">
