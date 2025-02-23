@@ -3,6 +3,9 @@ export interface HomeInterface {
     pedidos_totales: number;
     valoracion_media_platos: number;
     usuarios_activos_ultimos_7_dias: number;
+    suscripciones_activas: number;
+    tipo_plato_mas_vendido: [];
+    modo_empleo_mas_vendido: [];
 }
 
 
