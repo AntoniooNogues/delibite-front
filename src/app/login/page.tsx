@@ -48,7 +48,7 @@ export default function Login() {
             if (axios.isAxiosError(error) && error.response) {
                 setNotificacion({ titulo: error.response.data.titulo, mensaje: error.response.data.mensaje , code: error.response.data.code, tipo: error.response.data.tipo });
             }
-            setNotificacion({ titulo: 'Error', mensaje: 'Error al crear el plato: Error desconocido', code: 500, tipo: 'error' });
+            setNotificacion({ titulo: 'Error', mensaje: 'Error al realizar el login: Error desconocido', code: 500, tipo: 'error' });
         }
     };
 
