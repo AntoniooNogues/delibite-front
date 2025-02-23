@@ -12,7 +12,7 @@ import Link from "next/link";
 const navigation = [
     { name: "Suscripción", href: "#", current: false },
     { name: "Catálogo", href: "/catalogo/productos", current: false },
-    { name: "Packs", href: "#", current: false },
+    { name: "Packs", href: "/packs", current: false },
 ];
 
 function classNames(...classes: string[]) {

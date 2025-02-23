@@ -10,7 +10,7 @@ import {useRouter} from "next/navigation";
 import {motion} from "framer-motion";
 import axiosClient from "@/lib/axiosClient";
 import axios from "axios";
-import { Plato } from "@/interfaces/Home";
+import { Plato } from "@/interfaces/home";
 import NotificacionComponent from "@/components/Notificacion-Component";
 import {Notificaciones} from "@/interfaces/Notificaciones";
 

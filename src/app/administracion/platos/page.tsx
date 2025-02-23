@@ -148,8 +148,8 @@ export default function UsuariosPage() {
                             </button>
                         </div>
                     </div>
-                    <div className="scroll overflow-x-auto  max-h-[100%] w-full rounded-tl-2xl scroll-smooth">
-                        <table className="table-auto w-max bg-white border border-gray-200 rounded-tl-2xl">
+                    <div className="scroll overflow-x-auto  max-h-[100%] w-full rounded-t-2xl scroll-smooth">
+                        <table className="table-auto w-full bg-white border border-gray-200 rounded-tl-2xl">
                             <thead>
                             <tr className="min-h-[4rem]">
                                 <th className="px-6 py-4 border-b border-r whitespace-nowrap bg-(--oxley-100)">ID</th>
@@ -169,7 +169,7 @@ export default function UsuariosPage() {
                                 <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-100)">Grasas Saturadas</th>
                                 <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-200)">Proteína</th>
                                 <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-100)">Alérgenos</th>
-                                <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-100) cursor-help" title="El campo en la base de datos se actualiza automáticamente cada vez que se marca o desmarca el input, garantizando la persistencia inmediata del cambio.">
+                                <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-200) cursor-help" title="El campo en la base de datos se actualiza automáticamente cada vez que se marca o desmarca el input, garantizando la persistencia inmediata del cambio.">
                                     Visibilidad
                                 </th>
                                 <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-100)">Editar</th>
@@ -209,7 +209,7 @@ export default function UsuariosPage() {
                                             onChange={(e) => handleVisibilityChange(plato.plato_id, e.target.checked)}
                                         />
                                     </td>
-                                    <td className="px-6 py-4 border-b whitespace-nowrap text-center bg-(--oxley-200)">
+                                    <td className="px-6 py-4 border-b whitespace-nowrap text-center bg-(--oxley-100)">
                                         <button className="px-4 py-2 bg-(--oxley-500) text-white rounded-lg hover:bg-(--primary-dark) hover:scale-105 active:scale-95 transition-transform" onClick={() => handleEditClick(plato)}>
                                             Editar
                                         </button>

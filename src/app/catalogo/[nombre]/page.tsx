@@ -41,7 +41,7 @@ const PlatoDetalle = ({ plato }: { plato: Plato }) => {
                         initial={{ y: -100, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ duration: 0.8 }}
-                        onClick={() => router.push('/catalogo/productos')}
+                        onClick={() => router.back()}
                     >
                         <ArrowLeftCircleIcon className="h-12 w-12 text-(--verde-azulado) bg-white p-0 rounded-full hover:scale-105 active:scale-95 transform" />
                     </motion.button>
