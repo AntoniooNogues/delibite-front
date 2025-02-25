@@ -14,12 +14,14 @@ import LoadingComponent from "@/components/Loading-Component";
 import {useRouter} from "next/navigation";
 import CantidadControl from "@/components/BotonAddPlato-Component";
 import Cookies from "js-cookie";
+import {useTokenExpirado} from "@/hooks/useTokenExpirado";
 
 export default function Packs() {
     const [notificacion, setNotificacion] = useState<Notificaciones>();
     const [loading, setLoading] = useState(true);
     const [packs, setPacks] = useState<Packs[]>([]);
     const [cantidad, setCantidad] = useState<{ [key: number]: number }>({});
+    const notificacionToken = useTokenExpirado();
 
     const handleCantidadChange = (id: number, nombre: string, precio: number, value: number) => {
         setCantidad(prev => {
@@ -159,6 +161,12 @@ export default function Packs() {
             {notificacion && (
                 <NotificacionComponent
                     Notificaciones={notificacion}
+                    onClose={() => setNotificacion(undefined)}
+                />
+            )}
+            {notificacionToken && (
+                <NotificacionComponent
+                    Notificaciones={notificacionToken}
                     onClose={() => setNotificacion(undefined)}
                 />
             )}
