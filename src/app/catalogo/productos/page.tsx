@@ -13,14 +13,12 @@ import {Box, Slider} from "@mui/material";
 import { ArchiveBoxXMarkIcon } from "@heroicons/react/20/solid";
 import { debounce } from 'lodash';
 import axiosClient from "@/lib/axiosClient";
-import axios from "axios";
 import NotificacionComponent from "@/components/Notificacion-Component";
-import { Notificaciones } from '@/interfaces/Notificaciones';
+import {isNotificaciones, Notificaciones} from '@/interfaces/Notificaciones';
 import Carrito from "@/components/Carrito";
 import Cookies from "js-cookie";
 import Footer from "@/components/Footer";
-
-
+import { useTokenExpirado } from "@/hooks/useTokenExpirado";
 
 const CategoriaLista = ({ titulo, items, subheader }: { titulo: string; items: Catalogo[]; subheader: string }) => {
     const [cantidad, setCantidad] = useState<{ [key: number]: number }>({});
@@ -260,12 +258,13 @@ const Filtros = ({ setSelectedGoal, priceMax, priceMin, setPriceRange }: {
 
 export default function Catalogo() {
     const [catalogo, setCatalogo] = useState<Catalogo[]>([]);
+
     const [loading, setLoading] = useState(true);
     const categoryRef = useRef<HTMLDivElement>(null);
     const [selectedGoal, setSelectedGoal] = useState<string | null>(null);
     const [priceRange, setPriceRange] = useState<number[]>([0, 100]);
     const [notificacion, setNotificacion] = useState<Notificaciones>();
-
+    const notificacionToken = useTokenExpirado();
     useEffect(() => {
         fetchData();
     }, []);
@@ -275,10 +274,8 @@ export default function Catalogo() {
             const response = await axiosClient.get<Catalogo[]>(`/catalogo/cargar`);
             setCatalogo(response.data);
         } catch (error) {
-            if (axios.isAxiosError(error) && error.response) {
-                setNotificacion({ titulo: error.response.data.titulo, mensaje: error.response.data.mensaje, code: error.response.data.code, tipo: error.response.data.tipo });
-            } else {
-                setNotificacion({ titulo: 'Error', mensaje: 'Error al crear el plato: Error desconocido', code: 500, tipo: 'error' });
+            if (isNotificaciones(error)) {
+                setNotificacion(error);
             }
         } finally {
             setLoading(false);
@@ -298,7 +295,6 @@ export default function Catalogo() {
         return isPriceInRange && isGoalMatched;
     };
 
-    console.log(catalogo);
 
 
 
@@ -318,6 +314,8 @@ export default function Catalogo() {
     const precios = useMemo(() => catalogo.map(item => item.precio), [catalogo]);
     const precioMaximo = useMemo(() => (Math.ceil(Math.max(...precios))), [precios]);
     const precioMinimo = useMemo(() => (Math.floor(Math.min(...precios))), [precios]);
+
+
 
     return (
         <main>
@@ -344,6 +342,13 @@ export default function Catalogo() {
                     onClose={() => setNotificacion(undefined)}
                 />
             )}
+            {notificacionToken && (
+                <NotificacionComponent
+                    Notificaciones={notificacionToken}
+                    onClose={() => setNotificacion(undefined)}
+                />
+            )}
+
             <Carrito></Carrito>
         </main>
     );

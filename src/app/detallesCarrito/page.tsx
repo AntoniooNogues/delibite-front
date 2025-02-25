@@ -9,10 +9,12 @@ import {Trash} from "lucide-react";
 import { Dialog, DialogTitle, DialogActions, DialogContent, DialogContentText, Button } from "@mui/material";
 import Footer from "@/components/Footer";
 import FormularioPago from "@/components/FormularioPago";
+import { useTokenExpirado } from "@/hooks/useTokenExpirado";
 
 
 export default function DetallesCarrito() {
     const [carrito, setCarrito] = useState<{ [key: number]: { nombre: string, precio: number, cantidad: number } }>({});
+    const notificacionToken = useTokenExpirado();
 
     useEffect(() => {
         const updateCarrito = () => {
@@ -265,6 +267,13 @@ export default function DetallesCarrito() {
             </motion.div>
             {mostrarFormularioPago && <FormularioPago setMostrarFormularioPago={setMostrarFormularioPago} totalConEnvio={totalConEnvio}  />}
             <Footer></Footer>
+
+            {notificacionToken && (
+                <NotificacionComponent
+                    Notificaciones={notificacionToken}
+                    onClose={() => setNotificacion(undefined)}
+                />
+            )}
         </div>
     );
 }

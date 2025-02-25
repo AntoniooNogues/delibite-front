@@ -7,12 +7,15 @@ import {ArrowLeft} from "lucide-react";
 import LoadingComponent from "@/components/Loading-Component";
 import {Notificaciones} from "@/interfaces/Notificaciones";
 import NotificacionComponent from "@/components/Notificacion-Component";
+import {useTokenExpirado} from "@/hooks/useTokenExpirado";
 
 const Facturacion: React.FC = () => {
     const [direccion, setDireccion] = useState('');
     const [codigoPostal, setCodigoPostal] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [notificacion, setNotificacion] = useState<Notificaciones>();
+    const notificacionToken = useTokenExpirado();
+
 
     useEffect(() => {
         const fetchAddress = async () => {
@@ -117,6 +120,13 @@ const Facturacion: React.FC = () => {
             {notificacion && (
                 <NotificacionComponent
                     Notificaciones={notificacion}
+                    onClose={() => setNotificacion(undefined)}
+                />
+            )}
+
+            {notificacionToken && (
+                <NotificacionComponent
+                    Notificaciones={notificacionToken}
                     onClose={() => setNotificacion(undefined)}
                 />
             )}
