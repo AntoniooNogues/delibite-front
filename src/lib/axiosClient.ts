@@ -23,5 +23,16 @@ axiosClient.interceptors.request.use(
     (error: AxiosError) => Promise.reject(error)
 );
 
+// Interceptor de respuestas
+axiosClient.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response?.status === 401) {
+            Cookies.remove("token");
+            window.dispatchEvent(new CustomEvent("tokenExpirado", { detail: { titulo: "Sesión expirada", mensaje: "Tu sesión ha expirado. Por favor, inicia sesión nuevamente.", code: 401, tipo: "error" } }));
+        }
+        return Promise.reject(error);
+    }
+);
 
 export default axiosClient;
