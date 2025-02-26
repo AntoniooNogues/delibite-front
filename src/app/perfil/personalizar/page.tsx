@@ -4,6 +4,10 @@ import Alergenos from "@/components/Alergenos";
 import React, { useState, useEffect } from "react";
 import axiosClient from "@/lib/axiosClient";
 import { ArrowLeft, X } from "lucide-react";
+import Loading from "@/components/Loading-Component";
+import {Notificaciones} from "@/interfaces/Notificaciones";
+import NotificacionComponent from "@/components/Notificacion-Component";
+import axios from "axios";
 
 // Mapeo de IDs a nombres de alérgenos
 const alergenosMap: Record<string, string> = {
@@ -26,29 +30,50 @@ const alergenosMap: Record<string, string> = {
 export default function Personalizar() {
     const [selectedAlergenos, setSelectedAlergenos] = useState<string[]>([]);
     const [initialAlergenos, setInitialAlergenos] = useState<string[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [notificacion, setNotificacion] = useState<Notificaciones>();
+
 
     useEffect(() => {
         axiosClient.get("/alergenos/getByUser")
             .then(response => {
-                // Extrae el ID del nombre del archivo y lo convierte en nombre de alérgeno
                 const alergenos = response.data.map((alergeno: { id: number }) => `${alergeno.id}.svg`);
                 setSelectedAlergenos(alergenos);
                 setInitialAlergenos(alergenos);
             })
             .catch(error => {
                 console.error("Error al obtener los alérgenos:", error);
+            })
+            .finally(() => {
+            setIsLoading(false);
             });
     }, []);
 
-    const handleSubmit = () => {
+    if (isLoading) {
+        return <div className="min-h-screen flex items-center justify-center"><Loading /></div>;
+    }
+    const handleSubmit = async () => {
         if (JSON.stringify(selectedAlergenos) !== JSON.stringify(initialAlergenos)) {
-            axiosClient.post("/api/alergenos", { alergenos: selectedAlergenos })
-                .then(response => {
-                    console.log("Datos actualizados correctamente:", response.data);
-                })
-                .catch(error => {
-                    console.error("Error al actualizar los datos:", error);
-                });
+            try {
+                const response = await axiosClient.put("/alergenos/editar", { alergenos: selectedAlergenos });
+                if (response) {
+                    setNotificacion({
+                        titulo: "Alergenos modificados con éxito.",
+                        mensaje: "Se ha modificado con éxito",
+                        code: 201,
+                        tipo: "access"
+                    });
+                }
+            } catch (error: unknown) {
+                if (axios.isAxiosError(error) && error.response) {
+                    setNotificacion({
+                        titulo: error.response.data.titulo,
+                        mensaje: error.response.data.mensaje,
+                        code: error.response.data.code,
+                        tipo: error.response.data.tipo
+                    });
+                }
+            }
         }
     };
 
@@ -100,6 +125,12 @@ export default function Personalizar() {
                     </button>
                 </div>
             </div>
+            {notificacion && (
+                <NotificacionComponent
+                    Notificaciones={notificacion}
+                    onClose={() => setNotificacion(undefined)}
+                />
+            )}
         </PerfilLayout>
     );
 }
