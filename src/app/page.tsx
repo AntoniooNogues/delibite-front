@@ -126,7 +126,7 @@ export default function Home() {
         };
     }, []);
 
-    let router = useRouter();
+    const router = useRouter();
     return (
 
         <div className="flex flex-col ">

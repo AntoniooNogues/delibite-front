@@ -1,25 +1,16 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import { useRouter } from "next/navigation";
 import axiosClient from "@/lib/axiosClient";
 import NotificacionComponent from "@/components/Notificacion-Component";
 import { Notificaciones } from '@/interfaces/Notificaciones';
 import axios from "axios";
-import NavbarReducido from "@/components/NavbarReducido";
-import type { VerificarCuenta } from "@/interfaces/VerificarCuenta";
-import {ArrowLeftIcon, BackwardIcon} from "@heroicons/react/20/solid";
-import Cookies from "js-cookie";
-import ErrorPage from "@/pages/[_error]";
+import {ArrowLeftIcon} from "@heroicons/react/20/solid";
 import Navbar from "@/components/Navbar";
 
 export default function VerificarCuenta() {
     const router = useRouter();
-    const [propiedadesCuenta, setPropiedades] = useState<VerificarCuenta>();
     const [notificacion, setNotificacion] = useState<Notificaciones | undefined>(undefined);
-    const token = Cookies.get("token");
-
-
-    const [errorInput, setErrorInput] = useState(false);
     const [step, setStep] = useState(1);
     const [email, setEmail] = useState("");
     const [code, setCode] = useState("");
@@ -28,7 +19,6 @@ export default function VerificarCuenta() {
         const gmailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
         if (gmailRegex.test(email)) {
-            setErrorInput(false);
             try {
                 console.log(email);
                 await axiosClient.post("/enviar-email/verificacion", email);
@@ -44,7 +34,6 @@ export default function VerificarCuenta() {
                 }
             }
         } else {
-            setErrorInput(true);
             setNotificacion({
                 titulo: 'Error',
                 mensaje: 'Por favor, introduce un correo con formato válido',

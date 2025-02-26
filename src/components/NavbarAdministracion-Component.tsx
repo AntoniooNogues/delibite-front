@@ -4,6 +4,7 @@ import {useRouter, usePathname} from 'next/navigation';
 import {jwtDecode} from 'jwt-decode';
 import Cookies from 'js-cookie';
 import {motion} from 'framer-motion';
+import Link from 'next/link';
 
 interface SideBarAdminProps {
     className?: string
@@ -36,46 +37,46 @@ export default function SideBarAdmin({className}: SideBarAdminProps) {
         <main className={`flex items-center w-fit min-h-screen p-10  ${className}`}>
             <div
                 className="flex flex-col items-start w-40 h-full overflow-hidden text-(--oxley-200) bg-(--oxley-900) rounded-2xl">
-                <a className="flex items-center w-full px-3 mt-3" href="/">
+                <Link className="flex items-center w-full px-3 mt-3" href="/">
                     <span className="ml-2 text-2xl font-bold text-(--verde-azulado)"
                           style={{fontFamily: "Limelight, sans-serif"}}>delibite</span>
-                </a>
+                </Link>
                 <div className="w-full px-2">
                     <div className="flex flex-col items-center w-full mt-3 border-t border-[--oxley-700] gap-2">
-                        <a className={`flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-[--oxley-800] hover:text-[--oxley-50] ${pathname === '/administracion' ? 'bg-[--primary-dark]' : ''}`}
+                        <Link className={`flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-[--oxley-800] hover:text-[--oxley-50] ${pathname === '/administracion' ? 'bg-[--primary-dark]' : ''}`}
                            href="/administracion">
                             <span className="text-lg font-medium">Inicio</span>
-                        </a>
-                        <a className={`flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-[--oxley-800] hover:text-[--oxley-50] ${pathname === '/administracion/usuarios' ? 'bg-[--primary-dark]' : ''}`}
+                        </Link>
+                        <Link className={`flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-[--oxley-800] hover:text-[--oxley-50] ${pathname === '/administracion/usuarios' ? 'bg-[--primary-dark]' : ''}`}
                            href="/administracion/usuarios">
                             <span className="text-lg font-medium">Usuarios</span>
-                        </a>
-                        <a className={`flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-[--oxley-800] hover:text-[--oxley-50] ${pathname === '/administracion/platos' ? 'bg-[--primary-dark]' : ''}`}
+                        </Link>
+                        <Link className={`flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-[--oxley-800] hover:text-[--oxley-50] ${pathname === '/administracion/platos' ? 'bg-[--primary-dark]' : ''}`}
                            href="/administracion/platos">
                             <span className="text-lg font-medium">Platos</span>
-                        </a>
-                        <a className={`flex items-center w-full h-12 px-3 mt-2 text-[--oxley-50] rounded ${pathname === '/administracion/pedidos' ? 'bg-[--primary-dark]' : ''}`}
-                           href="/administracion/pedidos">
+                        </Link>
+                        <Link className={`flex items-center w-full h-12 px-3 mt-2 text-[--oxley-50] rounded ${pathname === '/administracion/pedidos' ? 'bg-[--primary-dark]' : ''}`}
+                           href="/administracion/">
                             <span className="text-lg font-medium">Pedidos</span>
-                        </a>
+                        </Link>
                     </div>
                     <div className="flex flex-col items-center w-full mt-2 border-t border-[--oxley-700]">
-                        <a className={`flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-[--oxley-800] hover:text-[--oxley-50] ${pathname === '/administracion/packs' ? 'bg-[--primary-dark]' : ''}`}
+                        <Link className={`flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-[--oxley-800] hover:text-[--oxley-50] ${pathname === '/administracion/packs' ? 'bg-[--primary-dark]' : ''}`}
                            href="/administracion/packs">
                             <span className="text-lg font-medium">Packs</span>
-                        </a>
-                        <a className={`flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-[--oxley-800] hover:text-[--oxley-50] ${pathname === '/administracion/valoraciones' ? 'bg-[--primary-dark]' : ''}`}
-                           href="/administracion/valoraciones">
+                        </Link>
+                        <Link className={`flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-[--oxley-800] hover:text-[--oxley-50] ${pathname === '/administracion/valoraciones' ? 'bg-[--primary-dark]' : ''}`}
+                           href="/administracion/">
                             <span className="text-lg font-medium">Valoraciones</span>
-                        </a>
-                        <a className={`flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-[--oxley-800] hover:text-[--oxley-50] ${pathname === '/administracion/suscripciones' ? 'bg-[--primary-dark]' : ''}`}
-                           href="/administracion/suscripciones">
+                        </Link>
+                        <Link className={`flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-[--oxley-800] hover:text-[--oxley-50] ${pathname === '/administracion/suscripciones' ? 'bg-[--primary-dark]' : ''}`}
+                           href="/administracion/">
                             <span className="text-lg font-medium">Suscripciones</span>
-                        </a>
+                        </Link>
                     </div>
                 </div>
                 <div className="relative w-full mt-auto">
-                    <a
+                    <button
                         className="flex items-center w-full h-16 mt-auto bg-(--oxley-800) hover:bg-(--oxley-700) hover:text-(--oxley-50) px-4"
                         onClick={() => setShowLogout(!showLogout)}
                     >
@@ -83,7 +84,7 @@ export default function SideBarAdmin({className}: SideBarAdminProps) {
                             src={usuario?.roles.includes('ROLE_ADMINISTRADOR') ? "/iconos/icon-administrador.png" : "/iconos/icon-supervisor.png"}
                             width={24} height={24} alt="Icono del usuario"/>
                         <span className="ml-2 text-md font-medium">{usuario?.username} <span className="mt-2 text-sm font-medium">{usuario?.roles.map(role => role.replace('ROLE_', '').charAt(0) + role.replace('ROLE_', '').slice(1).toLowerCase()).join(', ')}</span></span>
-                    </a>
+                    </button>
                     {showLogout && (
                         <motion.div
                             initial={{opacity: 0, y: -10}}

@@ -1,9 +1,6 @@
 "use client";
 import "../app/globals.css";
 import {
-    Disclosure,
-    DisclosureButton,
-    DisclosurePanel,
     PopoverButton,
     Popover, PopoverPanel
 } from "@headlessui/react";
@@ -56,9 +53,6 @@ export default function Navbar() {
         }
     }, []);
 
-    const controlMenu = () => {
-        setMenuEstado(!estadoMenu);
-    };
 
     const pathname = usePathname();
 

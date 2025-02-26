@@ -10,11 +10,14 @@ import { Dialog, DialogTitle, DialogActions, DialogContent, DialogContentText, B
 import Footer from "@/components/Footer";
 import FormularioPago from "@/components/FormularioPago";
 import { useTokenExpirado } from "@/hooks/useTokenExpirado";
+import NotificacionComponent from "@/components/Notificacion-Component";
+import {Notificaciones} from "@/interfaces/Notificaciones";
 
 
 export default function DetallesCarrito() {
     const [carrito, setCarrito] = useState<{ [key: number]: { nombre: string, precio: number, cantidad: number } }>({});
-    const notificacionToken = useTokenExpirado();
+    const [notificacion, setNotificacion] = useState<Notificaciones | null>(null);
+    setNotificacion(useTokenExpirado());
 
     useEffect(() => {
         const updateCarrito = () => {
@@ -268,10 +271,10 @@ export default function DetallesCarrito() {
             {mostrarFormularioPago && <FormularioPago setMostrarFormularioPago={setMostrarFormularioPago} totalConEnvio={totalConEnvio}  />}
             <Footer></Footer>
 
-            {notificacionToken && (
+            {notificacion && (
                 <NotificacionComponent
-                    Notificaciones={notificacionToken}
-                    onClose={() => setNotificacion(undefined)}
+                    Notificaciones={notificacion}
+                    onClose={() => setNotificacion(null)}
                 />
             )}
         </div>

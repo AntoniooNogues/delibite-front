@@ -260,9 +260,7 @@ const Filtros = ({ setSelectedGoal, priceMax, priceMin, setPriceRange }: {
 
 export default function Catalogo() {
     const [catalogo, setCatalogo] = useState<Catalogo[]>([]);
-
     const [loading, setLoading] = useState(true);
-    const categoryRef = useRef<HTMLDivElement>(null);
     const [selectedGoal, setSelectedGoal] = useState<string | null>(null);
     const [priceRange, setPriceRange] = useState<number[]>([0, 100]);
     const [notificacion, setNotificacion] = useState<Notificaciones>();

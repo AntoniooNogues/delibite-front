@@ -187,9 +187,9 @@ export default function PlatoDetalleComponent() {
     useEffect(() => {
         const fetchPlato = async () => {
             try {
-                let id = localStorage.getItem('platoId');
+                const id = localStorage.getItem('platoId');
                 const response = await axiosClient.get(`/plato/${id}/`);
-                let data = response.data;
+                const data = response.data;
 
                 setPlato(data);
             } catch (error) {

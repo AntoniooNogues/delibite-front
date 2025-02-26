@@ -1,6 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
 import Image from "next/image";
-import { Star } from "lucide-react";
 import { motion, useAnimation } from "framer-motion";
 import { StarIcon } from "@heroicons/react/20/solid";
 
@@ -30,9 +29,6 @@ const TestimonialSlider = () => {
     useEffect(() => {
         if (carouselRef.current) {
             const totalWidth = carouselRef.current.scrollWidth;
-            const visibleWidth = carouselRef.current.offsetWidth;
-
-
             setContainerWidth(totalWidth / 2);
         }
     }, []);

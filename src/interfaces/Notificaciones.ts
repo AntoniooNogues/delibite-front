@@ -5,6 +5,6 @@ export interface Notificaciones{
     tipo?: string;
 }
 
-export function isNotificaciones(error: any): error is Notificaciones {
+export function isNotificaciones(error: unknown): error is Notificaciones {
     return (error as Notificaciones).titulo !== undefined;
 }

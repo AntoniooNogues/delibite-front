@@ -1,4 +1,3 @@
-import axiosClient from "@/lib/axiosClient";
 
 interface UserFormData {
     username: string;
