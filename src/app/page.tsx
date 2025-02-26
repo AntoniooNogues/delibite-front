@@ -13,6 +13,7 @@ import axios from "axios";
 import { Plato } from "@/interfaces/home";
 import NotificacionComponent from "@/components/Notificacion-Component";
 import {Notificaciones} from "@/interfaces/Notificaciones";
+import { useTokenExpirado } from "@/hooks/useTokenExpirado";
 
 
 
@@ -91,7 +92,7 @@ export default function Home() {
     const [showNavbar, setShowNavbar] = useState(true);
     const [platos, setPlatos] = useState<Plato[]>([]);
     const [notificacion, setNotificacion] = useState<Notificaciones>();
-
+    const notificacionToken = useTokenExpirado();
 
     useEffect(() => {
         fetchData();
@@ -298,6 +299,12 @@ export default function Home() {
             {notificacion && (
                 <NotificacionComponent
                     Notificaciones={notificacion}
+                    onClose={() => setNotificacion(undefined)}
+                />
+            )}
+            {notificacionToken && (
+                <NotificacionComponent
+                    Notificaciones={notificacionToken}
                     onClose={() => setNotificacion(undefined)}
                 />
             )}
