@@ -23,6 +23,7 @@ export const useAuth = () => {
                 title: "Acceso denegado",
                 message: "Debes iniciar sesión para acceder.",
                 url: "/login",
+                color: 1,
             });
             router.push("/login");
             return;
@@ -38,6 +39,7 @@ export const useAuth = () => {
                     title: "Acceso denegado",
                     message: "No tienes permisos para acceder a esta página.",
                     url: "/login",
+                    color: 1,
                 });
                 router.push("/login");
             }
@@ -48,6 +50,7 @@ export const useAuth = () => {
                 title: "Acceso denegado",
                 message: "Debes iniciar sesión para acceder.",
                 url: "/login",
+                color: 1,
             });
             router.push("/login");
         }

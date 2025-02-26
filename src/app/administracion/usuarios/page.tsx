@@ -32,7 +32,8 @@ export default function UsuariosPage() {
                         errorCode: error.response.data.code || "ERROR",
                         title: error.response.data.titulo || error.cause,
                         message: error.response.data.mensaje || error.message,
-                        url: "/administracion/login"
+                        url: "/administracion/login",
+                        color: 2
                     });
                 } else {
                     console.error('Error fetching user data:', error);
@@ -74,11 +75,11 @@ export default function UsuariosPage() {
         setCurrentPage(newPage);
     };
     if (valueError) {
-        return <ErrorPage errorCode={valueError.errorCode} title={valueError.title} message={valueError.message} url={valueError.url}/>;
+        return <ErrorPage errorCode={valueError.errorCode} title={valueError.title} message={valueError.message} url={valueError.url} color={2}/>;
     }
 
     if (error) {
-        return <ErrorPage errorCode={error.errorCode} title={error.title} message={error.message} url={error.url}/>;
+        return <ErrorPage errorCode={error.errorCode} title={error.title} message={error.message} url={error.url} color={2}/>;
     }
 
     return (

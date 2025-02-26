@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
         return [
             {
                 source: '/api/:path*',
-                destination: 'http://127.0.0.1:8000/api/:path*' // Proxy to Backend
+                destination: 'https://delibite-back.onrender.com/api/:path*' // Proxy to Backend
             }
         ];
     }

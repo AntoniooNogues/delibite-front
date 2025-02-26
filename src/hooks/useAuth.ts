@@ -21,7 +21,8 @@ export const useAuth = () => {
                             errorCode: "403",
                             title: "Acceso denegado",
                             message: "No tienes permisos para acceder a esta página.",
-                            url: "/administracion/login"
+                            url: "/administracion/login",
+                            color: 2
                         })
                     }
                     setDecodedToken(tokenDescodificado);
@@ -31,7 +32,8 @@ export const useAuth = () => {
                         errorCode: "401",
                         title: "Acceso denegado",
                         message: "No tienes permisos para acceder a esta página.",
-                        url: "/administracion/login"
+                        url: "/administracion/login",
+                        color: 2
                     });
                 }
             }else{
@@ -39,7 +41,8 @@ export const useAuth = () => {
                     errorCode: "401",
                     title: "Acceso denegado",
                     message: "No tienes permisos para acceder a esta página.",
-                    url: "/administracion/login"
+                    url: "/administracion/login",
+                    color: 2
                 });
             }
         }
