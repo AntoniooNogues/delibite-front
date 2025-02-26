@@ -27,8 +27,6 @@ export default function Navbar() {
     const [usuario, setUser] = useState<{ username: string, roles: string[] } | null>(null);
     const [token, setToken] = useState<string | null>(null);
 
-    const [estadoMenu, setMenuEstado] = useState(false);
-
     const router = useRouter();
 
     function cerrarSesion(){

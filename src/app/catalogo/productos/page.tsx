@@ -132,7 +132,7 @@ const CategoriaLista = ({ titulo, items, subheader }: { titulo: string; items: C
                                 <CantidadControl
                                     itemId={item.plato_id}
                                     cantidadInicial={cantidad[item.plato_id] || 0}
-                                    handleCantidadChange={(id, value) => handleCantidadChange(item.plato_id, item.nombre, item.precio, value)}
+                                    handleCantidadChange={(value) => handleCantidadChange(item.plato_id, item.nombre, item.precio, value)}
                                     width={35}
                                     height={35}
                                 />
@@ -301,11 +301,11 @@ export default function Catalogo() {
 
     const principales = useMemo((): Catalogo[] => {
         return Object.values(catalogo).filter((item: Catalogo) => item.tipo === "PRINCIPAL" && filterByGoalAndPrice(item));
-    }, [catalogo, selectedGoal, priceRange]);
+    }, [catalogo, selectedGoal, priceRange, filterByGoalAndPrice]);
 
     const postres = useMemo((): Catalogo[] => {
         return Object.values(catalogo).filter((item: Catalogo) => item.tipo === "POSTRE" && filterByGoalAndPrice(item));
-    }, [catalogo, selectedGoal, priceRange]);
+    }, [catalogo, selectedGoal, priceRange, filterByGoalAndPrice]);
 
     const precios = useMemo(() => catalogo.map(item => item.precio), [catalogo]);
     const precioMaximo = useMemo(() => (Math.ceil(Math.max(...precios))), [precios]);

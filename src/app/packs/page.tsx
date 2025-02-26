@@ -1,6 +1,4 @@
 'use client';
-
-
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import NotificacionComponent from "@/components/Notificacion-Component";
@@ -15,6 +13,7 @@ import {useRouter} from "next/navigation";
 import CantidadControl from "@/components/BotonAddPlato-Component";
 import Cookies from "js-cookie";
 import {useTokenExpirado} from "@/hooks/useTokenExpirado";
+import Image from "next/image";
 
 export default function Packs() {
     const [notificacion, setNotificacion] = useState<Notificaciones>();
@@ -106,10 +105,12 @@ export default function Packs() {
                                     {pack.Plato.length > 3 ? (
                                         <div className="grid grid-cols-3 gap-1">
                                             {pack.Plato.slice(0, 3).map((plato, index) => (
-                                                <img
+                                                <Image
                                                     key={index}
                                                     src={plato.url}
                                                     alt={plato.nombre}
+                                                    width={256}
+                                                    height={256}
                                                     className="w-full h-64 object-cover rounded-t-lg"
                                                 />
                                             ))}
@@ -117,10 +118,12 @@ export default function Packs() {
                                     ) : (
                                         <div className="grid grid-cols-2 gap-1">
                                             {pack.Plato.slice(0, 2).map((plato, index) => (
-                                                <img
+                                                <Image
                                                     key={index}
                                                     src={plato.url}
                                                     alt={plato.nombre}
+                                                    width={256}
+                                                    height={256}
                                                     className="w-full h-64 object-cover rounded-t-lg"
                                                 />
                                             ))}
@@ -136,7 +139,7 @@ export default function Packs() {
                                         <CantidadControl
                                             itemId={pack.id}
                                             cantidadInicial={cantidad[pack.id] || 0}
-                                            handleCantidadChange={(id, value) => handleCantidadChange(pack.id, pack.nombre, pack.precio, value)}
+                                            handleCantidadChange={(value) => handleCantidadChange(pack.id, pack.nombre, pack.precio, value)}
                                             width={35}
                                             height={35}
                                         />
