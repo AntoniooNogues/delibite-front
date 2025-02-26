@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import '/src/app/administracion/administracion.css';
-import { ErrorPropsInterface } from "@/pages/ErrorPropsInterface";
+import { ErrorPropsInterface } from "@/interfaces/ErrorPropsInterface";
 
 const ErrorPage: React.FC<ErrorPropsInterface> = ({ errorCode, title, message, url, color }) => {
     const router = useRouter();

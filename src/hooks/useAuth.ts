@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {jwtDecode} from 'jwt-decode';
 import Cookies from 'js-cookie';
-import { ErrorPropsInterface } from '@/pages/ErrorPropsInterface';
+import { ErrorPropsInterface } from '@/interfaces/ErrorPropsInterface';
 
 export const useAuth = () => {
     const [token, setDecodedToken] = useState<{ roles: string[], username: string } | null>(null);

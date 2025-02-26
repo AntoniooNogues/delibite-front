@@ -7,7 +7,7 @@ import axiosClient from '@/lib/axiosClient';
 import axios from 'axios';
 import ErrorPage from "@/pages/[_error]";
 import {ArrowPathIcon, ArrowsUpDownIcon, PlusCircleIcon} from "@heroicons/react/20/solid";
-import { ErrorPropsInterface } from "@/pages/ErrorPropsInterface";
+import { ErrorPropsInterface } from "@/interfaces/ErrorPropsInterface";
 import { useAuth } from "@/hooks/useAuth";
 import FormularioPlato from "@/components/FormularioPlato-Component";
 import NotificacionComponent from "@/components/Notificacion-Component";
