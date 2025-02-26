@@ -3,6 +3,7 @@ export interface ErrorPropsInterface{
     title: string;
     message: string;
     url: string;
+    color: number;
 }
 
 
