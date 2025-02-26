@@ -24,13 +24,16 @@ const Alergenos: React.FC<AlergenosProps> = ({ selectedAlergenos, setSelectedAle
             {alergenos.map((alergeno, index) => (
                 <div
                     key={index}
-                    className={`p-2 rounded-full flex items-center justify-center cursor-pointer`}
-                    style={{
-                        filter: selectedAlergenos.includes(alergeno) ? 'drop-shadow(0 6px 6px var(--verde-azulado))' : ''
-                    }}
+                    className={`relative p-2 rounded-full flex items-center justify-center cursor-pointer transition-all 
+                        ${selectedAlergenos.includes(alergeno) ? 'drop-shadow-[0_10px_5px_var(--verde-azulado)]' : ''}`}
                     onClick={() => toggleAlergeno(alergeno)}
                 >
                     <Image src={`/alergenos/${alergeno}`} alt={alergeno.replace('.svg', '')} width={50} height={20} />
+                    {selectedAlergenos.includes(alergeno) && (
+                        <span className="absolute top-0 right-6 bg-green-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                            ✔
+                        </span>
+                    )}
                 </div>
             ))}
         </div>

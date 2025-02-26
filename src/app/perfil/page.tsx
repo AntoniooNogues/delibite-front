@@ -6,10 +6,9 @@ import {
     Apple,
     ArrowRight,
     Banana, Brain,
-    CreditCard,
+    ClipboardPen,
     Croissant,
     MapPinHouse,
-    PiggyBank,
     SquareUserRound,
     Wheat
 } from "lucide-react";
@@ -116,23 +115,13 @@ export default function Perfil() {
                                         </Link>
                                     </div>
                                     <div className="mt-8 space-y-4">
-                                        <h3 className="text-xl font-thin">Métodos de pago</h3>
-                                        <Link href={"/perfil/tarjeta"}>
+                                        <h3 className="text-xl font-thin">Tus pedidos</h3>
+                                        <Link href={"/perfil/facturas"}>
                                             <div
                                                 className="flex items-center justify-between bg-white px-6 py-4 my-4 rounded-xl transition hover:bg-gray-100 hover:scale-105 active:scale-95">
                                                 <div className="flex items-center space-x-4">
-                                                    <CreditCard className="text-(--oxley-500)"/>
-                                                    <p>Añade tu tarjeta</p>
-                                                </div>
-                                                <ArrowRight/>
-                                            </div>
-                                        </Link>
-                                        <Link href={"/perfil/monedero"}>
-                                            <div
-                                                className="flex items-center justify-between bg-white my-4 px-6 py-4 rounded-xl transition hover:bg-gray-100 hover:scale-105 active:scale-95">
-                                                <div className="flex items-center space-x-4">
-                                                    <PiggyBank className="text-(--oxley-500)"/>
-                                                    <p>Añade dinero a tu monedero</p>
+                                                    <ClipboardPen  className="text-(--oxley-500)"/>
+                                                    <p>Consultas tus facturas</p>
                                                 </div>
                                                 <ArrowRight/>
                                             </div>
