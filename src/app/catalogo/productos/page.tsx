@@ -70,7 +70,9 @@ const CategoriaLista = ({ titulo, items, subheader }: { titulo: string; items: C
 
             // Dispatch custom event to notify other components
             const event = new CustomEvent("actualizacionCarrito", { detail: carritoObj });
-            window.dispatchEvent(event);
+            setTimeout(() => {
+                window.dispatchEvent(event)
+            }, 5);
 
             return newCantidad;
         });
@@ -265,6 +267,7 @@ export default function Catalogo() {
     const [priceRange, setPriceRange] = useState<number[]>([0, 100]);
     const [notificacion, setNotificacion] = useState<Notificaciones>();
     const notificacionToken = useTokenExpirado();
+
     useEffect(() => {
         fetchData();
     }, []);
@@ -306,11 +309,6 @@ export default function Catalogo() {
         return Object.values(catalogo).filter((item: Catalogo) => item.tipo === "POSTRE" && filterByGoalAndPrice(item));
     }, [catalogo, selectedGoal, priceRange]);
 
-    const scrollToCategory = () => {
-        categoryRef.current?.scrollIntoView({ behavior: 'smooth' });
-    };
-
-    console.log("Estado de catalogo: ", catalogo);
     const precios = useMemo(() => catalogo.map(item => item.precio), [catalogo]);
     const precioMaximo = useMemo(() => (Math.ceil(Math.max(...precios))), [precios]);
     const precioMinimo = useMemo(() => (Math.floor(Math.min(...precios))), [precios]);
