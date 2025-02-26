@@ -84,7 +84,7 @@ export default function LoginAdministracion(): JSX.Element {
         <div className="min-h-screen flex items-center justify-center p-4 bg-pattern">
             <motion.div initial={{ x: -50, opacity: 0 }} animate={{ x: 0, opacity: 1 }}>
                 <ErrorNotification mensaje={notification} cerrar={() => setNotification(null)} />
-                <form className="flex flex-col items-center gap-8 bg-black/80 text-white rounded-xl p-8 shadow-lg w-96" onSubmit={handleSubmit}>
+                <form className="administracion flex flex-col items-center gap-8 bg-black/80 text-white rounded-xl p-8 shadow-lg w-96" onSubmit={handleSubmit}>
                     <div>
                         <span className="text-4xl text-(--oxley-50) cursor-pointer" style={{ fontFamily: "Limelight, sans-serif" }} onClick={() => router.push('/')}>
                             delibite
