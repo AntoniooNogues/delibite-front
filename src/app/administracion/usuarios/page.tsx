@@ -114,8 +114,8 @@ export default function UsuariosPage() {
                             </button>
                         </div>
                     </div>
-                    <div className="scroll overflow-x-auto max-h-[100%] w-full rounded-tl-2xl scroll-smooth">
-                        <table className="table-auto w-max bg-white border border-gray-200 rounded-tl-2xl">
+                    <div className="scroll overflow-x-auto max-h-[100%] w-full rounded-t-2xl scroll-smooth">
+                        <table className="table-auto w-full bg-white border border-gray-200 rounded-tl-2xl">
                             <thead>
                             <tr>
                                 <th className="px-6 py-4 border-b border-r whitespace-nowrap bg-(--oxley-100)">ID</th>

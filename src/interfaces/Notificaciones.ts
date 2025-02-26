@@ -4,3 +4,7 @@ export interface Notificaciones{
     code: number;
     tipo?: string;
 }
+
+export function isNotificaciones(error: any): error is Notificaciones {
+    return (error as Notificaciones).titulo !== undefined;
+}

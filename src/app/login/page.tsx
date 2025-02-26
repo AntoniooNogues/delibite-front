@@ -43,7 +43,7 @@ export default function Login() {
             setNotificacion({ titulo: 'Éxito', mensaje: 'Inicio de sesión exitoso', code: 200, tipo: 'success' });
             setTimeout(() => {
                 router.push(`/`);
-            }, 2000);
+            }, 1000);
         }catch (error){
             if (axios.isAxiosError(error) && error.response) {
                 setNotificacion({ titulo: error.response.data.titulo, mensaje: error.response.data.mensaje , code: error.response.data.code, tipo: error.response.data.tipo });

@@ -19,11 +19,14 @@ import NotificacionComponent from "@/components/Notificacion-Component";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import ProtectedRouteCliente from "@/components/ProtectedRouteCliente";
+import {useTokenExpirado} from "@/hooks/useTokenExpirado";
 
 
 export default function Perfil() {
     const [hasSubscription, setHasSubscription] = useState(false);
     const [notificacion, setNotificacion] = useState<Notificaciones>();
+    const notificacionToken = useTokenExpirado();
+
 
     useEffect(() => {
         const fetchSubscription = async () => {
@@ -175,6 +178,12 @@ export default function Perfil() {
                     {notificacion && (
                         <NotificacionComponent
                             Notificaciones={notificacion}
+                            onClose={() => setNotificacion(undefined)}
+                        />
+                    )}
+                    {notificacionToken && (
+                        <NotificacionComponent
+                            Notificaciones={notificacionToken}
                             onClose={() => setNotificacion(undefined)}
                         />
                     )}

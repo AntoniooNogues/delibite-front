@@ -13,82 +13,12 @@ import {Box, Slider} from "@mui/material";
 import { ArchiveBoxXMarkIcon } from "@heroicons/react/20/solid";
 import { debounce } from 'lodash';
 import axiosClient from "@/lib/axiosClient";
-import axios from "axios";
 import NotificacionComponent from "@/components/Notificacion-Component";
-import { Notificaciones } from '@/interfaces/Notificaciones';
+import {isNotificaciones, Notificaciones} from '@/interfaces/Notificaciones';
 import Carrito from "@/components/Carrito";
 import Cookies from "js-cookie";
 import Footer from "@/components/Footer";
-
-
-const Hero = ({ scrollToCategory }: { scrollToCategory: () => void }) => {
-    return (
-        <motion.div className="flex flex-col lg:flex-row items-center justify-between lg:p-10 gap-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.4 }}>
-            <div className="text-center lg:text-left lg:w-1/2 w-full px-4 lg:px-8">
-                <h1 className="text-4xl lg:text-5xl font-bold text-[var(--primary-dark)] leading-tight">
-                    Sabor y bienestar en cada bocado.
-                </h1>
-                <p className="text-lg lg:text-xl text-[var(--verde-azulado)] mt-4">
-                    Ingredientes frescos, recetas balanceadas y todo el sabor que necesitas para disfrutar sin culpa. ¡Disfruta lo mejor para tu bienestar en cada bocado!
-                </p>
-                <button className="my-6 px-6 py-3 bg-[var(--verde-azulado)] text-white rounded-full hover:scale-105 transition-all duration-300" onClick={scrollToCategory}>
-                    Ver Menú
-                </button>
-            </div>
-            <div className="flex justify-center items-center mt-6 lg:mt-0 w-full lg:w-1/2">
-                <Image src={"/catalogo/papas_arrugas.webp"} alt="Hero" width={600} height={600} title="Plato 12: papas arrugas con mojo" className="rounded-2xl" priority layout="responsive" placeholder="blur" blurDataURL="/catalogo/papas_arrugas_blur.webp" quality={75} />
-            </div>
-        </motion.div>
-    );
-}
-
-const PasosServicio = () => {
-    const pasos = [
-        {
-            titulo: "Elige los platos que quieras",
-            descripcion: "Cada semana dispondrás de 40 platos y 5 postres a tu elección.",
-            icono: "/iconos/menu.webp"
-        },
-        {
-            titulo: "Nuestros chefs cocinan por ti",
-            descripcion: "Comida de alta calidad con ingredientes naturales.",
-            icono: "/iconos/chef.webp"
-        },
-        {
-            titulo: "Disfruta de tu comida y gana tiempo",
-            descripcion: "Recibirás tus tápers cada lunes o viernes, según tu preferencia.",
-            icono: "/iconos/time.webp"
-        },
-        {
-            titulo: "Cada sábado cambiamos la carta",
-            descripcion: "Dependiendo de tus preferencias, te sugeriremos platos.",
-            icono: "/iconos/calendar.webp"
-        }
-    ];
-
-    return (
-        <div className="max-w-8xl mx-auto my-12 p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {pasos.map((paso, index) => (
-                <motion.div
-                    key={index}
-                    className="bg-[var(--blanco-puro)] p-6 rounded-2xl shadow-lg border border-[var(--gris-muy-claro)] text-center flex flex-col items-center"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.2 }}
-                >
-
-                    <div className="w-20 h-20 flex justify-center items-center rounded-full mb-4 hover:scale-115 transition duration-300 ease-in-out">
-                        <Image src={paso.icono} alt={paso.titulo} width={80} height={80} />
-                    </div>
-
-
-                    <h3 className="text-lg font-semibold text-[var(--primary-dark)]">{paso.titulo}</h3>
-                    <p className="text-gray-800 mt-2">{paso.descripcion}</p>
-                </motion.div>
-            ))}
-        </div>
-    );
-};
+import { useTokenExpirado } from "@/hooks/useTokenExpirado";
 
 const CategoriaLista = ({ titulo, items, subheader }: { titulo: string; items: Catalogo[]; subheader: string }) => {
     const [cantidad, setCantidad] = useState<{ [key: number]: number }>({});
@@ -140,7 +70,9 @@ const CategoriaLista = ({ titulo, items, subheader }: { titulo: string; items: C
 
             // Dispatch custom event to notify other components
             const event = new CustomEvent("actualizacionCarrito", { detail: carritoObj });
-            window.dispatchEvent(event);
+            setTimeout(() => {
+                window.dispatchEvent(event)
+            }, 5);
 
             return newCantidad;
         });
@@ -328,11 +260,13 @@ const Filtros = ({ setSelectedGoal, priceMax, priceMin, setPriceRange }: {
 
 export default function Catalogo() {
     const [catalogo, setCatalogo] = useState<Catalogo[]>([]);
+
     const [loading, setLoading] = useState(true);
     const categoryRef = useRef<HTMLDivElement>(null);
     const [selectedGoal, setSelectedGoal] = useState<string | null>(null);
     const [priceRange, setPriceRange] = useState<number[]>([0, 100]);
     const [notificacion, setNotificacion] = useState<Notificaciones>();
+    const notificacionToken = useTokenExpirado();
 
     useEffect(() => {
         fetchData();
@@ -343,10 +277,8 @@ export default function Catalogo() {
             const response = await axiosClient.get<Catalogo[]>(`/catalogo/cargar`);
             setCatalogo(response.data);
         } catch (error) {
-            if (axios.isAxiosError(error) && error.response) {
-                setNotificacion({ titulo: error.response.data.titulo, mensaje: error.response.data.mensaje, code: error.response.data.code, tipo: error.response.data.tipo });
-            } else {
-                setNotificacion({ titulo: 'Error', mensaje: 'Error al crear el plato: Error desconocido', code: 500, tipo: 'error' });
+            if (isNotificaciones(error)) {
+                setNotificacion(error);
             }
         } finally {
             setLoading(false);
@@ -366,7 +298,6 @@ export default function Catalogo() {
         return isPriceInRange && isGoalMatched;
     };
 
-    console.log(catalogo);
 
 
 
@@ -378,30 +309,20 @@ export default function Catalogo() {
         return Object.values(catalogo).filter((item: Catalogo) => item.tipo === "POSTRE" && filterByGoalAndPrice(item));
     }, [catalogo, selectedGoal, priceRange]);
 
-    const scrollToCategory = () => {
-        categoryRef.current?.scrollIntoView({ behavior: 'smooth' });
-    };
-
-    console.log("Estado de catalogo: ", catalogo);
     const precios = useMemo(() => catalogo.map(item => item.precio), [catalogo]);
     const precioMaximo = useMemo(() => (Math.ceil(Math.max(...precios))), [precios]);
     const precioMinimo = useMemo(() => (Math.floor(Math.min(...precios))), [precios]);
 
+
+
     return (
         <main>
             <Navbar />
-            <div>
-                <div className="container mx-auto max-w-full p-6">
-                    <Hero scrollToCategory={scrollToCategory} />
-                    <PasosServicio />
-                    <div className={"my-8"} ref={categoryRef}>
-                        <h1 className="text-4xl text-center py-4 my-2 text-gray-700">Selecciona los platos de tu primer menú.</h1>
-                        <p className="text-xl text-center text-gray-600">Los platos cambian de manera semanal y están disponibles solo hasta el sábado a las 17:30 h.</p>
-                    </div>
+            <div className="p-4">
+                <div className="mb-8">
+                    <h1 className="text-4xl text-center py-4 my-2 text-gray-700">Selecciona los platos de tu primer menú.</h1>
+                    <p className="text-xl text-center text-gray-600">Los platos cambian de manera semanal y están disponibles solo hasta el sábado a las 17:30 h.</p>
                 </div>
-            </div>
-
-            <div className="bg-[#E6E6E6] max-md:p-4 md:p-8 lg:p-16">
                 {loading ? <LoadingComponent /> : (
                     <>
                         <Filtros setSelectedGoal={setSelectedGoal} priceMax={precioMaximo} priceMin={precioMinimo} setPriceRange={setPriceRange} />
@@ -419,6 +340,13 @@ export default function Catalogo() {
                     onClose={() => setNotificacion(undefined)}
                 />
             )}
+            {notificacionToken && (
+                <NotificacionComponent
+                    Notificaciones={notificacionToken}
+                    onClose={() => setNotificacion(undefined)}
+                />
+            )}
+
             <Carrito></Carrito>
         </main>
     );

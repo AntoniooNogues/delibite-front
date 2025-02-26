@@ -1,7 +1,13 @@
 "use client";
 import "../app/globals.css";
-import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon, UserIcon } from "@heroicons/react/24/outline";
+import {
+    Disclosure,
+    DisclosureButton,
+    DisclosurePanel,
+    PopoverButton,
+    Popover, PopoverPanel
+} from "@headlessui/react";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import {usePathname, useRouter} from "next/navigation";
 import { motion } from "framer-motion";
 import React, {useEffect, useState} from "react";
@@ -10,9 +16,9 @@ import {jwtDecode} from "jwt-decode";
 import Link from "next/link";
 
 const navigation = [
-    { name: "Suscripción", href: "#", current: false },
-    { name: "Catálogo", href: "/catalogo/productos", current: false },
-    { name: "Packs", href: "#", current: false },
+    { name: "Suscripción", explicacion: "Gestiona tu suscripción", href: "#", current: false },
+    { name: "Catálogo", explicacion: "Explora nuestro catálogo",  href: "/catalogo/productos", current: false },
+    { name: "Packs", explicacion: "Descubre nuestros packs",  href: "/packs", current: false },
 ];
 
 function classNames(...classes: string[]) {
@@ -57,24 +63,23 @@ export default function Navbar() {
     const pathname = usePathname();
 
     return (
-        <Disclosure as="nav" className="pt-3 sticky top-0 z-50">
+        <Popover  as="nav" className="pt-3 sticky top-0 z-50">
             <motion.div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 w-3/4 bg-white rounded-4xl drop-shadow-lg" initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.4 }} >
                 <div className="relative flex h-16 items-center ">
-                    <div className="max-sm:pl-3">
+                    <div className="max-sm:pl-3 pr-3">
                         <span className="text-4xl text-(--verde-azulado) cursor-pointer" style={{ fontFamily: "Limelight, sans-serif" }} onClick={() => router.push('/')}>
                             delibite
                         </span>
                     </div>
                     <div className="absolute inset-y-0 right-2 flex items-center lg:hidden ">
                         {/* Mobile menu button */}
-                        <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-(--oxley-300) hover:bg-(--primary-dark) hover:text-(--oxley-300) focus:ring-2 focus:(--oxley-300) ">
-                            <span className="absolute inset-y-0 right-0 -inset-x-0.5" />
-                            <span className="sr-only">Open main menu</span>
-                            <Bars3Icon aria-hidden="true" className="block size-6 group-data-open:hidden" />
-                            <XMarkIcon aria-hidden="true" className="hidden size-6 group-data-open:block" />
-                        </DisclosureButton>
+                        <PopoverButton className="group relative inline-flex items-center justify-center rounded-md p-2 border border-gray-300 active:border-(--verde-azulado)">
+                            <span className="sr-only">Abrir menu</span>
+                            <Bars3Icon className="block size-6 group-data-open:hidden" aria-hidden="true" />
+                            <XMarkIcon className="hidden size-6 group-data-open:block" aria-hidden="true" />
+                        </PopoverButton>
                     </div>
-                    <div className="hidden lg:flex space-x-6 ml-2">
+                    <div className="hidden lg:flex space-x-5 ml-2">
                         {navigation.map((item) => (
                             <a
                                 key={item.name}
@@ -83,8 +88,8 @@ export default function Navbar() {
                                 className={classNames(
                                     pathname === item.href
                                         ? "underline text-(--oxley-700)"
-                                        : "text-(--oxley-500) hover:bg-(--verde-azulado) active:bg-(--oxley-500) hover:text-white transition transform active:scale-95 hover:scale-105",
-                                    "rounded-md px-3 py-2 text-xl font-medium"
+                                        : "text-(--oxley-500) hover:bg-(--oxley-300) active:bg-(--verde-azulado) hover:text-white transition transform active:scale-95 hover:scale-105",
+                                    "py-2 px-4 rounded-full text-xl font-medium"
                                 )}
                             >
                                 {item.name}
@@ -93,98 +98,92 @@ export default function Navbar() {
                     </div>
                     <div className="flex space-x-4 justify-end w-full max-lg:hidden">
                         {/* Menú de usuario */}
-                        <Menu as="div" className="relative">
+                        <Popover className="relative">
                             {token ? (
-                                    <div>
-                                        <MenuButton className="w-11 h-11 p-2 rounded-full text-black bg-(--oxley-300) hover:bg-(--verde-azulado) active:bg-(--oxley-500) transition active:scale-95 hover:scale-105">
-                                            <UserIcon className="w-7 h-7" />
-                                        </MenuButton>
-                                        <MenuItems className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-b-3xl z-50">
-                                            <MenuItem>
-                                                {({ focus }) => (
-                                                    <Link
-                                                        href="/perfil"
-                                                        className={classNames(
-                                                            focus ? "bg-gray-100" : "",
-                                                            "block px-4 py-2 text-sm text-gray-700"
-                                                        )}
-                                                    >
-                                                        Perfil
-                                                    </Link>
-                                                )}
-                                            </MenuItem>
-                                            <MenuItem>
-                                                {({ focus }) => (
-                                                    <a
-                                                        href="#"
-                                                        className={classNames(
-                                                            focus ? "bg-gray-100 rounded-b-3xl" : "",
-                                                            "block px-4 pt-2 pb-3 text-sm text-gray-700"
-                                                        )}
-                                                        onClick={cerrarSesion}
-                                                    >
-                                                        Cerrar sesión
-                                                    </a>
-                                                )}
-                                            </MenuItem>
-                                        </MenuItems>
-                                    </div>
-                            ):(
-                                <MenuButton className="text-(--oxley-500) hover:bg-(--verde-azulado) active:bg-(--oxley-500) hover:text-white transition transform active:scale-95 hover:scale-105 rounded-md px-3 py-2 text-xl font-medium " onClick={() => router.push("/login")}>
+                                <div>
+                                    <PopoverButton className="py-2 px-4 rounded-full text-black bg-(--oxley-300) text-xl font-medium  transition active:scale-95 hover:scale-105 active:border-transparent">
+                                        <p>{usuario?.username}</p>
+                                    </PopoverButton>
+
+                                    <PopoverPanel className="absolute right-0 mt-4 w-60 rounded-xl bg-white shadow-lg divide-y divide-gray-200">
+                                        <div className="p-3">
+                                            <Link className="block rounded-lg py-2 px-3 transition hover:bg-gray-100" href="/perfil">
+                                                <p className="font-semibold text-gray-900">Perfil</p>
+                                                <p className="text-gray-500 text-sm">Gestiona tu cuenta</p>
+                                            </Link>
+                                        </div>
+                                        <div className="p-3">
+                                            <button
+                                                onClick={cerrarSesion}
+                                                className="block w-full rounded-lg py-2 px-3 text-left transition hover:bg-gray-100 text-red-600 font-semibold"
+                                            >
+                                                Cerrar sesión
+                                            </button>
+                                        </div>
+                                    </PopoverPanel>
+                                </div>
+                            ) : (
+                                <PopoverButton
+                                    className="py-2 px-4 rounded-full text-black bg-(--oxley-300) text-xl font-medium active:bg-(--verde-azulado) transition active:scale-95 hover:scale-105"
+                                    onClick={() => router.push("/login")}
+                                >
                                     Iniciar Sesión
-                                </MenuButton>
+                                </PopoverButton>
                             )}
-                        </Menu>
+                        </Popover>
                     </div>
                 </div>
             </motion.div>
 
-            <DisclosurePanel className="lg:hidden bg-white mt-4 m-10 rounded-2xl drop-shadow-lg absolute z-50 w-full max-w-4xl mx-auto">
-                <div className="space-y-1 p-4 flex flex-col">
+            <PopoverPanel className="absolute -right-50 -left-50  mt-4 w-96  mx-auto rounded-xl bg-white shadow-lg divide-y divide-gray-200 ">
+                <div
+                    className="p-3 space-y-3"
+                >
                     {navigation.map((item) => (
-                        <DisclosureButton
+                        <Link
                             key={item.name}
-                            as="a"
                             href={item.href}
-                            aria-current={pathname === item.href ? "page" : undefined}
                             className={classNames(
                                 pathname === item.href
-                                    ? "underline text-(--oxley-700)"
-                                    : "text-(--oxley-500) hover:bg-(--verde-azulado) active:bg-(--oxley-500) hover:text-white active:scale-95 hover:scale-105 flex flex-col",
-                                "rounded-md px-3 py-2 text-xl font-medium"
+                                    ? "underline font-bold"
+                                    : "block w-full rounded-lg py-2 px-3 text-left transition hover:bg-gray-100 text-gray-900 font-semibold"
                             )}
                         >
                             {item.name}
-                        </DisclosureButton>
+                            <p className="text-gray-500 text-sm">{item.explicacion}</p>
+                        </Link>
                     ))}
 
                     {token ? (
-                        <button className="text-(--oxley-500) hover:bg-(--verde-azulado) active:bg-(--oxley-500) hover:text-white active:scale-95 hover:scale-105 flex flex-col rounded-md px-3 py-2 text-xl font-medium"
-                                onClick={controlMenu}
-                        >
-                            {usuario?.username}
-                        </button>
-                    ): (
-                        <button onClick={() => router.push("/login")} className="text-(--oxley-500) hover:bg-(--verde-azulado) active:bg-(--oxley-500) hover:text-white active:scale-95 hover:scale-105 flex flex-col rounded-md px-3 py-2 text-xl font-medium">
-                            Iniciar Sesión
-                        </button>
-                    )}
-                    {token && estadoMenu &&(
-                        <div className="p-2 bg-(--oxley-100) rounded-2xl">
-                            <button onClick={() => router.push('/perfil')} className="w-full text-(--oxley-500) hover:bg-(--verde-azulado) active:bg-(--oxley-500) hover:text-white active:scale-95 hover:scale-105 flex flex-col rounded-md px-3 py-2 text-xl font-medium">
-                                Perfil
+                        <>
+                            <button className="block w-full p-3 text-left transition text-gray-900 font-bold border-y border-gray-200 ">
+                                <p>Bienvenido, {usuario?.username}.</p>
                             </button>
-                            <button
-                                className="w-full text-(--oxley-500) hover:bg-(--verde-azulado) active:bg-(--oxley-500) hover:text-white active:scale-95 hover:scale-105 flex flex-col rounded-md px-3 py-2 text-xl font-medium"
-                                onClick={cerrarSesion}
-                            >
-                                Cerrar sesión
-                            </button>
-                        </div>
-                    )}
+                            <div className="px-3 pb-3 border-b border-gray-200">
+                                <button
+                                    onClick={() => router.push("/perfil")}
+                                    className="block w-full rounded-lg py-2 px-3 text-left transition hover:bg-gray-100 text-gray-900 font-semibold"
+                                >
+                                    Perfil
+                                    <p className="text-gray-500 text-sm">Gestiona tu cuenta</p>
+                                </button>
+                                <button
+                                    onClick={cerrarSesion}
+                                    className="block w-full rounded-lg py-2 px-3 text-left transition hover:bg-red-100 text-red-600 font-semibold mt-2"
+                                >
+                                    Cerrar sesión
+                                </button>
+                            </div>
+                        </>
+                    ) :
+                        <button
+                        onClick={() => router.push("/login")}
+                        className="block w-full rounded-lg py-2 px-3 text-left transition hover:bg-gray-100 text-gray-900 font-semibold"
+                    >
+                        Iniciar Sesion
+                    </button>}
                 </div>
-            </DisclosurePanel>
-
-        </Disclosure>
+            </PopoverPanel>
+        </Popover>
     );
 }

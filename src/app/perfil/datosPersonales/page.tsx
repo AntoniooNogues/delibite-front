@@ -11,9 +11,12 @@ import {Notificaciones} from "@/interfaces/Notificaciones";
 import axios from "axios";
 import NotificacionComponent from "@/components/Notificacion-Component";
 import CambioContrasenaModal from "@/components/CambioContrasena";
+import {useTokenExpirado} from "@/hooks/useTokenExpirado";
 
 const DatosPersonalesPage: React.FC = () => {
     const [user, setUser] = useState<interfazUsuario | null>(null);
+    const notificacionToken = useTokenExpirado();
+
     const [formData, setFormData] = useState({
         nombre: '',
         apellidos: '',
@@ -177,6 +180,13 @@ const DatosPersonalesPage: React.FC = () => {
             {notificacion && (
                 <NotificacionComponent
                     Notificaciones={notificacion}
+                    onClose={() => setNotificacion(undefined)}
+                />
+            )}
+
+            {notificacionToken && (
+                <NotificacionComponent
+                    Notificaciones={notificacionToken}
                     onClose={() => setNotificacion(undefined)}
                 />
             )}

@@ -15,6 +15,7 @@ import { Notificaciones } from '@/interfaces/Notificaciones';
 import axiosClient from "@/lib/axiosClient";
 import axios from "axios";
 import Footer from "@/components/Footer";
+import { useTokenExpirado } from '@/hooks/useTokenExpirado';
 
 const PlatoDetalle = ({ plato }: { plato: Plato }) => {
     const [cantidad, setCantidad] = useState<{ [key: number]: number }>({});
@@ -41,7 +42,7 @@ const PlatoDetalle = ({ plato }: { plato: Plato }) => {
                         initial={{ y: -100, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ duration: 0.8 }}
-                        onClick={() => router.push('/catalogo/productos')}
+                        onClick={() => router.back()}
                     >
                         <ArrowLeftCircleIcon className="h-12 w-12 text-(--verde-azulado) bg-white p-0 rounded-full hover:scale-105 active:scale-95 transform" />
                     </motion.button>
@@ -182,7 +183,7 @@ const PlatoDetalle = ({ plato }: { plato: Plato }) => {
 export default function PlatoDetalleComponent() {
     const [plato, setPlato] = useState<Plato | null>(null);
     const [notificacion, setNotificacion] = useState<Notificaciones>();
-
+    const notificacionToken = useTokenExpirado();
     useEffect(() => {
         const fetchPlato = async () => {
             try {
@@ -222,7 +223,12 @@ export default function PlatoDetalleComponent() {
                     onClose={() => setNotificacion(undefined)}
                 />
             )}
-
+            {notificacionToken && (
+                <NotificacionComponent
+                    Notificaciones={notificacionToken}
+                    onClose={() => setNotificacion(undefined)}
+                />
+            )}
         </main>
     );
 }
