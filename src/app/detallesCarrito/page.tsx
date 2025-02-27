@@ -3,21 +3,25 @@ import {motion} from "framer-motion";
 import Navbar from "@/components/Navbar";
 import React, {useEffect, useState} from "react";
 import Cookies from "js-cookie";
-import CantidadControl from "@/components/BotonAddPlato-Component";
+import CantidadControl from "@/components/BotonAddPlato";
 import Image from "next/image";
 import {Trash} from "lucide-react";
 import { Dialog, DialogTitle, DialogActions, DialogContent, DialogContentText, Button } from "@mui/material";
 import Footer from "@/components/Footer";
 import FormularioPago from "@/components/FormularioPago";
 import { useTokenExpirado } from "@/hooks/useTokenExpirado";
-import NotificacionComponent from "@/components/Notificacion-Component";
+import NotificacionComponent from "@/components/Notificacion";
 import {Notificaciones} from "@/interfaces/Notificaciones";
 
 
 export default function DetallesCarrito() {
     const [carrito, setCarrito] = useState<{ [key: number]: { nombre: string, precio: number, cantidad: number } }>({});
-    const [notificacion, setNotificacion] = useState<Notificaciones | null>(null);
-    setNotificacion(useTokenExpirado());
+    const notificacion = useTokenExpirado();
+    const [notificacionState, setNotificacionState] = useState<Notificaciones | null>(null);
+
+    useEffect(() => {
+        setNotificacionState(notificacion);
+    }, [notificacion]);
 
     useEffect(() => {
         const updateCarrito = () => {
@@ -271,10 +275,10 @@ export default function DetallesCarrito() {
             {mostrarFormularioPago && <FormularioPago setMostrarFormularioPago={setMostrarFormularioPago} totalConEnvio={totalConEnvio}  />}
             <Footer></Footer>
 
-            {notificacion && (
+            {notificacionState && (
                 <NotificacionComponent
-                    Notificaciones={notificacion}
-                    onClose={() => setNotificacion(null)}
+                    Notificaciones={notificacionState}
+                    onClose={() => setNotificacionState(null)}
                 />
             )}
         </div>

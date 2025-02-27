@@ -4,10 +4,10 @@ import { useAuth } from '@/hooks/useAuth';
 import AdminLayout from "@/components/AdminLayout";
 import { HomeInterface } from "@/interfaces/Administracion-Interfaces";
 import { motion } from 'framer-motion';
-import LoadingComponent from "@/components/Loading-Component";
+import Loading from "@/components/Loading";
 import axiosClient from "@/lib/axiosClient";
 import ErrorPage from "@/pages/[_error]";
-import NotificacionComponent from "@/components/Notificacion-Component";
+import NotificacionComponent from "@/components/Notificacion";
 import { Notificaciones } from "@/interfaces/Notificaciones";
 import axios from "axios";
 import {ClockIcon, ShoppingCartIcon, StarIcon, UserGroupIcon, UserIcon} from "@heroicons/react/20/solid";
@@ -130,7 +130,7 @@ export default function Home() {
                     </div>
                 </div>
             ) : (
-                <LoadingComponent />
+                <Loading />
             )}
             {notificacion && (
                 <NotificacionComponent

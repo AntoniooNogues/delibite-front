@@ -1,16 +1,16 @@
 'use client';
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import NotificacionComponent from "@/components/Notificacion-Component";
+import NotificacionComponent from "@/components/Notificacion";
 import Carrito from "@/components/Carrito";
 import React, {useEffect, useState} from "react";
 import {Notificaciones} from "@/interfaces/Notificaciones";
 import axiosClient from "@/lib/axiosClient";
 import axios from "axios";
 import type { Packs } from "@/interfaces/Packs";
-import LoadingComponent from "@/components/Loading-Component";
+import Loading from "@/components/Loading";
 import {useRouter} from "next/navigation";
-import CantidadControl from "@/components/BotonAddPlato-Component";
+import CantidadControl from "@/components/BotonAddPlato";
 import Cookies from "js-cookie";
 import {useTokenExpirado} from "@/hooks/useTokenExpirado";
 import Image from "next/image";
@@ -94,7 +94,7 @@ export default function Packs() {
 
             {loading ? (
                 <section className="min-h-screen flex justify-center items-center">
-                    <LoadingComponent />
+                    <Loading />
                 </section>
             ) : (
                 <section className="max-w-screen-xl mx-auto px-4 py-10">

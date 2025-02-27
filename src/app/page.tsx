@@ -11,7 +11,7 @@ import {motion} from "framer-motion";
 import axiosClient from "@/lib/axiosClient";
 import axios from "axios";
 import { Plato } from "@/interfaces/home";
-import NotificacionComponent from "@/components/Notificacion-Component";
+import NotificacionComponent from "@/components/Notificacion";
 import {Notificaciones} from "@/interfaces/Notificaciones";
 import { useTokenExpirado } from "@/hooks/useTokenExpirado";
 

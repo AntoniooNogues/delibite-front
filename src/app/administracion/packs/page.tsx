@@ -1,14 +1,14 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import AdminLayout from '@/components/AdminLayout';
-import LoadingComponent from '@/components/Loading-Component';
+import Loading from '@/components/Loading';
 import axiosClient from '@/lib/axiosClient';
 import axios from 'axios';
 import ErrorPage from "@/pages/[_error]";
 import {ArrowPathIcon, ArrowsUpDownIcon, PlusCircleIcon} from "@heroicons/react/20/solid";
 import { useAuth } from "@/hooks/useAuth";
-import FormularioPack from "@/components/FormularioPack-Component";
-import NotificacionComponent from "@/components/Notificacion-Component";
+import FormularioPack from "@/components/FormularioPack";
+import NotificacionComponent from "@/components/Notificacion";
 import { Notificaciones } from '@/interfaces/Notificaciones';
 import {Pack} from "@/interfaces/Administracion-Interfaces";
 
@@ -91,7 +91,7 @@ export default function UsuariosPage() {
     return (
         <AdminLayout>
             {loading ? (
-                <LoadingComponent />
+                <Loading />
             ) : (
                 <div>
                     <div className="flex flex-row gap-2 mb-4 justify-between">

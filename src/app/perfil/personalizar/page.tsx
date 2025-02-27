@@ -4,9 +4,9 @@ import Alergenos from "@/components/Alergenos";
 import React, { useState, useEffect } from "react";
 import axiosClient from "@/lib/axiosClient";
 import { ArrowLeft, X } from "lucide-react";
-import Loading from "@/components/Loading-Component";
+import Loading from "@/components/Loading";
 import {Notificaciones} from "@/interfaces/Notificaciones";
-import NotificacionComponent from "@/components/Notificacion-Component";
+import NotificacionComponent from "@/components/Notificacion";
 import axios from "axios";
 
 // Mapeo de IDs a nombres de alérgenos

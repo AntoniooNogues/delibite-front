@@ -1,6 +1,6 @@
 import React from "react";
 
-const LoadingComponent = () => (
+const Loading = () => (
     <div className="w-full h-full flex items-center justify-center">
         {/* Contenedor del spinner */}
         <div className="relative w-16 h-16 flex items-center justify-center">
@@ -8,4 +8,4 @@ const LoadingComponent = () => (
         </div>
     </div>
 );
-export default LoadingComponent;
+export default Loading;

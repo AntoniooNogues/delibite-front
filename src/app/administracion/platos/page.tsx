@@ -2,15 +2,15 @@
 import React, { useEffect, useState } from 'react';
 import AdminLayout from '@/components/AdminLayout';
 import { InterfazPlato } from "@/interfaces/interfazPlato";
-import LoadingComponent from '@/components/Loading-Component';
+import Loading from '@/components/Loading';
 import axiosClient from '@/lib/axiosClient';
 import axios from 'axios';
 import ErrorPage from "@/pages/[_error]";
 import {ArrowPathIcon, ArrowsUpDownIcon, PlusCircleIcon} from "@heroicons/react/20/solid";
 import { ErrorPropsInterface } from "@/interfaces/ErrorPropsInterface";
 import { useAuth } from "@/hooks/useAuth";
-import FormularioPlato from "@/components/FormularioPlato-Component";
-import NotificacionComponent from "@/components/Notificacion-Component";
+import FormularioPlato from "@/components/FormularioPlato";
+import NotificacionComponent from "@/components/Notificacion";
 import { Notificaciones } from '@/interfaces/Notificaciones';
 
 export default function UsuariosPage() {
@@ -106,7 +106,7 @@ export default function UsuariosPage() {
     return (
         <AdminLayout>
             {loading ? (
-                <LoadingComponent />
+                <Loading />
             ) : (
                 <div>
                     <div className="flex flex-row gap-2 mb-4 justify-between">

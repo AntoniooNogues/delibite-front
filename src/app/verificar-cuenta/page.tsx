@@ -2,7 +2,7 @@
 import React, { useState} from "react";
 import { useRouter } from "next/navigation";
 import axiosClient from "@/lib/axiosClient";
-import NotificacionComponent from "@/components/Notificacion-Component";
+import NotificacionComponent from "@/components/Notificacion";
 import { Notificaciones } from '@/interfaces/Notificaciones';
 import axios from "axios";
 import {ArrowLeftIcon} from "@heroicons/react/20/solid";

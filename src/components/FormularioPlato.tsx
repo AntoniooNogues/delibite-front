@@ -6,9 +6,10 @@ import { XCircleIcon } from "@heroicons/react/20/solid";
 import axios from "axios";
 import { DatosSelectores } from "@/interfaces/datosSelectores";
 import { Alergenos } from '@/interfaces/Catalogo';
-import CloudinaryUpload from "@/components/Cloudinary-Component";
-import NotificacionComponent from "@/components/Notificacion-Component";
+import CloudinaryUpload from "@/components/BotonCloudinary";
+import NotificacionComponent from "@/components/Notificacion";
 import { Notificaciones } from '@/interfaces/Notificaciones';
+import Image from 'next/image';
 
 const FormularioPlato = ({ plato, open, handleClose, modo }: {
     plato: InterfazPlato | undefined;
@@ -185,13 +186,15 @@ const FormularioPlato = ({ plato, open, handleClose, modo }: {
                             </FormControl>
 
                             {(modo === 'crear' || (modo === 'editar' && (platoData.url?.length ?? 0) === 0)) && <CloudinaryUpload onUploadComplete={handleUploadComplete} />}
-                            {(modo === 'crear' || modo === 'editar') && imageUrl && <img src={imageUrl} alt="Uploaded image" />}
+                            {(modo === 'crear' || modo === 'editar') && imageUrl &&
+                                <Image src={imageUrl} alt="Uploaded image" width={300} height={300}/>
+                            }
                             {modo === 'editar' && (
                                 <div>
                                     {platoData.url && (
                                         <div>
                                             <p className="text-gray-800 text-md font-bold">Imagen</p>
-                                            <img src={platoData.url} alt="Uploaded image" />
+                                            <Image src={platoData.url} alt="Uploaded image" width={300} height={300}/>
                                         </div>
                                     )}
                                 </div>

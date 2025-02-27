@@ -4,12 +4,12 @@ import React, { useState, useEffect } from 'react';
 import axiosClient from '@/lib/axiosClient';
 import { interfazUsuario } from '@/interfaces/users';
 import PerfilLayout from "@/components/PerfilLayout";
-import LoadingComponent from "@/components/Loading-Component";
+import Loading from "@/components/Loading";
 import { ArrowLeft } from "lucide-react";
 import { Input } from '@headlessui/react';
 import {Notificaciones} from "@/interfaces/Notificaciones";
 import axios from "axios";
-import NotificacionComponent from "@/components/Notificacion-Component";
+import NotificacionComponent from "@/components/Notificacion";
 import CambioContrasenaModal from "@/components/CambioContrasena";
 import {useTokenExpirado} from "@/hooks/useTokenExpirado";
 
@@ -173,7 +173,7 @@ const DatosPersonalesPage: React.FC = () => {
                     </form>
                 ) : (
                     <div className="flex sm:min-h-screen items-center justify-center">
-                        <LoadingComponent/>
+                        <Loading/>
                     </div>
                 )}
             </div>

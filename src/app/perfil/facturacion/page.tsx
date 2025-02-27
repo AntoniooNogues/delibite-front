@@ -4,9 +4,9 @@ import axios from 'axios';
 import axiosClient from '@/lib/axiosClient';
 import PerfilLayout from '@/components/PerfilLayout';
 import {ArrowLeft} from "lucide-react";
-import LoadingComponent from "@/components/Loading-Component";
+import Loading from "@/components/Loading";
 import {Notificaciones} from "@/interfaces/Notificaciones";
-import NotificacionComponent from "@/components/Notificacion-Component";
+import NotificacionComponent from "@/components/Notificacion";
 import {useTokenExpirado} from "@/hooks/useTokenExpirado";
 
 const Facturacion: React.FC = () => {
@@ -74,7 +74,7 @@ const Facturacion: React.FC = () => {
     };
     if (isLoading) {
         return <div className="flex w-full h-screen items-center justify-center">
-            <LoadingComponent></LoadingComponent>
+            <Loading></Loading>
         </div>;
     }
     return (

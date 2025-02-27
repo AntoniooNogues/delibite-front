@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
 import Image from "next/image";
 import { Nfc, X } from 'lucide-react';
-import Loading from "./Loading-Component";
+import Loading from "./Loading";
 import axiosClient from "../lib/axiosClient";
 import axios from "axios";
 import Cookies from "js-cookie";
 import {Notificaciones} from "@/interfaces/Notificaciones";
-import NotificacionComponent from "@/components/Notificacion-Component";
+import NotificacionComponent from "@/components/Notificacion";
 import ProtectedRouteCliente from "@/components/ProtectedRouteCliente";
 
 

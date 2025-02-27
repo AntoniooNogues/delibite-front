@@ -1,4 +1,4 @@
-// src/components/NotificacionComponent.tsx
+
 import { CheckCircleIcon, ExclamationCircleIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';

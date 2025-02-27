@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import SideBarAdmin from "@/components/NavbarAdministracion-Component";
+import SideBarAdmin from "@/components/NavbarAdministracion";
 
 export default function AdminLayout(props: { children: React.ReactNode }) {
     return (

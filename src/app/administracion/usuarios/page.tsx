@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import AdminLayout from '@/components/AdminLayout';
 import { interfazUsuario } from '../../../interfaces/users';
-import LoadingComponent from '@/components/Loading-Component';
+import Loading from '@/components/Loading';
 import axiosClient from '@/lib/axiosClient';
 import axios from 'axios';
 import ErrorPage from "@/pages/[_error]";
@@ -85,7 +85,7 @@ export default function UsuariosPage() {
     return (
         <AdminLayout>
             {loading ? (
-                <LoadingComponent />
+                <Loading />
             ) : (
                 <div>
                     <div className="flex flex-row gap-2 mb-4 justify-between">

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Input } from '@headlessui/react';
 import {Notificaciones} from "@/interfaces/Notificaciones";
-import NotificacionComponent from "@/components/Notificacion-Component";
+import NotificacionComponent from "@/components/Notificacion";
 
 interface CambioContrasenaModal {
     isOpen: boolean;

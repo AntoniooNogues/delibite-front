@@ -7,7 +7,7 @@ import { EyeSlashIcon } from "@heroicons/react/16/solid";
 import { EyeIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 import axiosClient from "@/lib/axiosClient";
-import NotificacionComponent from "@/components/Notificacion-Component";
+import NotificacionComponent from "@/components/Notificacion";
 import { Notificaciones } from '@/interfaces/Notificaciones';
 import axios from "axios";
 import Cookies from "js-cookie";

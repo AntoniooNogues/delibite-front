@@ -15,7 +15,7 @@ import {
 import React, {useEffect, useState } from "react";
 import axios from "axios";
 import {Notificaciones} from "@/interfaces/Notificaciones";
-import NotificacionComponent from "@/components/Notificacion-Component";
+import NotificacionComponent from "@/components/Notificacion";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import ProtectedRouteCliente from "@/components/ProtectedRouteCliente";

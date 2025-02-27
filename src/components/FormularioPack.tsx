@@ -3,7 +3,7 @@ import { Modal, TextField, Select, MenuItem, InputLabel, FormControl, ListItemTe
 import { XCircleIcon } from "@heroicons/react/20/solid";
 import axiosClient from "@/lib/axiosClient";
 import {cargarPlatosPack, Pack, Plato} from "@/interfaces/Administracion-Interfaces";
-import NotificacionComponent from "@/components/Notificacion-Component";
+import NotificacionComponent from "@/components/Notificacion";
 import { Notificaciones } from '@/interfaces/Notificaciones';
 import axios from "axios";
 
@@ -89,8 +89,7 @@ const FormularioPack = ({ pack, open, handleClose, modo }: {
 
     useEffect(() => {
         cargarDatos();
-        console.log(packData);
-    }, []);
+    }, [packData]);
 
     return (
         <div>

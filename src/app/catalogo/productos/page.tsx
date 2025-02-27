@@ -1,19 +1,19 @@
 'use client';
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, {useState, useEffect, useMemo, useRef, useCallback} from 'react';
 import Image from "next/image";
 import { motion } from "framer-motion";
 import type { Catalogo } from '@/interfaces/Catalogo';
 import { useRouter } from 'next/navigation';
-import LoadingComponent from "@/components/Loading-Component";
-import CantidadControl from '@/components/BotonAddPlato-Component';
+import Loading from "@/components/Loading";
+import CantidadControl from '@/components/BotonAddPlato';
 import Navbar from "@/components/Navbar";
 import { ChevronDownIcon, FlagIcon, XMarkIcon } from "@heroicons/react/20/solid";
-import InputLabel from "@/components/LabelInput-Component";
+import InputLabel from "@/components/LabelInput";
 import {Box, Slider} from "@mui/material";
 import { ArchiveBoxXMarkIcon } from "@heroicons/react/20/solid";
 import { debounce } from 'lodash';
 import axiosClient from "@/lib/axiosClient";
-import NotificacionComponent from "@/components/Notificacion-Component";
+import NotificacionComponent from "@/components/Notificacion";
 import {isNotificaciones, Notificaciones} from '@/interfaces/Notificaciones';
 import Carrito from "@/components/Carrito";
 import Cookies from "js-cookie";
@@ -284,7 +284,7 @@ export default function Catalogo() {
     };
 
 
-    const filterByGoalAndPrice = (item: Catalogo) => {
+    const filterByGoalAndPrice = useCallback((item: Catalogo) => {
         const isPriceInRange = item.precio >= priceRange[0] && item.precio <= priceRange[1];
         const isGoalMatched = selectedGoal ? (
             selectedGoal === "Balanceada" ? item.calorias >= 400 && item.calorias <= 650 :
@@ -294,18 +294,16 @@ export default function Catalogo() {
         ) : true;
 
         return isPriceInRange && isGoalMatched;
-    };
-
-
+    }, [priceRange, selectedGoal]);
 
 
     const principales = useMemo((): Catalogo[] => {
         return Object.values(catalogo).filter((item: Catalogo) => item.tipo === "PRINCIPAL" && filterByGoalAndPrice(item));
-    }, [catalogo, selectedGoal, priceRange, filterByGoalAndPrice]);
+    }, [catalogo, filterByGoalAndPrice]);
 
     const postres = useMemo((): Catalogo[] => {
         return Object.values(catalogo).filter((item: Catalogo) => item.tipo === "POSTRE" && filterByGoalAndPrice(item));
-    }, [catalogo, selectedGoal, priceRange, filterByGoalAndPrice]);
+    }, [catalogo, filterByGoalAndPrice]);
 
     const precios = useMemo(() => catalogo.map(item => item.precio), [catalogo]);
     const precioMaximo = useMemo(() => (Math.ceil(Math.max(...precios))), [precios]);
@@ -321,7 +319,7 @@ export default function Catalogo() {
                     <h1 className="text-4xl text-center py-4 my-2 text-gray-700">Selecciona los platos de tu primer menú.</h1>
                     <p className="text-xl text-center text-gray-600">Los platos cambian de manera semanal y están disponibles solo hasta el sábado a las 17:30 h.</p>
                 </div>
-                {loading ? <LoadingComponent /> : (
+                {loading ? <Loading /> : (
                     <>
                         <Filtros setSelectedGoal={setSelectedGoal} priceMax={precioMaximo} priceMin={precioMinimo} setPriceRange={setPriceRange} />
                         <div>

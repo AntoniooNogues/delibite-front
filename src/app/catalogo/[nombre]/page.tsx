@@ -1,16 +1,16 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import LoadingComponent from '@/components/Loading-Component';
+import Loading from '@/components/Loading';
 import Image from 'next/image';
-import CantidadControl from "@/components/BotonAddPlato-Component";
+import CantidadControl from "@/components/BotonAddPlato";
 import { Plato } from "@/interfaces/plato";
 import { ArrowLeftCircleIcon } from '@heroicons/react/20/solid';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import Navbar from "@/components/Navbar";
-import NotificacionComponent from "@/components/Notificacion-Component";
+import NotificacionComponent from "@/components/Notificacion";
 import { Notificaciones } from '@/interfaces/Notificaciones';
 import axiosClient from "@/lib/axiosClient";
 import axios from "axios";
@@ -209,7 +209,7 @@ export default function PlatoDetalleComponent() {
             <Navbar />
             {!plato ?
                 <div className="flex justify-center items-center h-screen">
-                    <LoadingComponent />
+                    <Loading />
                 </div> :
                 <div>
                     <PlatoDetalle plato={plato} />

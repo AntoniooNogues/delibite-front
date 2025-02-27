@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { motion } from "framer-motion";
 import { ShoppingCart, X, Trash } from "lucide-react";
 import Cookies from "js-cookie";
-import CantidadControl from "./BotonAddPlato-Component";
+import CantidadControl from "./BotonAddPlato";
 
 export default function Carrito() {
     const router = useRouter();

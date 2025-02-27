@@ -1,7 +1,7 @@
 import React, { ReactNode, useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuthClient";
 import { Notificaciones } from "@/interfaces/Notificaciones";
-import NotificacionComponent from "@/components/Notificacion-Component";
+import NotificacionComponent from "@/components/Notificacion";
 
 interface ProtectedRouteProps {
     children: ReactNode;
