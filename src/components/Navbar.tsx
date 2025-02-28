@@ -13,7 +13,7 @@ import {jwtDecode} from "jwt-decode";
 import Link from "next/link";
 
 const navigation = [
-    { name: "Suscripción", explicacion: "Gestiona tu suscripción", href: "#", current: false },
+    { name: "Suscripción", explicacion: "Gestiona tu suscripción", href: "/suscripcion", current: false },
     { name: "Catálogo", explicacion: "Explora nuestro catálogo",  href: "/catalogo/productos", current: false },
     { name: "Packs", explicacion: "Descubre nuestros packs",  href: "/packs", current: false },
 ];
