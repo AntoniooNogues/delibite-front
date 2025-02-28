@@ -137,7 +137,6 @@ export default function Packs() {
                                     <div className="flex flex-row justify-between items-center">
                                         <h3 className="text-3xl font-semibold text-gray-800">{pack.nombre}</h3>
                                         <CantidadControl
-                                            itemId={pack.id}
                                             cantidadInicial={cantidad[pack.id] || 0}
                                             handleCantidadChange={(value) => handleCantidadChange(pack.id, pack.nombre, pack.precio, value)}
                                             width={35}

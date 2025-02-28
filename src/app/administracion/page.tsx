@@ -6,7 +6,7 @@ import { HomeInterface } from "@/interfaces/Administracion-Interfaces";
 import { motion } from 'framer-motion';
 import Loading from "@/components/Loading";
 import axiosClient from "@/lib/axiosClient";
-import ErrorPage from "@/pages/[_error]";
+import ErrorPage from "@pages/Error";
 import NotificacionComponent from "@/components/Notificacion";
 import { Notificaciones } from "@/interfaces/Notificaciones";
 import axios from "axios";
@@ -51,11 +51,11 @@ export default function Home() {
     })) || [];
 
     if (error) {
-        return <ErrorPage errorCode={error.errorCode} title={error.title} message={error.message} url={error.url} color={2}/>;
+        return <ErrorPage errorCode={error.errorCode} title={error.title} message={error.message} url={error.url} color={2} textoBoton={"Ir al login"}/>;
     }
 
     if (notificacion && notificacion.code === 401) {
-        return <ErrorPage errorCode={"401"} title="No autorizado" message="No tienes autorización para acceder a este recurso." url="/administracion/login" color={2}/>;
+        return <ErrorPage errorCode={"401"} title="No autorizado" message="No tienes autorización para acceder a este recurso." url="/administracion/login" color={2} textoBoton={"Ir al login"}/>;
     }
 
     return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
 import { motion } from "framer-motion";
 import { ShoppingCart, X, Trash } from "lucide-react";
@@ -24,7 +24,9 @@ export default function Carrito() {
 
         const intervalId = setInterval(updateCarrito, 1000);
 
-        return () => clearInterval(intervalId);
+        return () => {
+            clearInterval(intervalId);
+        };
     }, []);
 
     const handleCantidadChange = (id: number, value: number) => {
@@ -38,7 +40,7 @@ export default function Carrito() {
 
             Cookies.set("carrito", JSON.stringify(newCarrito), { expires: 7 });
 
-            const event = new CustomEvent("actualizacionCarrito", {detail: newCarrito});
+            const event = new CustomEvent("actualizacionCarrito", { detail: newCarrito });
             window.dispatchEvent(event);
 
             return newCarrito;
@@ -97,9 +99,8 @@ export default function Carrito() {
                                     <p>{cantidad}x {precio}€ = {(cantidad * precio).toFixed(2)}€</p>
                                 </div>
                                 <CantidadControl
-                                    itemId={parseInt(id)}
                                     cantidadInicial={cantidad}
-                                    handleCantidadChange={(itemId, value) => handleCantidadChange(itemId, value)}
+                                    handleCantidadChange={(value: number) => handleCantidadChange(parseInt(id), value)}
                                     width={30}
                                     height={30}
                                 />
