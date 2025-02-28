@@ -291,7 +291,7 @@ export default function Home() {
 
             </main>
 
-            {/* Componente Carrito */}
+            {/* Componente CarritoItem */}
             <Carrito />
 
             <Footer />
