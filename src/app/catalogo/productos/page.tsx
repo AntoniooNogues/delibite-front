@@ -47,7 +47,7 @@ const CategoriaLista = ({ titulo, items, subheader }: { titulo: string; items: C
 
 
 
-    const handleCantidadChange = (id: number, nombre: string, precio: number, value: number) => {
+    const handleCantidadChange = (id: number, nombre: string, precio: number, value: number, url: string) => {
         setCantidad(prev => {
             const newCantidad = { ...prev, [id]: value };
             if (newCantidad[id] <= 0) {
@@ -60,7 +60,7 @@ const CategoriaLista = ({ titulo, items, subheader }: { titulo: string; items: C
 
             // Update the carrito object
             if (value > 0) {
-                carritoObj[id] = { nombre, precio, cantidad: value };
+                carritoObj[id] = { nombre, precio, cantidad: value, url };
             } else {
                 delete carritoObj[id];
             }
@@ -71,7 +71,7 @@ const CategoriaLista = ({ titulo, items, subheader }: { titulo: string; items: C
             // Dispatch custom event to notify other components
             const event = new CustomEvent("actualizacionCarrito", { detail: carritoObj });
             setTimeout(() => {
-                window.dispatchEvent(event)
+                window.dispatchEvent(event);
             }, 5);
 
             return newCantidad;
@@ -130,9 +130,8 @@ const CategoriaLista = ({ titulo, items, subheader }: { titulo: string; items: C
                             <div className="mt-auto flex flex-row justify-between items-center ">
                                 <p className="text-left text-gray-700 text-[22px] font-medium ">{item.precio}€</p>
                                 <CantidadControl
-                                    itemId={item.plato_id}
                                     cantidadInicial={cantidad[item.plato_id] || 0}
-                                    handleCantidadChange={(id, value) => handleCantidadChange(item.plato_id, item.nombre, item.precio, value)}
+                                    handleCantidadChange={(value) => handleCantidadChange(item.plato_id, item.nombre, item.precio, value, item.url)}
                                     width={35}
                                     height={35}
                                 />
@@ -343,7 +342,7 @@ export default function Catalogo() {
                 />
             )}
 
-            <Carrito></Carrito>
+            <Carrito />
         </main>
     );
 }

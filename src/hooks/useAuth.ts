@@ -22,7 +22,8 @@ export const useAuth = () => {
                             title: "Acceso denegado",
                             message: "No tienes permisos para acceder a esta página.",
                             url: "/administracion/login",
-                            color: 2
+                            color: 2,
+                            textoBoton: "Ir al login"
                         })
                     }
                     setDecodedToken(tokenDescodificado);
@@ -33,7 +34,8 @@ export const useAuth = () => {
                         title: "Acceso denegado",
                         message: "No tienes permisos para acceder a esta página.",
                         url: "/administracion/login",
-                        color: 2
+                        color: 2,
+                        textoBoton: "Ir al login"
                     });
                 }
             }else{
@@ -42,7 +44,8 @@ export const useAuth = () => {
                     title: "Acceso denegado",
                     message: "No tienes permisos para acceder a esta página.",
                     url: "/administracion/login",
-                    color: 2
+                    color: 2,
+                    textoBoton: "Ir al login"
                 });
             }
         }

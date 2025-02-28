@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 import CantidadControl from "@/components/BotonAddPlato";
 import Image from "next/image";
 import {Trash} from "lucide-react";
-import { Dialog, DialogTitle, DialogActions, DialogContent, DialogContentText, Button } from "@mui/material";
+import { Dialog, DialogTitle, DialogActions, DialogContent, DialogContentText } from "@mui/material";
 import Footer from "@/components/Footer";
 import FormularioPago from "@/components/FormularioPago";
 import { useTokenExpirado } from "@/hooks/useTokenExpirado";
@@ -84,7 +84,11 @@ export default function DetallesCarrito() {
     const totalCarrito = Object.values(carrito).reduce((total, { precio, cantidad }) => total + (precio * cantidad), 0);
     const [mostrarFormularioPago, setMostrarFormularioPago] = useState(false);
     const handleFinalizarCompra = () => {
-        setMostrarFormularioPago(true);
+        if (totalCarrito === 0) {
+            setNotificacionState({ titulo: "Error", mensaje: "No hay productos en el carrito para finalizar la compra", code: 500, tipo: "error" });
+        }else{
+            setMostrarFormularioPago(true);
+        }
     };
     const [pais, setPais] = useState("España");
     const calcularEnvio = () => {
@@ -100,7 +104,7 @@ export default function DetallesCarrito() {
         }
     };
     const precioEnvio = calcularEnvio();
-    const totalConEnvio = totalCarrito + precioEnvio;
+    const totalConEnvio = totalCarrito > 0 ? totalCarrito + precioEnvio : 0;
     return (
         <div>
             <Navbar></Navbar>
@@ -138,9 +142,8 @@ export default function DetallesCarrito() {
                                                 </div>
                                                 <div className="min-w-2 shrink-0">
                                                     <CantidadControl
-                                                        itemId={parseInt(id)}
                                                         cantidadInicial={cantidad}
-                                                        handleCantidadChange={(itemId, value) => handleCantidadChange(itemId, value)}
+                                                        handleCantidadChange={(value: number) => handleCantidadChange(parseInt(id), value)}
                                                         width={30}
                                                         height={30}
                                                     />
@@ -187,47 +190,13 @@ export default function DetallesCarrito() {
                                 </DialogContentText>
                             </DialogContent>
                             <DialogActions>
-                                <Button
-                                    onClick={handleClose}
-                                    sx={{
-                                        backgroundColor: 'var(--verde-azulado)',
-                                        color: 'white',
-                                        '&:hover': {
-                                            backgroundColor: 'var(--primary-dark)',
-                                            transform: 'scale(1.05)'
-                                        },
-                                        '&:active': {
-                                            backgroundColor: 'var(--oxley-800)',
-                                            transform: 'scale(0.95)',
-                                        },
-                                        padding: '10px 20px',
-                                        borderRadius: '5px',
-                                        boxShadow: '0px 3px 5px rgba(0, 0, 0, 0.2)',
-                                    }}
-                                >
+                                <button onClick={handleClose} className="mt-8 w-1/2 bg-(--primary-dark) text-white py-3 rounded-full hover:scale-105 active:scale-95 text-lg">
                                     Cancelar
-                                </Button>
-                                <Button
-                                    onClick={() => selectedId !== null && borrarProducto(selectedId)}
-                                    autoFocus
-                                    sx={{
-                                        backgroundColor: 'var(--danger-400)',
-                                        color: 'white',
-                                        '&:hover': {
-                                            backgroundColor: 'var(--danger-600)',
-                                            transform: 'scale(1.05)'
-                                        },
-                                        '&:active': {
-                                            backgroundColor: 'var(--danger-800)',
-                                            transform: 'scale(0.95)',
-                                        },
-                                        padding: '10px 20px',
-                                        borderRadius: '5px',
-                                        boxShadow: '0px 3px 5px rgba(0, 0, 0, 0.2)',
-                                    }}
-                                >
+                                </button>
+
+                                <button onClick={() => selectedId !== null && borrarProducto(selectedId)} className="mt-8 w-1/2 bg-(--danger-400) text-white py-3 rounded-full hover:scale-105 active:scale-95 text-lg">
                                     Eliminar
-                                </Button>
+                                </button>
                             </DialogActions>
                         </Dialog>
                     </div>
@@ -235,44 +204,46 @@ export default function DetallesCarrito() {
                         <span className="text-2xl">
                             Resumen del pedido
                         </span>
-                        <hr/>
-                        <div className="mt-4">
-                            <div className="flex text-lg justify-between">
-                                <p>Subtotal: </p>
-                                <p>
-                                    {(totalCarrito - (totalCarrito * 0.21)).toFixed(2)}
+                            <hr/>
+                            <div className="mt-4">
+                                <div className="flex text-lg justify-between overflow-y-auto scroll">
+                                    <p>Subtotal: </p>
+                                    <p>
+                                        {(totalCarrito - (totalCarrito * 0.21)).toFixed(2)}
+                                    </p>
+                                </div>
+                                <div className="flex text-lg justify-between">
+                                    <p>Impuestos: </p>
+                                    <p> {(totalCarrito * 0.21).toFixed(2)} </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="justify-between">
+                            <div className="flex items-center justify-between">
+                                <p
+                                    className="underline hover:scale-105 active:scale-95"
+                                >
+                                    Calcular envío
                                 </p>
+                                <select value={pais} onChange={(e) => setPais(e.target.value)}
+                                        className="mt-2 p-2 border rounded">
+                                    <option value="España">España</option>
+                                    <option value="Portugal">Portugal</option>
+                                    <option value="Francia">Francia</option>
+                                </select>
                             </div>
-                            <div className="flex text-lg justify-between">
-                                <p>Tax: </p>
-                                <p> {(totalCarrito * 0.21).toFixed(2)} </p>
+                            <div className="flex justify-between text-xl mt-8">
+                                <p className="font-bold">Total: </p>
+                                <p className="font-bold">{(totalConEnvio).toFixed(2)}</p>
                             </div>
-                        </div>
-                        <div className="flex items-center justify-between">
-                            <p
-                                className="underline hover:scale-105 active:scale-95"
-                            >
-                                Calcular envío
-                            </p>
-                            <select value={pais} onChange={(e) => setPais(e.target.value)}
-                                    className="mt-2 p-2 border rounded">
-                                <option value="España">España</option>
-                                <option value="Portugal">Portugal</option>
-                                <option value="Francia">Francia</option>
-                            </select>
-                        </div>
-                        <div className="flex justify-between text-xl mt-8">
-                            <p className="font-bold">Total: </p>
-                            <p className="font-bold">{(totalConEnvio).toFixed(2)}</p>
-                        </div>
-                        <div className="flex items-center justify-center w-full mt-12">
-                            <button
-                                onClick={handleFinalizarCompra}
-                                className="px-4 py-3 bg-(--oxley-300) hover:bg-(--verde-azulado)
+                            <div className="flex items-center justify-center w-full mt-12">
+                                <button
+                                    onClick={handleFinalizarCompra}
+                                    className="px-4 py-3 bg-(--oxley-300) hover:bg-(--verde-azulado)
                             active:bg-(--oxley-500) transition transform hover:scale-105 active:scale-95 w-full rounded-2xl font-bold">
-                                Finalizar compra
-                            </button>
-                        </div>
+                                    Finalizar compra
+                                </button>
+                            </div>
                     </div>
                 </div>
             </motion.div>

@@ -5,7 +5,7 @@ import { InterfazPlato } from "@/interfaces/interfazPlato";
 import Loading from '@/components/Loading';
 import axiosClient from '@/lib/axiosClient';
 import axios from 'axios';
-import ErrorPage from "@/pages/[_error]";
+import ErrorPage from "@pages/Error";
 import {ArrowPathIcon, ArrowsUpDownIcon, PlusCircleIcon} from "@heroicons/react/20/solid";
 import { ErrorPropsInterface } from "@/interfaces/ErrorPropsInterface";
 import { useAuth } from "@/hooks/useAuth";
@@ -37,7 +37,8 @@ export default function UsuariosPage() {
                     title: error.response.data.titulo || error.cause,
                     message: error.response.data.mensaje || error.message,
                     url: error.response.data.url || "/administracion/platos",
-                    color: 2
+                    color: 2,
+                    textoBoton: "Ir al login"
                 });
         }   else {
                 console.error('Error fetching user data:', error);
@@ -96,11 +97,11 @@ export default function UsuariosPage() {
 
 
     if (valueError) {
-        return <ErrorPage errorCode={valueError.errorCode} title={valueError.title} message={valueError.message} url={valueError.url} color={1}/>;
+        return <ErrorPage errorCode={valueError.errorCode} title={valueError.title} message={valueError.message} url={valueError.url} color={2} textoBoton={"Ir al login"}/>;
     }
 
     if (error) {
-        return <ErrorPage errorCode={error.errorCode} title={error.title} message={error.message} url={error.url} color={1}/>;
+        return <ErrorPage errorCode={error.errorCode} title={error.title} message={error.message} url={error.url} color={2} textoBoton={"Ir al login"}/>;
     }
 
     return (

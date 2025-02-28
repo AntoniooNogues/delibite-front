@@ -4,6 +4,7 @@ export interface ErrorPropsInterface{
     message: string;
     url: string;
     color: number;
+    textoBoton: string;
 }
 
 

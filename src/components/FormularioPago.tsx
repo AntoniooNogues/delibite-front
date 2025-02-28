@@ -9,6 +9,7 @@ import Cookies from "js-cookie";
 import {Notificaciones} from "@/interfaces/Notificaciones";
 import NotificacionComponent from "@/components/Notificacion";
 import ProtectedRouteCliente from "@/components/ProtectedRouteCliente";
+import {useRouter} from "next/navigation";
 
 
 interface FormularioPagoProps {
@@ -25,6 +26,7 @@ export default function FormularioPago({ setMostrarFormularioPago, totalConEnvio
         paypalEmail: "",
         paypalPassword: "",
     });
+    const router = useRouter();
 
     const [isFlipped, setIsFlipped] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState("card");
@@ -71,7 +73,7 @@ export default function FormularioPago({ setMostrarFormularioPago, totalConEnvio
             console.log(respuesta.data);
             setTimeout(() => {
                 setMostrarFormularioPago(false);
-                window.location.reload();
+                router.push("/")
             }, 2500);
             Cookies.remove("carrito");
         } catch (error) {

@@ -4,7 +4,7 @@ import AdminLayout from '@/components/AdminLayout';
 import Loading from '@/components/Loading';
 import axiosClient from '@/lib/axiosClient';
 import axios from 'axios';
-import ErrorPage from "@/pages/[_error]";
+import ErrorPage from "@pages/Error";
 import {ArrowPathIcon, ArrowsUpDownIcon, PlusCircleIcon} from "@heroicons/react/20/solid";
 import { useAuth } from "@/hooks/useAuth";
 import FormularioPack from "@/components/FormularioPack";
@@ -85,7 +85,7 @@ export default function UsuariosPage() {
 
 
     if (error) {
-        return <ErrorPage errorCode={error.errorCode} title={error.title} message={error.message} url={error.url} color={2}/>;
+        return <ErrorPage errorCode={error.errorCode} title={error.title} message={error.message} url={error.url} color={2} textoBoton={"Ir al login"}/>;
     }
 
     return (
