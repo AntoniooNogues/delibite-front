@@ -19,3 +19,17 @@ export interface Plato {
     url: string;
     alergenos: Alergenos[];
 }
+
+export interface Valoraciones {
+    nombre: string;
+    apellidos: string;
+    valoracion: number;
+    descripcion: string;
+    codigo: string;
+    fecha_pedido: string;
+}
+
+export interface DetallesValoraciones{
+    numero_valoraciones: number;
+    valoracion_media: number;
+}
