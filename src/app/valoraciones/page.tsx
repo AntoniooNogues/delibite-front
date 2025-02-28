@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useSearchParams} from 'next/navigation';
 import ErrorPage from "@pages/Error";
 import Navbar from "@/components/Navbar";
@@ -24,12 +24,7 @@ export default function ValoracionesPage() {
     const [loading, setLoading] = useState(true);
     const [pedidoID, setPedidoID] = useState<number | null>(null);
 
-    useEffect(() => {
-        fetchData();
-        setPedidoID(platos.map((plato) => plato.pedido_id)[0]);
-    }, []);
-
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             const response = await axiosClient.post(`/valoraciones/verificar`, { codigo });
             setPlatos(response.data);
@@ -54,15 +49,16 @@ export default function ValoracionesPage() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [codigo]);
+
+    useEffect(() => {
+        fetchData();
+        setPedidoID(platos.map((plato) => plato.pedido_id)[0]);
+    }, [fetchData, platos]);
 
     const [valoraciones, setValoraciones] = useState<Record<number, Valoracion>>({});
 
-
-
-
-
-    const handleValoracionChange = (platoId: number, key: keyof Valoracion, value: any) => {
+    const handleValoracionChange = (platoId: number, key: keyof Valoracion, value: string | number) => {
         if (pedidoID === null) return;
         setValoraciones((prev) => {
             return {
@@ -147,7 +143,7 @@ export default function ValoracionesPage() {
                                         setTimeout(() => {
                                             window.location.href = "/";
                                         }, 2000);
-                                    } catch (error) {
+                                    } catch {
                                         setNotificacion({ titulo: "Ha ocurrido un error ", mensaje: "No se han podido valorar los platos del pedido", code: 500, tipo: "error" });
                                     }
                                 }}

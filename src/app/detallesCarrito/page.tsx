@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 import CantidadControl from "@/components/BotonAddPlato";
 import Image from "next/image";
 import {Trash} from "lucide-react";
-import { Dialog, DialogTitle, DialogActions, DialogContent, DialogContentText, Button } from "@mui/material";
+import { Dialog, DialogTitle, DialogActions, DialogContent, DialogContentText } from "@mui/material";
 import Footer from "@/components/Footer";
 import FormularioPago from "@/components/FormularioPago";
 import { useTokenExpirado } from "@/hooks/useTokenExpirado";

@@ -16,18 +16,40 @@ import axiosClient from "@/lib/axiosClient";
 import axios from "axios";
 import Footer from "@/components/Footer";
 import { useTokenExpirado } from '@/hooks/useTokenExpirado';
+import Cookies from "js-cookie";
 
 const PlatoDetalle = ({ plato }: { plato: Plato }) => {
     const [cantidad, setCantidad] = useState<{ [key: number]: number }>({});
     const [isOpen, setIsOpen] = useState(false);
 
     const router = useRouter();
-    const handleCantidadChange = (id: number, value: number) => {
+    const handleCantidadChange = (id: number, nombre: string, precio: number, value: number, url: string) => {
         setCantidad(prev => {
             const newCantidad = { ...prev, [id]: value };
             if (newCantidad[id] <= 0) {
                 delete newCantidad[id];
             }
+
+            // Retrieve existing cookie data
+            const carrito = Cookies.get("carrito");
+            const carritoObj = carrito ? JSON.parse(carrito) : {};
+
+            // Update the carrito object
+            if (value > 0) {
+                carritoObj[id] = { nombre, precio, cantidad: value, url };
+            } else {
+                delete carritoObj[id];
+            }
+
+            // Save updated carrito object to cookies
+            Cookies.set("carrito", JSON.stringify(carritoObj), { expires: 7 });
+
+            // Dispatch custom event to notify other components
+            const event = new CustomEvent("actualizacionCarrito", { detail: carritoObj });
+            setTimeout(() => {
+                window.dispatchEvent(event);
+            }, 5);
+
             return newCantidad;
         });
     };
@@ -63,9 +85,8 @@ const PlatoDetalle = ({ plato }: { plato: Plato }) => {
                     <div className="flex flex-row gap-4 justify-between items-center">
                         <p className="font-semibold text-xl">{plato.precio}€</p>
                         <CantidadControl
-                            itemId={plato.plato_id}
                             cantidadInicial={cantidad[plato.plato_id] || 0}
-                            handleCantidadChange={handleCantidadChange}
+                            handleCantidadChange={(value) => handleCantidadChange(plato.plato_id, plato.nombre, plato.precio, value, plato.url)}
                             width={40}
                             height={40}
                         />
