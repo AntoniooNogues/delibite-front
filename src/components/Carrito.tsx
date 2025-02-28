@@ -6,11 +6,12 @@ import { motion } from "framer-motion";
 import { ShoppingCart, X, Trash } from "lucide-react";
 import Cookies from "js-cookie";
 import CantidadControl from "./BotonAddPlato";
+import {CarritoItem} from "@/interfaces/CarritoItem";
 
 export default function Carrito() {
     const router = useRouter();
     const [isOpen, setIsOpen] = useState(false);
-    const [carrito, setCarrito] = useState<{ [key: number]: { nombre: string, precio: number, cantidad: number } }>({});
+    const [carrito, setCarrito] = useState<{ [key: number]: CarritoItem }>({});
 
     useEffect(() => {
         const updateCarrito = () => {
