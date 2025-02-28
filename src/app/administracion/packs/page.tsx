@@ -85,7 +85,7 @@ export default function UsuariosPage() {
 
 
     if (error) {
-        return <ErrorPage errorCode={error.errorCode} title={error.title} message={error.message} url={error.url} color={2}/>;
+        return <ErrorPage errorCode={error.errorCode} title={error.title} message={error.message} url={error.url} color={2} textoBoton={"Ir al login"}/>;
     }
 
     return (
