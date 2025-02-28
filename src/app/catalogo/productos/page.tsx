@@ -132,7 +132,7 @@ const CategoriaLista = ({ titulo, items, subheader }: { titulo: string; items: C
                                 <CantidadControl
                                     itemId={item.plato_id}
                                     cantidadInicial={cantidad[item.plato_id] || 0}
-                                    handleCantidadChange={(value) => handleCantidadChange(item.plato_id, item.nombre, item.precio, value)}
+                                    handleCantidadChange={(id, value) => handleCantidadChange(item.plato_id, item.nombre, item.precio, value)}
                                     width={35}
                                     height={35}
                                 />
