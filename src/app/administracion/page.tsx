@@ -6,7 +6,7 @@ import { HomeInterface } from "@/interfaces/Administracion-Interfaces";
 import { motion } from 'framer-motion';
 import Loading from "@/components/Loading";
 import axiosClient from "@/lib/axiosClient";
-import ErrorPage from "@/pages/[_error]";
+import ErrorPage from "@pages/Error";
 import NotificacionComponent from "@/components/Notificacion";
 import { Notificaciones } from "@/interfaces/Notificaciones";
 import axios from "axios";

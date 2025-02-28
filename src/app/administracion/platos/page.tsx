@@ -5,7 +5,7 @@ import { InterfazPlato } from "@/interfaces/interfazPlato";
 import Loading from '@/components/Loading';
 import axiosClient from '@/lib/axiosClient';
 import axios from 'axios';
-import ErrorPage from "@/pages/[_error]";
+import ErrorPage from "@pages/Error";
 import {ArrowPathIcon, ArrowsUpDownIcon, PlusCircleIcon} from "@heroicons/react/20/solid";
 import { ErrorPropsInterface } from "@/interfaces/ErrorPropsInterface";
 import { useAuth } from "@/hooks/useAuth";

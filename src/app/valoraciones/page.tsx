@@ -2,7 +2,7 @@
 
 import React, {useEffect, useState} from 'react';
 import {useSearchParams} from 'next/navigation';
-import ErrorPage from "@/pages/[_error]";
+import ErrorPage from "@pages/Error";
 import Navbar from "@/components/Navbar";
 import axiosClient from '@/lib/axiosClient';
 import axios from 'axios';
