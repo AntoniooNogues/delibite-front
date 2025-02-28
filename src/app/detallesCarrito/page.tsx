@@ -12,10 +12,10 @@ import FormularioPago from "@/components/FormularioPago";
 import { useTokenExpirado } from "@/hooks/useTokenExpirado";
 import NotificacionComponent from "@/components/Notificacion";
 import {Notificaciones} from "@/interfaces/Notificaciones";
-
+import {CarritoItem} from "@/interfaces/CarritoItem";
 
 export default function DetallesCarrito() {
-    const [carrito, setCarrito] = useState<{ [key: number]: { nombre: string, precio: number, cantidad: number } }>({});
+    const [carrito, setCarrito] = useState<{ [key: number]: CarritoItem }>({});
     const notificacion = useTokenExpirado();
     const [notificacionState, setNotificacionState] = useState<Notificaciones | null>(null);
 
@@ -105,34 +105,38 @@ export default function DetallesCarrito() {
         <div>
             <Navbar></Navbar>
             <motion.div initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.2 }}>
-                {/* Mostrar productos */}
-                <div className="mt-8 mx-auto w-5/6 flex space-x-6 mb-12">
-                    <div className="w-2/3 bg-white p-6 rounded-2xl shadow-lg">
+                <div className="mt-8 mx-auto w-11/12 lg:w-5/6 flex flex-col lg:flex-row space-y-6 lg:space-y-0 lg:space-x-6 mb-12">
+                    <div className="w-full lg:w-2/3 bg-white p-6 rounded-2xl shadow-lg">
                         <span className="text-2xl">
                             Mi carrito
                         </span>
                         <hr/>
-                        <div className="space-y-2 mt-2 ">
+                        <div className="space-y-2 mt-2">
                             {Object.keys(carrito).length > 0 ? (
-                                Object.entries(carrito).map(([id, { nombre, precio, cantidad }], i) => {
+                                Object.entries(carrito).map(([id, {nombre, precio, cantidad, img, tipo}], i) => {
                                     return (
                                         <div
                                             key={id}
-                                            className={`flex flex-col justify-between p-4 rounded-lg  ${
+                                            className={`flex flex-col lg:flex-row w-full justify-between p-4 rounded-lg ${
                                                 i % 2 === 0 ? 'bg-white' : 'bg-[var(--gris-muy-claro)]'
                                             }`}
                                         >
-                                            <div className="flex justify-between items-center space-x-4" style={{ flexShrink: 0 }}>
-                                                <div>
-                                                    <Image src={"/catalogo/papas_arrugas.webp"} alt={"Imagen producto"} className="rounded-lg" width={140} height={70}></Image>
+                                            <div
+                                                className="flex flex-col lg:flex-row lg:w-full justify-between items-center space-y-4 lg:space-y-0 lg:space-x-4"
+                                                style={{flexShrink: 0}}>
+                                                <div className="w-full lg:w-auto">
+                                                    <Image src={img} alt={"Imagen producto"}
+                                                           className="rounded-lg w-full lg:w-36" width={140}
+                                                           height={70}></Image>
                                                 </div>
-                                                <div className="flex flex-1 items-center space-x-4">
+                                                <div
+                                                    className="flex flex-1 flex-col lg:flex-row items-center space-y-2 lg:space-y-0 lg:space-x-4">
                                                     <p className="text-lg font-semibold">{nombre}</p>
                                                     <p className="text-md">
                                                         {precio}€
                                                     </p>
                                                 </div>
-                                                <div className="min-w-2 shrink-0 ">
+                                                <div className="min-w-2 shrink-0">
                                                     <CantidadControl
                                                         itemId={parseInt(id)}
                                                         cantidadInicial={cantidad}
@@ -141,7 +145,7 @@ export default function DetallesCarrito() {
                                                         height={30}
                                                     />
                                                 </div>
-                                                <div className="min-w-3 shrink-0 ">
+                                                <div className="min-w-3 shrink-0">
                                                     <p className="font-bold">
                                                         {(cantidad * precio).toFixed(2)}€
                                                     </p>
@@ -227,7 +231,7 @@ export default function DetallesCarrito() {
                             </DialogActions>
                         </Dialog>
                     </div>
-                    <div className="w-1/3 bg-white p-6 rounded-2xl shadow-lg max-h-86">
+                    <div className="w-full lg:w-1/3 bg-white p-6 rounded-2xl shadow-lg max-h-86">
                         <span className="text-2xl">
                             Resumen del pedido
                         </span>
@@ -272,7 +276,8 @@ export default function DetallesCarrito() {
                     </div>
                 </div>
             </motion.div>
-            {mostrarFormularioPago && <FormularioPago setMostrarFormularioPago={setMostrarFormularioPago} totalConEnvio={totalConEnvio}  />}
+            {mostrarFormularioPago &&
+                <FormularioPago setMostrarFormularioPago={setMostrarFormularioPago} totalConEnvio={totalConEnvio}  />}
             <Footer></Footer>
 
             {notificacionState && (
