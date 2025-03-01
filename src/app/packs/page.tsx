@@ -14,6 +14,7 @@ import CantidadControl from "@/components/BotonAddPlato";
 import Cookies from "js-cookie";
 import {useTokenExpirado} from "@/hooks/useTokenExpirado";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 export default function Packs() {
     const [notificacion, setNotificacion] = useState<Notificaciones>();
@@ -87,10 +88,11 @@ export default function Packs() {
     return (
         <main className="bg-gray-50">
             <Navbar />
-            <header className="mt-10 text-center py-16 bg-gradient-to-t from-(--oxley-700) to-(--verde-azulado-80) text-white">
+
+            <motion.div initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.4 }} className="mt-10 text-center py-16 bg-gradient-to-t from-(--oxley-700) to-(--verde-azulado-80) text-white">
                 <h1 className="text-5xl font-bold">Packs</h1>
                 <p className="mt-4 text-xl">Explora nuestros paquetes exclusivos y encuentra el que mejor se adapte a tus necesidades.</p>
-            </header>
+            </motion.div>
 
             {loading ? (
                 <section className="min-h-screen flex justify-center items-center">
