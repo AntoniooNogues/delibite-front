@@ -71,7 +71,7 @@ export default function Navbar() {
                             <XMarkIcon className="hidden size-6 group-data-open:block" aria-hidden="true" />
                         </PopoverButton>
                     </div>
-                    <div className="hidden lg:flex space-x-5 ml-2">
+                    <div className="hidden lg:flex md:space-x-2 space-x-5 ml-2">
                         {navigation.map((item) => (
                             <a
                                 key={item.name}

@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import React, {useCallback, useEffect, useState} from 'react';
-import {useSearchParams} from 'next/navigation';
+import React, { Suspense, useCallback, useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import ErrorPage from "@pages/Error";
 import Navbar from "@/components/Navbar";
 import axiosClient from '@/lib/axiosClient';
 import axios from 'axios';
-import type {Notificaciones} from '@/interfaces/Notificaciones';
+import type { Notificaciones } from '@/interfaces/Notificaciones';
 import NotificacionComponent from "@/components/Notificacion";
-import type {LineaPedido, Valoracion} from '@/interfaces/Valoraciones';
+import type { LineaPedido, Valoracion } from '@/interfaces/Valoraciones';
 import Loading from "@/components/Loading";
 import Rating from '@mui/material/Rating';
 import Image from "next/image";
 import Footer from "@/components/Footer";
 
-export default function ValoracionesPage() {
+function ValoracionesContent() {
     const searchParams = useSearchParams();
     const codigo = searchParams ? searchParams.get('codigo') : null;
     const [notificacion, setNotificacion] = useState<Notificaciones>();
@@ -72,8 +72,6 @@ export default function ValoracionesPage() {
             };
         });
     };
-
-
 
     return (
         <main>
@@ -163,5 +161,13 @@ export default function ValoracionesPage() {
                 />
             )}
         </main>
+    );
+}
+
+export default function ValoracionesPage() {
+    return (
+        <Suspense fallback={<Loading />}>
+            <ValoracionesContent />
+        </Suspense>
     );
 }
