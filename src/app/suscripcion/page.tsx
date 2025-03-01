@@ -46,7 +46,9 @@ export default function Suscripcion() {
         const carrito = Cookies.get("carrito");
         const carritoObj = carrito ? JSON.parse(carrito) : {};
         const newCantidad = Object.keys(carritoObj).reduce((acc, id) => {
-            acc[parseInt(id)] = carritoObj[id].cantidad;
+            if (carritoObj[id].tipo === 'suscripcion') {
+                acc[parseInt(id)] = carritoObj[id].cantidad;
+            }
             return acc;
         }, {} as { [key: number]: number });
         setCantidad(newCantidad);
@@ -76,7 +78,7 @@ export default function Suscripcion() {
         setTotalPlatos(total);
     };
 
-    const handleCantidadChange = (id: number, nombre: string, precio: number, value: number, img: string, tipo: 'plato' | 'suscripcion') => {
+        const handleCantidadChange = (id: number, nombre: string, precio: number, value: number, img: string, tipo: 'plato' | 'suscripcion') => {
         setCantidad(prev => {
             const newCantidad = { ...prev, [id]: value };
             if (newCantidad[id] <= 0) {
@@ -114,7 +116,7 @@ export default function Suscripcion() {
     };
 
     if (loading) {
-        return <div>
+        return <div className="flex items-center justify-center min-h-screen">
             <Loading></Loading>
         </div>
     }
@@ -194,9 +196,8 @@ export default function Suscripcion() {
                             <div className="mt-auto flex flex-row justify-between items-center ">
                                 <p className="text-left text-gray-700 text-[22px] font-medium ">{item.precio}€</p>
                                 <CantidadControl
-                                    itemId={item.plato_id}
                                     cantidadInicial={cantidad[item.plato_id] || 0}
-                                    handleCantidadChange={(id, value) => handleCantidadChange(item.plato_id, item.nombre, item.precio, value, item.url, 'suscripcion')}
+                                    handleCantidadChange={(value) => handleCantidadChange(item.plato_id, item.nombre, item.precio, value, item.url, 'suscripcion')}
                                     width={35}
                                     height={35}
                                 />
