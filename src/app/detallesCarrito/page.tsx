@@ -12,10 +12,10 @@ import FormularioPago from "@/components/FormularioPago";
 import { useTokenExpirado } from "@/hooks/useTokenExpirado";
 import NotificacionComponent from "@/components/Notificacion";
 import {Notificaciones} from "@/interfaces/Notificaciones";
-
+import {CarritoItem} from "@/interfaces/CarritoItem";
 
 export default function DetallesCarrito() {
-    const [carrito, setCarrito] = useState<{ [key: number]: { nombre: string, precio: number, cantidad: number, url: string } }>({});
+    const [carrito, setCarrito] = useState<{ [key: number]: CarritoItem }>({});
     const notificacion = useTokenExpirado();
     const [notificacionState, setNotificacionState] = useState<Notificaciones | null>(null);
 
@@ -107,100 +107,102 @@ export default function DetallesCarrito() {
     const totalConEnvio = totalCarrito > 0 ? totalCarrito + precioEnvio : 0;
     return (
         <div>
-            <div className="relative w-full z-50">
-                <Navbar />
-            </div>
-            <motion.div initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.2 }} className="min-h-screen">
-                {/* Mostrar productos */}
-                <div className="mt-8 mx-auto w-5/6 flex space-x-6 mb-12 h-full min-h-[600px] max-h-[600px]">
-                    <div className="w-2/3 bg-white p-6 rounded-2xl shadow-lg overflow-y-auto">
+            <div className="min-h-screen">
+                <Navbar></Navbar>
+                <motion.div initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.2 }}>
+                    <div className="mt-8 mx-auto w-11/12 lg:w-5/6 flex flex-col lg:flex-row space-y-6 lg:space-y-0 lg:space-x-6 mb-12">
+                        <div className="w-full lg:w-2/3 bg-white p-6 rounded-2xl shadow-lg">
                         <span className="text-2xl">
                             Mi carrito
                         </span>
-                        <hr/>
-                        <div className="space-y-2 mt-2 ">
-                            {Object.keys(carrito).length > 0 ? (
-                                Object.entries(carrito).map(([id, { nombre, precio, cantidad, url }], i) => {
-                                    return (
-                                        <div
-                                            key={id}
-                                            className={`flex flex-col justify-between p-4 rounded-lg  ${
-                                                i % 2 === 0 ? 'bg-white' : 'bg-[var(--gris-muy-claro)]'
-                                            }`}
-                                        >
-                                            <div className="flex justify-between items-center space-x-4" style={{ flexShrink: 0 }}>
-                                                <div>
-                                                    <Image src={url} alt={"Imagen producto"} className="rounded-lg" width={140} height={70} />
-                                                </div>
-                                                <div className="flex flex-1 items-center space-x-4">
-                                                    <p className="text-lg font-semibold">{nombre}</p>
-                                                    <p className="text-md">
-                                                        {precio}€
-                                                    </p>
-                                                </div>
-                                                <div className="min-w-2 shrink-0 ">
-                                                    <CantidadControl
-                                                        cantidadInicial={cantidad}
-                                                        handleCantidadChange={(value: number) => handleCantidadChange(parseInt(id), value)}
-                                                        width={30}
-                                                        height={30}
-                                                    />
-                                                </div>
-                                                <div className="min-w-3 shrink-0 ">
-                                                    <p className="font-bold">
-                                                        {(cantidad * precio).toFixed(2)}€
-                                                    </p>
-                                                </div>
-                                                <div>
-                                                    <button
-                                                        onClick={() => handleClickOpen(parseInt(id))}
-                                                        className="bg-red-500 text-white p-2 rounded-full shadow-lg hover:bg-red-700 active:bg-red-900 transition transform active:scale-95 hover:scale-105 focus:outline-none"
-                                                    >
-                                                        <Trash size={16}/>
-                                                    </button>
+                            <hr/>
+                            <div className="space-y-2 mt-2">
+                                {Object.keys(carrito).length > 0 ? (
+                                    Object.entries(carrito).map(([id, {nombre, precio, cantidad, img, tipo}], i) => {
+                                        return (
+                                            <div
+                                                key={id}
+                                                className={`flex flex-col lg:flex-row w-full justify-between p-4 rounded-lg ${
+                                                    i % 2 === 0 ? 'bg-white' : 'bg-[var(--gris-muy-claro)]'
+                                                }`}
+                                            >
+                                                <div
+                                                    className="flex flex-col lg:flex-row lg:w-full justify-between items-center space-y-4 lg:space-y-0 lg:space-x-4"
+                                                    style={{flexShrink: 0}}>
+                                                    <div className="w-full lg:w-auto">
+                                                        <Image src={img} alt={"Imagen producto"}
+                                                               className="rounded-lg w-full lg:w-36" width={140}
+                                                               height={70}></Image>
+                                                    </div>
+                                                    <div
+                                                        className="flex flex-1 flex-col lg:flex-row items-center space-y-2 lg:space-y-0 lg:space-x-4">
+                                                        <p className="text-lg font-semibold">{nombre}</p>
+                                                        <p className="text-md">
+                                                            {precio}€
+                                                        </p>
+                                                    </div>
+                                                    <div className="min-w-2 shrink-0">
+                                                        <CantidadControl
+                                                            cantidadInicial={cantidad}
+                                                            handleCantidadChange={(value: number) => handleCantidadChange(parseInt(id), value)}
+                                                            width={30}
+                                                            height={30}
+                                                        />
+                                                    </div>
+                                                    <div className="min-w-3 shrink-0">
+                                                        <p className="font-bold">
+                                                            {(cantidad * precio).toFixed(2)}€
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <button
+                                                            onClick={() => handleClickOpen(parseInt(id))}
+                                                            className="bg-red-500 text-white p-2 rounded-full shadow-lg hover:bg-red-700 active:bg-red-900 transition transform active:scale-95 hover:scale-105 focus:outline-none"
+                                                        >
+                                                            <Trash size={16}/>
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    );
-                                })
-                            ) : (
-                                <p className="text-gray-600 text-center">No hay productos en el carrito.</p>
-                            )}
-                        </div>
-                        <Dialog
-                            open={open}
-                            onClose={handleClose}
-                            aria-labelledby="alert-dialog-title"
-                            aria-describedby="alert-dialog-description"
-                            sx={{
-                                '& .MuiDialog-paper': {
-                                    backgroundColor: 'var(--oxley-50)',
-                                    color: 'var(--oxley-900)',
-                                    borderRadius: '10px',
-                                    padding: '20px',
-                                },
-                            }}
-                        >
-                            <DialogTitle id="alert-dialog-title">{"Confirmar eliminación"}</DialogTitle>
-                            <DialogContent>
-                                <DialogContentText id="alert-dialog-description">
-                                    ¿Estás seguro de que deseas eliminar este producto del carrito?
-                                </DialogContentText>
-                            </DialogContent>
-                            <DialogActions>
-                                <button onClick={handleClose} className="mt-8 w-1/2 bg-(--primary-dark) text-white py-3 rounded-full hover:scale-105 active:scale-95 text-lg">
-                                    Cancelar
-                                </button>
+                                        );
+                                    })
+                                ) : (
+                                    <p className="text-gray-600 text-center">No hay productos en el carrito.</p>
+                                )}
+                            </div>
+                            <Dialog
+                                open={open}
+                                onClose={handleClose}
+                                aria-labelledby="alert-dialog-title"
+                                aria-describedby="alert-dialog-description"
+                                sx={{
+                                    '& .MuiDialog-paper': {
+                                        backgroundColor: 'var(--oxley-50)',
+                                        color: 'var(--oxley-900)',
+                                        borderRadius: '10px',
+                                        padding: '20px',
+                                    },
+                                }}
+                            >
+                                <DialogTitle id="alert-dialog-title">{"Confirmar eliminación"}</DialogTitle>
+                                <DialogContent>
+                                    <DialogContentText id="alert-dialog-description">
+                                        ¿Estás seguro de que deseas eliminar este producto del carrito?
+                                    </DialogContentText>
+                                </DialogContent>
+                                <DialogActions>
+                                    <button onClick={handleClose} className="mt-8 w-1/2 bg-(--primary-dark) text-white py-3 rounded-full hover:scale-105 active:scale-95 text-lg">
+                                        Cancelar
+                                    </button>
 
-                                <button onClick={() => selectedId !== null && borrarProducto(selectedId)} className="mt-8 w-1/2 bg-(--danger-400) text-white py-3 rounded-full hover:scale-105 active:scale-95 text-lg">
-                                    Eliminar
-                                </button>
-                            </DialogActions>
-                        </Dialog>
-                    </div>
-                    <div className="w-1/3 bg-white p-6 rounded-2xl shadow-lg flex flex-col justify-between overflow-y-auto">
-                        <div>
-                            <span className="text-2xl">
+                                    <button onClick={() => selectedId !== null && borrarProducto(selectedId)} className="mt-8 w-1/2 bg-(--danger-400) text-white py-3 rounded-full hover:scale-105 active:scale-95 text-lg">
+                                        Eliminar
+                                    </button>
+                                </DialogActions>
+                            </Dialog>
+                        </div>
+                        <div className="w-full lg:w-1/3 bg-white p-6 rounded-2xl shadow-lg max-h-86">
+                        <span className="text-2xl">
                             Resumen del pedido
                         </span>
                             <hr/>
@@ -216,38 +218,39 @@ export default function DetallesCarrito() {
                                     <p> {(totalCarrito * 0.21).toFixed(2)} </p>
                                 </div>
                             </div>
-                        </div>
-                        <div className="justify-between">
-                            <div className="flex items-center justify-between">
-                                <p
-                                    className="underline hover:scale-105 active:scale-95"
-                                >
-                                    Calcular envío
-                                </p>
-                                <select value={pais} onChange={(e) => setPais(e.target.value)}
-                                        className="mt-2 p-2 border rounded">
-                                    <option value="España">España</option>
-                                    <option value="Portugal">Portugal</option>
-                                    <option value="Francia">Francia</option>
-                                </select>
-                            </div>
-                            <div className="flex justify-between text-xl mt-8">
-                                <p className="font-bold">Total: </p>
-                                <p className="font-bold">{(totalConEnvio).toFixed(2)}</p>
-                            </div>
-                            <div className="flex items-center justify-center w-full mt-12">
-                                <button
-                                    onClick={handleFinalizarCompra}
-                                    className="px-4 py-3 bg-(--oxley-300) hover:bg-(--verde-azulado)
+                            <div className="justify-between">
+                                <div className="flex items-center justify-between">
+                                    <p
+                                        className="underline hover:scale-105 active:scale-95"
+                                    >
+                                        Calcular envío
+                                    </p>
+                                    <select value={pais} onChange={(e) => setPais(e.target.value)}
+                                            className="mt-2 p-2 border rounded">
+                                        <option value="España">España</option>
+                                        <option value="Portugal">Portugal</option>
+                                        <option value="Francia">Francia</option>
+                                    </select>
+                                </div>
+                                <div className="flex justify-between text-xl mt-8">
+                                    <p className="font-bold">Total: </p>
+                                    <p className="font-bold">{(totalConEnvio).toFixed(2)}</p>
+                                </div>
+                                <div className="flex items-center justify-center w-full mt-12">
+                                    <button
+                                        onClick={handleFinalizarCompra}
+                                        className="px-4 py-3 bg-(--oxley-300) hover:bg-(--verde-azulado)
                             active:bg-(--oxley-500) transition transform hover:scale-105 active:scale-95 w-full rounded-2xl font-bold">
-                                    Finalizar compra
-                                </button>
+                                        Finalizar compra
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </motion.div>
-            {mostrarFormularioPago && <FormularioPago setMostrarFormularioPago={setMostrarFormularioPago} totalConEnvio={totalConEnvio}  />}
+                </motion.div>
+            </div>
+            {mostrarFormularioPago &&
+                <FormularioPago setMostrarFormularioPago={setMostrarFormularioPago} totalConEnvio={totalConEnvio}  />}
             <Footer></Footer>
 
             {notificacionState && (

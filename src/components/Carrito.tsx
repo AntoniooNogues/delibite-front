@@ -6,11 +6,13 @@ import { motion } from "framer-motion";
 import { ShoppingCart, X, Trash } from "lucide-react";
 import Cookies from "js-cookie";
 import CantidadControl from "./BotonAddPlato";
+import { CarritoItem } from "@/interfaces/CarritoItem";
 
 export default function Carrito() {
     const router = useRouter();
     const [isOpen, setIsOpen] = useState(false);
-    const [carrito, setCarrito] = useState<{ [key: number]: { nombre: string, precio: number, cantidad: number } }>({});
+    const [carrito, setCarrito] = useState<{ [key: number]: CarritoItem }>({});
+    const [cantidad1, setCantidad] = useState<{ [key: number]: number }>({});
 
     useEffect(() => {
         const updateCarrito = () => {
@@ -29,21 +31,30 @@ export default function Carrito() {
         };
     }, []);
 
-    const handleCantidadChange = (id: number, value: number) => {
-        setCarrito(prev => {
-            const newCarrito = { ...prev };
-            if (value > 0) {
-                newCarrito[id].cantidad = value;
-            } else {
-                delete newCarrito[id];
+    const handleCantidadChange = (id: number, nombre: string, precio: number, value: number, img: string) => {
+        setCantidad(prev => {
+            const newCantidad = { ...prev, [id]: value };
+            if (newCantidad[id] <= 0) {
+                delete newCantidad[id];
             }
 
-            Cookies.set("carrito", JSON.stringify(newCarrito), { expires: 7 });
+            const carrito = Cookies.get("carrito");
+            const carritoObj = carrito ? JSON.parse(carrito) : {};
 
-            const event = new CustomEvent("actualizacionCarrito", { detail: newCarrito });
-            window.dispatchEvent(event);
+            if (value > 0) {
+                carritoObj[id] = { nombre, precio, cantidad: value, img };
+            } else {
+                delete carritoObj[id];
+            }
 
-            return newCarrito;
+            Cookies.set("carrito", JSON.stringify(carritoObj), { expires: 7 });
+
+            const event = new CustomEvent("actualizacionCarrito", { detail: carritoObj });
+            setTimeout(() => {
+                window.dispatchEvent(event)
+            }, 5);
+
+            return newCantidad;
         });
     };
 
@@ -75,9 +86,9 @@ export default function Carrito() {
 
             {/* Sidebar del carrito */}
             <motion.div
-                initial={{x: "100%"}}
-                animate={{x: isOpen ? 0 : "100%"}}
-                transition={{type: "spring", stiffness: 300, damping: 30}}
+                initial={{ x: "100%" }}
+                animate={{ x: isOpen ? 0 : "100%" }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 className="fixed top-0 right-0 w-86 h-full bg-(--oxley-50) shadow-lg p-4 flex flex-col z-50"
             >
                 <button
@@ -85,22 +96,22 @@ export default function Carrito() {
                     className="self-end text-gray-500 hover:text-gray-700"
                 >
                     <X size={30} className="text-(--oxley-500) hover:text-(--primary-dark)
-                    active:text-(--oxley-700) transition transform active:scale-95 hover:scale-105"/>
+                    active:text-(--oxley-700) transition transform active:scale-95 hover:scale-105" />
                 </button>
                 <h2 className="text-xl font-semibold">Tu Carrito</h2>
 
                 {/* Mostrar productos */}
                 <div className="mt-4 space-y-2">
                     {Object.keys(carrito).length > 0 ? (
-                        Object.entries(carrito).map(([id, {nombre, precio, cantidad}]) => (
+                        Object.entries(carrito).map(([id, { nombre, precio, cantidad }]) => (
                             <div key={id} className="flex flex-col justify-between p-2 border-b">
                                 <div>
                                     <p>{nombre}</p>
                                     <p>{cantidad}x {precio}€ = {(cantidad * precio).toFixed(2)}€</p>
                                 </div>
                                 <CantidadControl
-                                    cantidadInicial={cantidad}
-                                    handleCantidadChange={(value: number) => handleCantidadChange(parseInt(id), value)}
+                                    cantidadInicial={cantidad1[Number(id)] || 0}
+                                    handleCantidadChange={(value) => handleCantidadChange(Number(id), nombre, precio, value,'')}
                                     width={30}
                                     height={30}
                                 />
@@ -116,7 +127,7 @@ export default function Carrito() {
                         onClick={emptyCarrito}
                         className="bg-red-500 text-white p-2 rounded-full shadow-lg hover:bg-red-700
                         active:bg-red-900 transition transform active:scale-95 hover:scale-105 focus:outline-none">
-                        <Trash size={24}/>
+                        <Trash size={24} />
                     </button>
                 </div>
                 <div className="flex w-full justify-center items-center mt-4">
