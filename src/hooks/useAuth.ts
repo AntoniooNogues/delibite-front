@@ -15,7 +15,6 @@ export const useAuth = () => {
             if (tokenUsuario) {
                 try {
                     const tokenDescodificado = jwtDecode<{ roles: string[], username: string }>(tokenUsuario);
-                    console.log("Decoded roles:", tokenDescodificado.roles);
                     if (!tokenDescodificado.roles.includes('ROLE_ADMINISTRADOR') && !tokenDescodificado.roles.includes('ROLE_SUPERVISOR')) {
                         setError({
                             errorCode: "403",
