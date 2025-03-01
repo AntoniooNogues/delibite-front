@@ -7,9 +7,9 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion'
 
 const navigation = [
-    { name: 'Suscripción', href: '#', current: false },
+    { name: 'Suscripción', href: '/suscripcion', current: false },
     { name: 'Catálogo', href: '/catalogo/productos', current: false },
-    { name: 'Packs', href: '#', current: false },
+    { name: 'Packs', href: '/packs', current: false },
 ]
 
 function classNames(...classes: string[]) {
