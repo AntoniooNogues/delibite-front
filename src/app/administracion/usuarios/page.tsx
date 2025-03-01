@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import AdminLayout from '@/components/AdminLayout';
-import { interfazUsuario } from '../../../interfaces/users';
+import { interfazUsuario } from '@/interfaces/users';
 import Loading from '@/components/Loading';
 import axiosClient from '@/lib/axiosClient';
 import axios from 'axios';
@@ -20,6 +20,19 @@ export default function UsuariosPage() {
     const itemsPerPage = 20;
 
     const isAdmin = token?.roles.includes("ROLE_ADMINISTRADOR");
+
+    useEffect(() => {
+        if (!isAdmin) {
+            setError({
+                errorCode: "401",
+                title: "No autorizado",
+                message: "No tienes autorización para acceder a este recurso.",
+                url: "/administracion/",
+                color: 2,
+                textoBoton: "Ir a la página de inicio"
+            });
+        }
+    }, [isAdmin]);
 
     useEffect(() => {
         const fetchDataAndSetState = async (page: number) => {
@@ -76,11 +89,11 @@ export default function UsuariosPage() {
         setCurrentPage(newPage);
     };
     if (valueError) {
-        return <ErrorPage errorCode={valueError.errorCode} title={valueError.title} message={valueError.message} url={valueError.url} color={2} textoBoton={"Ir al login"}/>;
+        return <ErrorPage errorCode={valueError.errorCode} title={valueError.title} message={valueError.message} url={valueError.url} color={2} textoBoton={valueError.textoBoton}/>;
     }
 
     if (error) {
-        return <ErrorPage errorCode={error.errorCode} title={error.title} message={error.message} url={error.url} color={2} textoBoton={"Ir al login"}/>;
+        return <ErrorPage errorCode={error.errorCode} title={error.title} message={error.message} url={error.url} color={2} textoBoton={error.textoBoton}/>;
     }
 
     return (
@@ -149,21 +162,12 @@ export default function UsuariosPage() {
                                     <td className="px-6 py-4 border-b whitespace-nowrap text-center bg-(--oxley-200)">{usuario.rol.replace('ROLE_', '')}</td>
                                     <td className="px-6 py-4 border-b whitespace-nowrap text-center bg-(--oxley-100)">
                                         <div className="flex items-center justify-center h-full">
-                                            {isAdmin ? (
-                                                <input
-                                                    className="h-4 w-4 accent-(--primary-dark)"
-                                                    type="checkbox"
-                                                    checked={usuario.visibilidad}
-                                                    onChange={(e) => handleVisibilityChange(usuario.id, e.target.checked)}
-                                                />
-                                            ) : (
-                                                <input
-                                                    className="h-4 w-4 accent-(--primary-dark) cursor-not-allowed"
-                                                    type="checkbox"
-                                                    checked={usuario.visibilidad}
-                                                    disabled={true}
-                                                />
-                                            )}
+                                            <input
+                                                className="h-4 w-4 accent-(--primary-dark)"
+                                                type="checkbox"
+                                                checked={usuario.visibilidad}
+                                                onChange={(e) => handleVisibilityChange(usuario.id, e.target.checked)}
+                                            />
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 border-b whitespace-nowrap text-center bg-(--oxley-200)">{usuario.fecha_actividad}</td>
