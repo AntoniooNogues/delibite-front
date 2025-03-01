@@ -313,11 +313,12 @@ export default function Catalogo() {
     return (
         <main>
             <Navbar />
+            <motion.div initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.4 }}  className="my-10 text-center py-16 bg-gradient-to-t from-(--oxley-700) to-(--verde-azulado-80) text-white">
+                <h1 className="text-5xl font-bold">Menú Semanal</h1>
+                <h3 className="text-2xl text-center py-4 my-2 ">Selecciona los platos de tu primer menú.</h3>
+                <p className="text-xl text-center">Los platos cambian de manera semanal y están disponibles solo hasta el sábado a las 17:30 h.</p>
+            </motion.div>
             <div className="p-4">
-                <div className="mb-8">
-                    <h1 className="text-4xl text-center py-4 my-2 text-gray-700">Selecciona los platos de tu primer menú.</h1>
-                    <p className="text-xl text-center text-gray-600">Los platos cambian de manera semanal y están disponibles solo hasta el sábado a las 17:30 h.</p>
-                </div>
                 {loading ? <Loading /> : (
                     <>
                         <Filtros setSelectedGoal={setSelectedGoal} priceMax={precioMaximo} priceMin={precioMinimo} setPriceRange={setPriceRange} />
