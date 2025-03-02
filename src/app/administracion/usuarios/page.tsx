@@ -6,7 +6,7 @@ import Loading from '@/components/Loading';
 import axiosClient from '@/lib/axiosClient';
 import axios from 'axios';
 import ErrorPage from "@pages/Error";
-import {ArrowsUpDownIcon} from "@heroicons/react/20/solid";
+import {ArrowPathIcon, ArrowsUpDownIcon} from "@heroicons/react/20/solid";
 import {ErrorPropsInterface} from "@/interfaces/ErrorPropsInterface";
 import {useAuth} from "@/hooks/useAuth";
 
@@ -19,43 +19,45 @@ export default function UsuariosPage() {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 20;
 
-    const isAdmin = token?.roles.includes("ROLE_ADMINISTRADOR");
-
     useEffect(() => {
-        if (!isAdmin) {
-            setError({
-                errorCode: "401",
-                title: "No autorizado",
-                message: "No tienes autorización para acceder a este recurso.",
-                url: "/administracion/",
-                color: 2,
-                textoBoton: "Ir a la página de inicio"
-            });
-        }
-    }, [isAdmin]);
-
-    useEffect(() => {
-        const fetchDataAndSetState = async (page: number) => {
-            try {
-                const response = await axiosClient.get<interfazUsuario[]>(`/administracion/usuarios?page=${page}&limit=${itemsPerPage}`);
-                setDatos(response.data);
-            } catch (error) {
-                if (axios.isAxiosError(error) && error.response) {
-                    setError({
-                        errorCode: error.response.data.code || "ERROR",
-                        title: error.response.data.titulo || error.cause,
-                        message: error.response.data.mensaje || error.message,
-                        url: "/administracion/login",
-                        color: 2,
-                        textoBoton: "Ir al login"
-                    });
-                } else {
-                    console.error('Error fetching user data:', error);
-                }
-            } finally {
-                setLoading(false);
+        if (token) {
+            const isAdmin = token.roles.includes("ROLE_ADMINISTRADOR");
+            if (!isAdmin) {
+                setError({
+                    errorCode: "401",
+                    title: "No autorizado",
+                    message: "No tienes autorización para acceder a este recurso.",
+                    url: "/administracion/",
+                    color: 2,
+                    textoBoton: "Ir a la página de inicio"
+                });
             }
-        };
+        }
+    }, [token]);
+
+    const fetchDataAndSetState = async (page: number) => {
+        try {
+            const response = await axiosClient.get<interfazUsuario[]>(`/administracion/usuarios?page=${page}&limit=${itemsPerPage}`);
+            setDatos(response.data);
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
+                setError({
+                    errorCode: error.response.data.code || "ERROR",
+                    title: error.response.data.titulo || error.cause,
+                    message: error.response.data.mensaje || error.message,
+                    url: "/administracion/login",
+                    color: 2,
+                    textoBoton: "Ir al login"
+                });
+            } else {
+                console.error('Error fetching user data:', error);
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         if (token) {
             fetchDataAndSetState(currentPage);
         }
@@ -88,6 +90,7 @@ export default function UsuariosPage() {
         }
         setCurrentPage(newPage);
     };
+
     if (valueError) {
         return <ErrorPage errorCode={valueError.errorCode} title={valueError.title} message={valueError.message} url={valueError.url} color={2} textoBoton={valueError.textoBoton}/>;
     }
@@ -103,13 +106,19 @@ export default function UsuariosPage() {
             ) : (
                 <div>
                     <div className="flex flex-row gap-2 mb-4 justify-between">
-                        <div>
+                        <div className="flex flex-row gap-4">
                             <button
                                 onClick={handleSort}
-                                className="flex flex-row gap-2 px-4 py-2 bg-(--oxley-500) text-white rounded-lg hover:bg-(--primary-dark) hover:scale-105 active:scale-95 transition-transform"
+                                className="flex flex-row gap-2 px-4 py-2 bg-(--oxley-500) text-white rounded-lg hover:bg-(--primary-dark) hover:scale-105 active:scale-95 transition-transform cursor-pointer"
                             >
                                 Ordenar
-                                <ArrowsUpDownIcon className="h-6 w-6 text-white" />
+                                <ArrowsUpDownIcon className="h-6 w-6 text-white hover:animate-bounce" />
+                            </button>
+                            <button
+                                onClick={() => fetchDataAndSetState(currentPage)}
+                                className="flex flex-row gap-2 px-4 py-2 bg-(--oxley-500) text-white rounded-lg hover:bg-(--primary-dark) hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+                            >
+                                <ArrowPathIcon className="h-6 w-6 text-white rotate-360 hover:animate-spin" />
                             </button>
                         </div>
                         <div className="flex gap-4">
@@ -133,34 +142,34 @@ export default function UsuariosPage() {
                         <table className="table-auto w-full bg-white border border-gray-200 rounded-tl-2xl">
                             <thead>
                             <tr>
-                                <th className="px-6 py-4 border-b border-r whitespace-nowrap bg-(--oxley-100)">ID</th>
-                                <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-200)">Username</th>
-                                <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-100)">Nombre</th>
-                                <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-200)">Apellidos</th>
-                                <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-100)">Email</th>
-                                <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-200)">DNI</th>
-                                <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-100)">Teléfono</th>
-                                <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-200)">Dirección</th>
-                                <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-100)">Fecha de Nacimiento</th>
-                                <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-200)">Rol</th>
-                                <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-100)">Visibilidad</th>
-                                <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-200)">Fecha de Actividad</th>
+                                <th className="px-6 py-4 border-b-2 border-(--oxley-200) whitespace-nowrap bg-(--oxley-100)">ID</th>
+                                <th className="px-6 py-4 border-b-2 border-(--oxley-100) whitespace-nowrap bg-(--oxley-200)">Username</th>
+                                <th className="px-6 py-4 border-b-2 border-(--oxley-200) whitespace-nowrap bg-(--oxley-100)">Nombre</th>
+                                <th className="px-6 py-4 border-b-2 border-(--oxley-100) whitespace-nowrap bg-(--oxley-200)">Apellidos</th>
+                                <th className="px-6 py-4 border-b-2 border-(--oxley-200) whitespace-nowrap bg-(--oxley-100)">Email</th>
+                                <th className="px-6 py-4 border-b-2 border-(--oxley-100) whitespace-nowrap bg-(--oxley-200)">DNI</th>
+                                <th className="px-6 py-4 border-b-2 border-(--oxley-200) whitespace-nowrap bg-(--oxley-100)">Teléfono</th>
+                                <th className="px-6 py-4 border-b-2 border-(--oxley-100) whitespace-nowrap bg-(--oxley-200)">Dirección</th>
+                                <th className="px-6 py-4 border-b-2 border-(--oxley-200) whitespace-nowrap bg-(--oxley-100)">Fecha de Nacimiento</th>
+                                <th className="px-6 py-4 border-b-2 border-(--oxley-100) whitespace-nowrap bg-(--oxley-200)">Rol</th>
+                                <th className="px-6 py-4 border-b-2 border-(--oxley-200) whitespace-nowrap bg-(--oxley-100)">Visibilidad</th>
+                                <th className="px-6 py-4 border-b-2 border-(--oxley-100) whitespace-nowrap bg-(--oxley-200)">Fecha de Actividad</th>
                             </tr>
                             </thead>
                             <tbody>
                             {datos.map(usuario => (
                                 <tr key={usuario.id}>
-                                    <td className="px-6 py-4 border-r border-b whitespace-nowrap text-center bg-(--oxley-100) font-bold">{usuario.id}</td>
-                                    <td className="px-6 py-4 border-b whitespace-nowrap text-center bg-(--oxley-200)">{usuario.username}</td>
-                                    <td className="px-6 py-4 border-b whitespace-nowrap text-center bg-(--oxley-100)">{usuario.nombre}</td>
-                                    <td className="px-6 py-4 border-b whitespace-nowrap text-center bg-(--oxley-200)">{usuario.apellidos}</td>
-                                    <td className="px-6 py-4 border-b whitespace-nowrap text-center bg-(--oxley-100)">{usuario.email}</td>
-                                    <td className="px-6 py-4 border-b whitespace-nowrap text-center bg-(--oxley-200)">{usuario.dni}</td>
-                                    <td className="px-6 py-4 border-b whitespace-nowrap text-center bg-(--oxley-100)">{usuario.telefono}</td>
-                                    <td className="px-6 py-4 border-b whitespace-nowrap text-center bg-(--oxley-200)">{usuario.direccion}</td>
-                                    <td className="px-6 py-4 border-b whitespace-nowrap text-center bg-(--oxley-100)">{usuario.fecha_nacimiento}</td>
-                                    <td className="px-6 py-4 border-b whitespace-nowrap text-center bg-(--oxley-200)">{usuario.rol.replace('ROLE_', '')}</td>
-                                    <td className="px-6 py-4 border-b whitespace-nowrap text-center bg-(--oxley-100)">
+                                    <td className="px-6 py-4 border-b-2 border-(--oxley-200) whitespace-nowrap text-center bg-(--oxley-100) font-bold">{usuario.id}</td>
+                                    <td className="px-6 py-4 border-b-2 border-(--oxley-100) whitespace-nowrap text-center bg-(--oxley-200)">{usuario.username}</td>
+                                    <td className="px-6 py-4 border-b-2 border-(--oxley-200) whitespace-nowrap text-center bg-(--oxley-100)">{usuario.nombre}</td>
+                                    <td className="px-6 py-4 border-b-2 border-(--oxley-100) whitespace-nowrap text-center bg-(--oxley-200)">{usuario.apellidos}</td>
+                                    <td className="px-6 py-4 border-b-2 border-(--oxley-200) whitespace-nowrap text-center bg-(--oxley-100)">{usuario.email}</td>
+                                    <td className="px-6 py-4 border-b-2 border-(--oxley-100) whitespace-nowrap text-center bg-(--oxley-200)">{usuario.dni}</td>
+                                    <td className="px-6 py-4 border-b-2 border-(--oxley-200) whitespace-nowrap text-center bg-(--oxley-100)">{usuario.telefono}</td>
+                                    <td className="px-6 py-4 border-b-2 border-(--oxley-100) whitespace-nowrap text-center bg-(--oxley-200)">{usuario.direccion}</td>
+                                    <td className="px-6 py-4 border-b-2 border-(--oxley-200) whitespace-nowrap text-center bg-(--oxley-100)">{usuario.fecha_nacimiento}</td>
+                                    <td className="px-6 py-4 border-b-2 border-(--oxley-100) whitespace-nowrap text-center bg-(--oxley-200)">{usuario.rol.replace('ROLE_', '')}</td>
+                                    <td className="px-6 py-4 border-b-2 border-(--oxley-200) whitespace-nowrap text-center bg-(--oxley-100)">
                                         <div className="flex items-center justify-center h-full">
                                             <input
                                                 className="h-4 w-4 accent-(--primary-dark)"
@@ -170,7 +179,7 @@ export default function UsuariosPage() {
                                             />
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 border-b whitespace-nowrap text-center bg-(--oxley-200)">{usuario.fecha_actividad}</td>
+                                    <td className="px-6 py-4 border-b-2 border-(--oxley-100) whitespace-nowrap text-center bg-(--oxley-200)">{usuario.fecha_actividad}</td>
                                 </tr>
                             ))}
                             </tbody>

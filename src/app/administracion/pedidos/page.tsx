@@ -85,16 +85,16 @@ export default function UsuariosPage() {
                         <div className="flex flex-row gap-4">
                             <button
                                 onClick={handleSort}
-                                className="flex flex-row gap-2 px-4 py-2 bg-(--oxley-500) text-white rounded-lg hover:bg-(--primary-dark) hover:scale-105 active:scale-95 transition-transform "
+                                className="flex flex-row gap-2 px-4 py-2 bg-(--oxley-500) text-white rounded-lg hover:bg-(--primary-dark) hover:scale-105 active:scale-95 transition-transform cursor-pointer"
                             >
                                 Ordenar
-                                <ArrowsUpDownIcon className="h-6 w-6 text-white" />
+                                <ArrowsUpDownIcon className="h-6 w-6 text-white hover:animate-bounce" />
                             </button>
                             <button
                                 onClick={() => fetchDataAndSetState(currentPage)}
-                                className="flex flex-row gap-2 px-4 py-2 bg-(--oxley-500) text-white rounded-lg hover:bg-(--primary-dark) hover:scale-105 active:scale-95 transition-transform"
+                                className="flex flex-row gap-2 px-4 py-2 bg-(--oxley-500) text-white rounded-lg hover:bg-(--primary-dark) hover:scale-105 active:scale-95 transition-transform cursor-pointer"
                             >
-                                <ArrowPathIcon className="h-6 w-6 text-white rotate-360" />
+                                <ArrowPathIcon className="h-6 w-6 text-white rotate-360 hover:animate-spin" />
                             </button>
                         </div>
                         <div className="flex gap-4">
@@ -118,37 +118,37 @@ export default function UsuariosPage() {
                         <table className="table-auto w-full bg-white border border-gray-200 rounded-tl-2xl">
                             <thead>
                                 <tr className="min-h-[4rem] ">
-                                    <th className="px-6 py-4 border-b border-r whitespace-nowrap bg-(--oxley-100)">ID</th>
-                                    <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-200)">Nombre de usuario</th>
-                                    <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-100)">Estado</th>
-                                    <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-200)">Fecha de pedido</th>
-                                    <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-100)">Fecha de entrega</th>
-                                    <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-200)">Codigo</th>
-                                    <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-100)">Cantidad</th>
-                                    <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-200)">Precio</th>
-                                    <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-100)">ID de platos</th>
-                                    <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-200)">Nombre de platos</th>
+                                    <th className="px-6 py-4 border-b-2 border-(--oxley-200) whitespace-nowrap bg-(--oxley-100)">ID</th>
+                                    <th className="px-6 py-4 border-b-2 border-(--oxley-100) whitespace-nowrap bg-(--oxley-200)">Nombre de usuario</th>
+                                    <th className="px-6 py-4 border-b-2 border-(--oxley-200) whitespace-nowrap bg-(--oxley-100)">Estado</th>
+                                    <th className="px-6 py-4 border-b-2 border-(--oxley-100) whitespace-nowrap bg-(--oxley-200)">Fecha de pedido</th>
+                                    <th className="px-6 py-4 border-b-2 border-(--oxley-200) whitespace-nowrap bg-(--oxley-100)">Fecha de entrega</th>
+                                    <th className="px-6 py-4 border-b-2 border-(--oxley-100) whitespace-nowrap bg-(--oxley-200)">Codigo</th>
+                                    <th className="px-6 py-4 border-b-2 border-(--oxley-200) whitespace-nowrap bg-(--oxley-100)">Cantidad</th>
+                                    <th className="px-6 py-4 border-b-2 border-(--oxley-100) whitespace-nowrap bg-(--oxley-200)">Precio</th>
+                                    <th className="px-6 py-4 border-b-2 border-(--oxley-200) whitespace-nowrap bg-(--oxley-100)">ID de platos</th>
+                                    <th className="px-6 py-4 border-b-2 border-(--oxley-100) whitespace-nowrap bg-(--oxley-200)">Nombre de platos</th>
                                 </tr>
                             </thead>
                             <tbody>
                             {datos.map(pedido => (
                                 <tr key={pedido.pedido_id}>
-                                    <td className="px-6 py-4 border-r border-b whitespace-nowrap text-center bg-(--oxley-100) font-bold">{pedido.pedido_id}</td>
-                                    <td className="px-6 py-4 border-b whitespace-nowrap text-center bg-(--oxley-200)">{pedido.username}</td>
-                                    <td className="px-6 py-4 border-r border-b whitespace-nowrap text-center bg-(--oxley-100) font-bold">{pedido.estado}</td>
-                                    <td className="px-6 py-4 border-b whitespace-nowrap text-center bg-(--oxley-200)">{pedido.fecha_pedido}</td>
-                                    <td className="px-6 py-4 border-r border-b whitespace-nowrap text-center bg-(--oxley-100) font-bold">{pedido.fecha_entrega}</td>
-                                    <td className="px-6 py-4 border-b whitespace-nowrap text-center bg-(--oxley-200)">{pedido.codigo}</td>
-                                    <td className="px-6 py-4 border-r border-b whitespace-nowrap text-center bg-(--oxley-100) font-bold">{pedido.cantidad}</td>
-                                    <td className="px-6 py-4 border-b whitespace-nowrap text-center bg-(--oxley-200)">{pedido.precio}€</td>
-                                    <td className="px-6 py-4 border-b whitespace-nowrap text-center bg-(--oxley-100)">
+                                    <td className="px-6 py-4 border-b-2 border-(--oxley-200) whitespace-nowrap text-center bg-(--oxley-100) font-bold">{pedido.pedido_id}</td>
+                                    <td className="px-6 py-4 border-b-2 border-(--oxley-100) whitespace-nowrap text-center bg-(--oxley-200)">{pedido.username}</td>
+                                    <td className="px-6 py-4 border-b-2 border-(--oxley-200) whitespace-nowrap text-center bg-(--oxley-100) font-bold">{pedido.estado}</td>
+                                    <td className="px-6 py-4 border-b-2 border-(--oxley-100) whitespace-nowrap text-center bg-(--oxley-200)">{pedido.fecha_pedido}</td>
+                                    <td className="px-6 py-4 border-b-2 border-(--oxley-200) whitespace-nowrap text-center bg-(--oxley-100) font-bold">{pedido.fecha_entrega}</td>
+                                    <td className="px-6 py-4 border-b-2 border-(--oxley-100) whitespace-nowrap text-center bg-(--oxley-200)">{pedido.codigo}</td>
+                                    <td className="px-6 py-4 border-b-2 border-(--oxley-200) whitespace-nowrap text-center bg-(--oxley-100) font-bold">{pedido.cantidad}</td>
+                                    <td className="px-6 py-4 border-b-2 border-(--oxley-100) whitespace-nowrap text-center bg-(--oxley-200)">{pedido.precio}€</td>
+                                    <td className="px-6 py-4 border-b-2 border-(--oxley-200) whitespace-nowrap text-center bg-(--oxley-100)">
                                         <ul>
                                             {pedido.platos.map(p => (
                                                 <li key={p.plato_id}>{p.plato_id}</li>
                                             ))}
                                         </ul>
                                     </td>
-                                    <td className="px-6 py-4 border-b whitespace-nowrap text-center bg-(--oxley-200)">
+                                    <td className="px-6 py-4 border-b-2 border-(--oxley-100) whitespace-nowrap text-center bg-(--oxley-200)">
                                         <ul>
                                             {pedido.platos.map(p => (
                                                 <li key={p.nombre}>{p.nombre}</li>

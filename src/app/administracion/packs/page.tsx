@@ -98,10 +98,16 @@ export default function UsuariosPage() {
                         <div className="flex flex-row gap-4">
                             <button
                                 onClick={handleSort}
-                                className="flex flex-row gap-2 px-4 py-2 bg-(--oxley-500) text-white rounded-lg hover:bg-(--primary-dark) hover:scale-105 active:scale-95 transition-transform "
+                                className="flex flex-row gap-2 px-4 py-2 bg-(--oxley-500) text-white rounded-lg hover:bg-(--primary-dark) hover:scale-105 active:scale-95 transition-transform cursor-pointer"
                             >
                                 Ordenar
-                                <ArrowsUpDownIcon className="h-6 w-6 text-white" />
+                                <ArrowsUpDownIcon className="h-6 w-6 text-white hover:animate-bounce" />
+                            </button>
+                            <button
+                                onClick={() => fetchDataAndSetState(currentPage)}
+                                className="flex flex-row gap-2 px-4 py-2 bg-(--oxley-500) text-white rounded-lg hover:bg-(--primary-dark) hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+                            >
+                                <ArrowPathIcon className="h-6 w-6 text-white rotate-360 hover:animate-spin" />
                             </button>
                             <button
                                 onClick={() => setCrearPlato(true)}
@@ -109,12 +115,6 @@ export default function UsuariosPage() {
                             >
                                 Añadir Pack
                                 <PlusCircleIcon className="h-6 w-6 text-white" />
-                            </button>
-                            <button
-                                onClick={() => fetchDataAndSetState(currentPage)}
-                                className="flex flex-row gap-2 px-4 py-2 bg-(--oxley-500) text-white rounded-lg hover:bg-(--primary-dark) hover:scale-105 active:scale-95 transition-transform"
-                            >
-                                <ArrowPathIcon className="h-6 w-6 text-white rotate-360" />
                             </button>
                         </div>
                         <div className="flex gap-4">
@@ -138,24 +138,24 @@ export default function UsuariosPage() {
                         <table className="table-auto w-full bg-white border border-gray-200 rounded-tl-2xl">
                             <thead>
                             <tr className="min-h-[4rem]">
-                                <th className="px-6 py-4 border-b border-r whitespace-nowrap bg-(--oxley-100)">ID</th>
-                                <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-200)">Nombre</th>
-                                <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-100)">Descripción</th>
-                                <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-200)">Precio</th>
-                                <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-100)">Visibilidad</th>
-                                <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-200)">ID Platos</th>
-                                <th className="px-6 py-4 border-b whitespace-nowrap bg-(--oxley-100)">Platos</th>
-                                <th className="px-6 py-4 border-b b whitespace-nowrap bg-(--oxley-200)">Editar</th>
+                                <th className="px-6 py-4 border-b-2 border-(--oxley-200)  whitespace-nowrap bg-(--oxley-100)">ID</th>
+                                <th className="px-6 py-4 border-b-2 border-(--oxley-100) whitespace-nowrap bg-(--oxley-200)">Nombre</th>
+                                <th className="px-6 py-4 border-b-2 border-(--oxley-200) whitespace-nowrap bg-(--oxley-100)">Descripción</th>
+                                <th className="px-6 py-4 border-b-2 border-(--oxley-100) whitespace-nowrap bg-(--oxley-200)">Precio</th>
+                                <th className="px-6 py-4 border-b-2 border-(--oxley-200) whitespace-nowrap bg-(--oxley-100)">Visibilidad</th>
+                                <th className="px-6 py-4 border-b-2 border-(--oxley-100) whitespace-nowrap bg-(--oxley-200)">ID Platos</th>
+                                <th className="px-6 py-4 border-b-2 border-(--oxley-200) whitespace-nowrap bg-(--oxley-100)">Platos</th>
+                                <th className="px-6 py-4 border-b-2 border-(--oxley-100)  whitespace-nowrap bg-(--oxley-200)">Editar</th>
                             </tr>
                             </thead>
                             <tbody>
                             {datos.map(pack => (
                                 <tr key={pack.pack_id}>
-                                    <td className="px-6 py-4 border-r border-b whitespace-nowrap text-center bg-(--oxley-100) font-bold">{pack.pack_id}</td>
-                                    <td className="px-6 py-4 border-b whitespace-nowrap text-center bg-(--oxley-200)">{pack.nombre}</td>
-                                    <td className="px-6 py-4 border-b whitespace-nowrap text-center bg-(--oxley-100)">{pack.descripcion}</td>
-                                    <td className="px-6 py-4 border-b whitespace-nowrap text-center bg-(--oxley-200)">{pack.precio}€</td>
-                                    <td className="px-6 py-4 border-b whitespace-nowrap text-center bg-(--oxley-100)">
+                                    <td className="px-6 py-4 border-b-2 border-(--oxley-200) whitespace-nowrap text-center bg-(--oxley-100) font-bold">{pack.pack_id}</td>
+                                    <td className="px-6 py-4 border-b-2 border-(--oxley-100) whitespace-nowrap text-center bg-(--oxley-200)">{pack.nombre}</td>
+                                    <td className="px-6 py-4 border-b-2 border-(--oxley-200) whitespace-nowrap text-center bg-(--oxley-100)">{pack.descripcion}</td>
+                                    <td className="px-6 py-4 border-b-2 border-(--oxley-100) whitespace-nowrap text-center bg-(--oxley-200)">{pack.precio}€</td>
+                                    <td className="px-6 py-4 border-b-2 border-(--oxley-200) whitespace-nowrap text-center bg-(--oxley-100)">
                                         <input
                                             className="h-4 w-4 accent-(--primary-dark)"
                                             type="checkbox"
@@ -163,21 +163,21 @@ export default function UsuariosPage() {
                                             onChange={(e) => handleVisibilityChange(pack.pack_id, e.target.checked)}
                                         />
                                     </td>
-                                    <td className="px-6 py-4 border-b whitespace-nowrap text-center bg-(--oxley-200)">
+                                    <td className="px-6 py-4 border-b-2 border-(--oxley-100) whitespace-nowrap text-center bg-(--oxley-200)">
                                         <ul>
                                             {pack.platos.map(p => (
                                                 <li key={p.id}>{p.id}</li>
                                             ))}
                                         </ul>
                                     </td>
-                                    <td className="px-6 py-4 border-b whitespace-nowrap text-center bg-(--oxley-100)">
+                                    <td className="px-6 py-4 border-b-2 border-(--oxley-200) whitespace-nowrap text-center bg-(--oxley-100)">
                                         <ul>
                                             {pack.platos.map(p => (
                                                 <li key={p.id}>{p.nombre}</li>
                                             ))}
                                         </ul>
                                     </td>
-                                    <td className="px-6 py-4 border-b whitespace-nowrap text-center bg-(--oxley-200)">
+                                    <td className="px-6 py-4 border-b-2 border-(--oxley-100) whitespace-nowrap text-center bg-(--oxley-200)">
                                         <button className="px-4 py-2 bg-(--oxley-500) text-white rounded-lg hover:bg-(--primary-dark) hover:scale-105 active:scale-95 transition-transform" onClick={() => handleEditClick(pack)}>
                                             Editar
                                         </button>
