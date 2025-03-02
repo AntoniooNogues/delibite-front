@@ -35,40 +35,37 @@ export default function Login() {
     }, []);
 
     const Submit = async () => {
-        try {
-            const respuesta = await axiosClient.post('/login_check', formData);
-            if (respuesta && respuesta.data.token) {
-                Cookies.set('token', respuesta.data.token);
+        if (!formData.username || !formData.password) {
+            setNotificacion({
+                titulo: 'Error', mensaje: 'Por favor, rellene todos los campos.', code: 400, tipo: 'error'
+            });
+            return;
+        }else {
+            try {
+                const respuesta = await axiosClient.post('/login_check', formData);
+                if (respuesta && respuesta.data.token) {
+                    Cookies.set('token', respuesta.data.token);
+                }
+                setNotificacion({titulo: 'Éxito', mensaje: 'Inicio de sesión exitoso', code: 200, tipo: 'success'});
+                setTimeout(() => {
+                    router.push(`/`);
+                }, 1000);
+            } catch (error) {
+                if (axios.isAxiosError(error) && error.response) {
+                    setNotificacion({
+                        titulo: error.response.data.titulo,
+                        mensaje: error.response.data.mensaje,
+                        code: error.response.data.code,
+                        tipo: error.response.data.tipo
+                    });
+                }
+                setNotificacion({
+                    titulo: 'Error',
+                    mensaje: 'Error al realizar el login: Error desconocido',
+                    code: 500,
+                    tipo: 'error'
+                });
             }
-            setNotificacion({ titulo: 'Éxito', mensaje: 'Inicio de sesión exitoso', code: 200, tipo: 'success' });
-            setTimeout(() => {
-                router.push(`/`);
-            }, 1000);
-        }catch (error){
-            if (axios.isAxiosError(error) && error.response) {
-                setNotificacion({ titulo: error.response.data.titulo, mensaje: error.response.data.mensaje , code: error.response.data.code, tipo: error.response.data.tipo });
-            }
-            setNotificacion({ titulo: 'Error', mensaje: 'Error al realizar el login: Error desconocido', code: 500, tipo: 'error' });
-        }
-    };
-
-    const validateCampo = (name: string, value: string) => {
-        const error:Notificaciones = { titulo: 'Error en el campo', mensaje: '', code: 400, tipo: 'error' };
-
-        switch (name) {
-            case "username":
-                if (!value) error.mensaje = "El correo electrónico es obligatorio";
-                break;
-            case "password":
-                if (!value) error.mensaje = "La contraseña es obligatoria";
-                break;
-            default:
-                break;
-        }
-
-        if (error.mensaje) {
-            setNotificacion(error);
-            return false;
         }
     };
 
@@ -102,7 +99,6 @@ export default function Login() {
                                 value={formData.username}
                                 type="text"
                                 onChange={handleChange}
-                                onBlur={(e) => validateCampo(e.target.name, e.target.value)}
                                 className="border p-2 bg-white rounded shadow-lg"
                                 placeholder="Nombre de usuario"
                             />
