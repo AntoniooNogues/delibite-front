@@ -102,9 +102,9 @@ export default function Registro() {
     };
 
     const validateStep = async ()  => {
-        let errors = [];
+        const errors = [];
         const errorBase = { titulo: 'Error', code: 400, tipo: 'error' };
-        let camposResaltar = [];
+        const camposResaltar = [];
 
         switch (step) {
             case 1:
