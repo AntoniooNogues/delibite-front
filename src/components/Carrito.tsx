@@ -101,7 +101,7 @@ export default function Carrito() {
                 <h2 className="text-xl font-semibold">Tu Carrito</h2>
 
                 {/* Mostrar productos */}
-                <div className="mt-4 space-y-2">
+                <div className="mt-4 space-y-2 overflow-y-auto max-h-128 scroll">
                     {Object.keys(carrito).length > 0 ? (
                         Object.entries(carrito).map(([id, { nombre, precio, cantidad }]) => (
                             <div key={id} className="flex flex-col justify-between p-2 border-b">
