@@ -61,3 +61,11 @@ export interface PlatosPedidos {
     plato_id: number;
     nombre: string;
 }
+
+export interface Suscripciones {
+    id: number;
+    username: string;
+    estado: string;
+    numero_platos: number;
+    fecha_renovacion: string;
+}
