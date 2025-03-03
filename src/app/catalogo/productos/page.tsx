@@ -305,23 +305,32 @@ export default function Catalogo() {
     return (
         <main>
             <Navbar />
-            <motion.div initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.4 }}  className="my-10 text-center py-16 bg-gradient-to-t from-(--oxley-700) to-(--verde-azulado-80) text-white">
-                <h1 className="text-5xl font-bold">Menú Semanal</h1>
-                <h3 className="text-2xl text-center py-4 my-2 ">Selecciona los platos de tu primer menú.</h3>
-                <p className="text-xl text-center">Los platos cambian de manera semanal y están disponibles solo hasta el sábado a las 17:30 h.</p>
-            </motion.div>
-            <div className="p-4">
-                {loading ? <Loading /> : (
-                    <>
-                        <Filtros setSelectedGoal={setSelectedGoal} priceMax={precioMaximo} priceMin={precioMinimo} setPriceRange={setPriceRange} />
-                        <div>
-                            <CategoriaLista titulo="Principales" items={principales} subheader={"Disfruta de nuestros platos saludables, equilibrados y deliciosos, diseñados para nutrirte y hacerte sentir bien cada semana."} />
-                            <CategoriaLista titulo="Postres" items={postres} subheader={"Endulza tu semana con nuestros postres saludables, sin culpas y llenos de sabor, perfectos para darte un gusto balanceado."} />
-                        </div>
-                    </>
-                )}
-            </div>
-            <Footer />
+            {loading ?
+                <div className="relative h-screen">
+                    <Loading />
+                </div>
+            : (
+                <div>
+                    <motion.div initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.4 }}  className="my-10 text-center py-16 bg-gradient-to-t from-(--oxley-700) to-(--verde-azulado-80) text-white">
+                        <h1 className="text-5xl font-bold">Menú Semanal</h1>
+                        <h3 className="text-2xl text-center py-4 my-2 ">Selecciona los platos de tu primer menú.</h3>
+                        <p className="text-xl text-center">Los platos cambian de manera semanal y están disponibles solo hasta el sábado a las 17:30 h.</p>
+                    </motion.div>
+                    <div className="p-4">
+
+                        <>
+                            <Filtros setSelectedGoal={setSelectedGoal} priceMax={precioMaximo} priceMin={precioMinimo} setPriceRange={setPriceRange} />
+                            <div>
+                                <CategoriaLista titulo="Principales" items={principales} subheader={"Disfruta de nuestros platos saludables, equilibrados y deliciosos, diseñados para nutrirte y hacerte sentir bien cada semana."} />
+                                <CategoriaLista titulo="Postres" items={postres} subheader={"Endulza tu semana con nuestros postres saludables, sin culpas y llenos de sabor, perfectos para darte un gusto balanceado."} />
+                            </div>
+                        </>
+
+                    </div>
+                    <Footer />
+                    <Carrito />
+                </div>
+            )}
             {notificacion && (
                 <NotificacionComponent
                     Notificaciones={notificacion}
@@ -334,8 +343,6 @@ export default function Catalogo() {
                     onClose={() => setNotificacion(undefined)}
                 />
             )}
-
-            <Carrito />
         </main>
     );
 }

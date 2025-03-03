@@ -74,10 +74,10 @@ const PlatoDetalle = ({ plato, valoraciones, detallesValoraciones }: { plato: Pl
 
                 <div className="w-1/2 pt-4 flex flex-col mt-4 max-md:w-full lg:px-5 lg:pr-10 max-lg:px-6">
                     <div>
-                        <h1 className="text-3xl font-bold flex flex-row mb-4 gap-4 sm:gap-0">
+                        <h1 className="text-3xl font-bold flex flex-row mb-4 gap-4 max-sm:gap-0">
                             {plato.nombre}
                             {plato.alergenos?.length > 0 && (
-                                <span className="flex gap-4 my-2">
+                            <span className="flex gap-4 my-2">
                                 {plato.alergenos.map((x) => (
                                     <Image key={x.alergeno_id} src={`/alergenos/${x.alergeno_id}.svg`} width={24} height={24} alt={x.nombre} title={x.nombre} className="w-6 h-6" />
                                 ))}
@@ -119,7 +119,7 @@ const PlatoDetalle = ({ plato, valoraciones, detallesValoraciones }: { plato: Pl
                             <p>
                                 Puede contener trazas de los siguientes alergenos:
                                 {plato.alergenos.map((x, index) => (
-                                    <span key={x.alergeno_id} className="text-(--negro-puro)">
+                                <span key={x.alergeno_id} className="text-(--negro-puro)">
                                     {plato.alergenos.length === 1 ? ` ${x.nombre}.` : index === plato.alergenos.length - 1 ? `y ${x.nombre}.` : ` ${x.nombre}, `}
                                 </span>
                                 ))}
