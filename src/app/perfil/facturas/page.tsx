@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import axiosClient from '@/lib/axiosClient';
 import PerfilLayout from "@/components/PerfilLayout";
+import { format } from 'date-fns';
+import {ArrowLeft} from "lucide-react";
 
 interface Pedido {
     id: number;
@@ -12,7 +14,6 @@ interface Pedido {
 
 const FacturaPage: React.FC = () => {
     const [pedidos, setPedidos] = useState<Pedido[]>([]);
-    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchPedidos = async () => {
@@ -20,7 +21,6 @@ const FacturaPage: React.FC = () => {
                 const response = await axiosClient.get('/pedido/listar');
                 setPedidos(response.data);
             } catch {
-                setError('Error al obtener pedidos');
             }
         };
 
@@ -47,20 +47,24 @@ const FacturaPage: React.FC = () => {
     return (
         <PerfilLayout>
             <div className="min-h-screen">
-                <div className="flex flex-col justify-center items-center mt-6">
+                <div className="flex flex-col justify-center items-center">
                     <div className="flex p-6 rounded-xl w-3/4 items-center">
-                        <div className="flex-1 p-6">
-                            <h1 className="text-2xl font-bold">Facturas</h1>
-                            {error && <p className="text-red-500">{error}</p>}
-                            <ul className="mt-4 space-y-4">
+                        <div className="flex-1">
+                            <div className="flex items-center space-x-6 mb-4">
+                                <ArrowLeft onClick={() => window.history.back()} className="cursor-pointer"/>
+                                <h2 className="text-2xl font-bold">Facturas de tus pedidos</h2>
+                            </div>
+                            <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                                 {pedidos.map(pedido => (
                                     <li key={pedido.id} className="bg-white p-4 rounded-xl shadow-md">
-                                        <p>Fecha: {pedido.fecha}</p>
-                                        <p>Estado: {pedido.estado}</p>
-                                        <p>Código: {pedido.codigo}</p>
+                                        <p>Fecha: {format(new Date(pedido.fecha), 'dd/MM/yyyy')}</p>
+                                        <p>Estado: {Number(pedido.estado) === 1 ? 'En Proceso' : Number(pedido.estado) === 2 ? 'Enviado' : Number(pedido.estado) === 3 ? 'Entregado' : 'Desconocido'}</p>
+                                        <p>Código: ***{pedido.codigo ? pedido.codigo.slice(-4) : 'N/A'}</p>
                                         <button
                                             onClick={() => handleDescargar(pedido.id)}
-                                            className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-lg transition hover:bg-blue-600"
+                                            className="mt-4 px-4 py-2 rounded-full text-white bg-(--oxley-500)
+hover:bg-(--oxley-700) active:bg-(--oxley-800) hover:text-white transition transform
+active:scale-95 hover:scale-105"
                                         >
                                             Descargar Factura
                                         </button>
