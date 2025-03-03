@@ -80,20 +80,18 @@ export default function Login() {
 
     return (
         <div className="bg-(--gris-registro) min-h-screen flex flex-col">
-            <NavbarReducido />
-            <div className="flex-grow flex items-center justify-center w-full">
-                <div className="px-10 py-6  rounded-lg  w-1/3">
+            <NavbarReducido/>
+            <div className="flex-grow flex items-center justify-center w-full px-4">
+                <div className="px-6 py-6 rounded-lg w-full max-w-md sm:px-10 sm:py-8">
                     <motion.div
-                        initial={{ opacity: 0, x: 50 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -50 }}
-                        transition={{ duration: 0.3 }}
+                        initial={{opacity: 0, x: 50}}
+                        animate={{opacity: 1, x: 0}}
+                        exit={{opacity: 0, x: -50}}
+                        transition={{duration: 0.3}}
                     >
-                        <span className="text-center">
-                            <h2 className="text-3xl font-bold  mb-4 pb-8">Hola de nuevo</h2>
-                        </span>
+                        <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6">Hola de nuevo</h2>
 
-                        <div className="flex flex-col gap-8">
+                        <div className="flex flex-col gap-6">
                             <input
                                 name="username"
                                 value={formData.username}
@@ -116,24 +114,24 @@ export default function Login() {
                                     onClick={togglePasswordVisibility}
                                 >
                                     {showPassword ? (
-                                        <EyeSlashIcon className="h-5 w-5 text-gray-500" />
+                                        <EyeSlashIcon className="h-5 w-5 text-gray-500"/>
                                     ) : (
-                                        <EyeIcon className="h-5 w-5 text-gray-500" />
+                                        <EyeIcon className="h-5 w-5 text-gray-500"/>
                                     )}
                                 </div>
                             </div>
                         </div>
-                        <div className="mt-2">
+                        <div className="mt-2 text-center">
                             <a href="#" className="text-sm">¿Olvidaste tu contraseña?</a>
-
-                            <button onClick={Submit} className="px-4 py-2 mt-8 text-lg w-full bg-(--verde-azulado) rounded-4xl
-                             hover:bg-(--oxley-500) active:bg-(--oxley-700) hover:text-white transition transform active:scale-95 hover:scale-105">
-
-                                Entrar
-                            </button>
-                            <div className="text-center mt-6">
-                                <Link href="/registro" className="text-sm">Es mi primera vez y quiero unirme</Link>
-                            </div>
+                        </div>
+                        <button
+                            onClick={Submit}
+                            className="px-4 py-2 mt-6 text-lg w-full bg-(--verde-azulado) rounded-4xl
+                    hover:bg-(--oxley-500) active:bg-(--oxley-700) hover:text-white transition transform active:scale-95 hover:scale-105">
+                            Entrar
+                        </button>
+                        <div className="text-center mt-6">
+                            <Link href="/registro" className="text-sm">Es mi primera vez y quiero unirme</Link>
                         </div>
                     </motion.div>
                 </div>

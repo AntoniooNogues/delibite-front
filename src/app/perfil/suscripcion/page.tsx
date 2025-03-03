@@ -120,7 +120,7 @@ const SuscripcionPage: React.FC = () => {
                         <div className={`space-y-4 ${suscripcion.estado === 2 ? 'opacity-50' : ''}`}>
                             <p className="text-lg"><span className="font-semibold">Número de platos:</span> {suscripcion.numPlatos}</p>
                             <p className="text-lg"><span className="font-semibold">Fecha de renovación:</span> {formatDate(suscripcion.fechaRenovacion)}</p>
-                            <p className="text-lg"><span className="font-semibold">Total:</span> {suscripcion.total}€</p>
+                            <p className="text-lg"><span className="font-semibold">Total:</span> {suscripcion.total.toFixed(2)}€</p>
                             <p className="text-lg">
                                 <span className="font-semibold">Estado:</span>
                                 <span className={`ml-2 inline-block w-3 h-3 rounded-full ${suscripcion.estado === 1 ? 'bg-green-500' : 'bg-orange-500'}`}></span>
