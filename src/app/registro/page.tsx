@@ -77,68 +77,116 @@ export default function Registro() {
         }
     };
 
+
+
     const [selectedAlergenos, setSelectedAlergenos] = useState<string[]>([]);
+    const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 
-    const validateField = (name: string, value: string) => {
-        const error:Notificaciones = { titulo: 'Error en el campo', mensaje: '', code: 400, tipo: 'error' };
+    const highlightPasswordFields = (inputNames: string[]) => {
+        inputNames.forEach((inputName) => {
+            const inputElement = document.querySelector(`input[name="${inputName}"]`);
+            if (inputElement) {
+                inputElement.classList.add("border-red-500");
+            }
+        });
+    };
 
-        switch (name) {
-            case "nombre":
-            case "apellidos":
-                if (!value.trim()) error.mensaje = "Este campo es obligatorio. ";
+    const removeHighlightFromFields = (inputNames: string[]) => {
+        inputNames.forEach((inputName) => {
+            const inputElement = document.querySelector(`input[name="${inputName}"]`);
+            if (inputElement) {
+                inputElement.classList.remove("border-red-500");
+            }
+        });
+    };
+
+    const validateStep = async ()  => {
+        const errors = [];
+        const errorBase = { titulo: 'Error', code: 400, tipo: 'error' };
+        const camposResaltar = [];
+
+        switch (step) {
+            case 1:
+                if (!formData.nombre || !formData.apellidos || !formData.email || !formData.dni || !formData.telefono || !formData.fecha_nacimiento || !formData.direccion || !formData.codigo_postal) {
+                    errors.push('Por favor, complete todos los campos obligatorios.');
+                    camposResaltar.push("nombre", "apellidos", "email", "dni", "telefono", "fecha_nacimiento", "direccion", "codigo_postal");
+                    break;
+                }
+                if (!/^\d{9}$/.test(formData.telefono)) {
+                    errors.push('El teléfono debe tener exactamente 9 números.');
+                    camposResaltar.push("telefono");
+                }
+                if (!/^\d{8}[A-Z]$/.test(formData.dni)) {
+                    errors.push('El DNI debe tener 8 números seguidos de una letra mayúscula.');
+                    camposResaltar.push("dni");
+                }
+                if (!/^\d{5}$/.test(formData.codigo_postal as string)) {
+                    errors.push('El código postal debe tener exactamente 5 números.');
+                    camposResaltar.push("codigo_postal");
+                }
+                if (new Date(formData.fecha_nacimiento) > new Date(new Date().setFullYear(new Date().getFullYear() - 18))) {
+                    errors.push('Debes ser mayor de edad para registrarte.');
+                    camposResaltar.push("fecha_nacimiento");
+                }
                 break;
+            case 2:
 
-            case "email":
-                if (!value) error.mensaje += "El email es obligatorio. ";
-                else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
-                    error.mensaje += "Correo electrónico no válido. ";
+                if (!formData.username || !formData.password || !formData.confirmarContrasena) {
+                    errors.push('Por favor, complete todos los campos obligatorios.');
+                    camposResaltar.push("username", "password", "confirmarContrasena");
+                    break
+                }
+                if (formData.password !== formData.confirmarContrasena) {
+                    errors.push('Las contraseñas no coinciden.');
+                    camposResaltar.push("password", "confirmarContrasena");
+                }
+                if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(formData.password)) {
+                    errors.push('La contraseña no cumple con los requisitos mínimos.');
+                    camposResaltar.push("password", "confirmarContrasena");
+                }
+                try {
+                    await axiosClient.get(`/usuario/comprobar-username/${formData.username}`);
+                } catch (error) {
+                    if (axios.isAxiosError(error) && error.response) {
+                        if (error.response.status === 409) {
+                            errors.push('El nombre de usuario ya está en uso.');
+                            camposResaltar.push("username");
+                        }
+                    }
+                }
                 break;
-
-            case "dni":
-                if (!/^\d{8}[A-Za-z]$/.test(value))
-                    error.mensaje += "DNI no válido (8 números y 1 letra). ";
+            case 3:
+                if (selectedAlergenos.length === 0) {
+                    errors.push('Por favor, seleccione al menos un alérgeno.');
+                }
                 break;
-
-            case "telefono":
-                if (!/^\d{9}$/.test(value))
-                    error.mensaje += "Número de teléfono inválido (9 dígitos). ";
-                break;
-
-            case "fechaNacimiento":
-                if (!value) error.mensaje += "La fecha de nacimiento es obligatoria. ";
-                break;
-
-            case "password":
-                if (value.length < 6) error.mensaje += "La contraseña debe tener al menos 6 caracteres. ";
-                break;
-
-            case "confirmarContrasena":
-                if (value !== formData.password) error.mensaje += "Las contraseñas no coinciden. ";
-                break;
-
             default:
                 break;
         }
 
-        if (error) {
-            setNotificacion(error);
+        if (errors.length > 0) {
+            setNotificacion({ ...errorBase, mensaje: errors.join(' \n ') });
+            highlightPasswordFields(camposResaltar);
+            return false;
         }
+
+        return true;
     };
 
-    const [showPassword, setShowPassword] = useState<boolean>(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
 
-        validateField(e.target.name, e.target.value);
-    };
-
-    function nextStep() {
-        setStep((prev) => (prev < 4 ? prev + 1 : prev));
+    async function nextStep() {
+        removeHighlightFromFields(["nombre", "apellidos", "email", "dni", "telefono", "fecha_nacimiento", "direccion", "codigo_postal", "username", "password", "confirmarContrasena"]);
+        if (await validateStep()) {
+            setStep((prev) => (prev < 4 ? prev + 1 : prev));
+        }
     }
 
-    const prevStep = () => setStep((prev) => (prev > 1 ? prev - 1 : prev));
+    const prevStep = () => {
+        removeHighlightFromFields(["nombre", "apellidos", "email", "dni", "telefono", "fecha_nacimiento", "direccion", "codigo_postal", "username", "password", "confirmarContrasena"]);
+        setStep((prev) => (prev > 1 ? prev - 1 : prev));
+    };
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
@@ -205,66 +253,62 @@ export default function Registro() {
                                         <input
                                             name="nombre"
                                             value={formData.nombre}
-                                            onChange={handleChange}
-                                            onBlur={(e) => validateField(e.target.name, e.target.value)}
-                                            className="border p-2 rounded shadow-lg"
+                                            onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
+                                            className={`border p-2 rounded w-full`}
                                             placeholder="Nombre"
                                         />
                                         <input
                                             name="apellidos"
                                             value={formData.apellidos}
-                                            onChange={handleChange}
-                                            onBlur={(e) => validateField(e.target.name, e.target.value)}
-                                            className="border p-2 rounded shadow-lg"
+                                            onChange={(e) => setFormData({ ...formData, apellidos: e.target.value })}
+                                            className={`border p-2 rounded w-full`}
                                             placeholder="Apellidos"
                                         />
                                         <input
                                             name="email"
                                             type="email"
                                             value={formData.email}
-                                            onChange={handleChange}
-                                            onBlur={(e) => validateField(e.target.name, e.target.value)}
-                                            className="border p-2 rounded shadow-lg"
+                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                            className={`border p-2 rounded w-full`}
                                             placeholder="Correo electrónico"
                                         />
                                         <input
                                             name="dni"
                                             value={formData.dni}
-                                            onChange={handleChange}
-                                            onBlur={(e) => validateField(e.target.name, e.target.value)}
-                                            className="border p-2 rounded shadow-lg"
+                                            onChange={(e) => setFormData({ ...formData, dni: e.target.value })}
+                                            className={`border p-2 rounded w-full`}
+                                            maxLength={9}
                                             placeholder="DNI"
                                         />
                                         <input
                                             name="telefono"
                                             value={formData.telefono}
-                                            onChange={handleChange}
-                                            onBlur={(e) => validateField(e.target.name, e.target.value)}
-                                            className="border p-2 rounded shadow-lg"
+                                            onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
+                                            className={`border p-2 rounded w-full`}
+                                            maxLength={9}
                                             placeholder="Teléfono"
                                         />
                                         <input
                                             name="fecha_nacimiento"
                                             type="date"
                                             value={formData.fecha_nacimiento}
-                                            onBlur={(e) => validateField(e.target.name, e.target.value)}
-                                            onChange={handleChange}
-                                            className="border p-2 rounded shadow-lg"
+                                            onChange={(e) => setFormData({ ...formData, fecha_nacimiento: e.target.value })}
+                                            className={`border p-2 rounded w-full`}
+                                            max={new Date(new Date().setFullYear(new Date().getFullYear() - 18)).toISOString().split('T')[0]}
                                         />
                                         <input
                                             name="direccion"
                                             value={formData.direccion}
-                                            onChange={handleChange}
-                                            onBlur={(e) => validateField(e.target.name, e.target.value)}
-                                            className="border p-2 rounded shadow-lg"
+                                            onChange={(e) => setFormData({ ...formData, direccion: e.target.value })}
+                                            className={`border p-2 rounded w-full`}
                                             placeholder="Dirección"
                                         />
                                         <input
                                             name="codigo_postal"
                                             value={formData.codigo_postal}
-                                            onChange={handleChange}
-                                            onBlur={(e) => validateField(e.target.name, e.target.value)}
-                                            className="border p-2 rounded shadow-lg"
+                                            onChange={(e) => setFormData({ ...formData, codigo_postal: e.target.value })}
+                                            className={`border p-2 rounded w-full`}
+                                            maxLength={5}
                                             placeholder="Código postal"
                                         />
                                     </div>
@@ -279,9 +323,8 @@ export default function Registro() {
                                             name="username"
                                             type="text"
                                             value={formData.username}
-                                            onChange={handleChange}
-                                            onBlur={(e) => validateField(e.target.name, e.target.value)}
-                                            className="border p-2 rounded"
+                                            onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                                            className={`border p-2 rounded w-full`}
                                             placeholder="Nombre de usuario"
                                         />
                                         <div className="relative">
@@ -289,8 +332,8 @@ export default function Registro() {
                                                 name="password"
                                                 type={showPassword ? "text" : "password"}
                                                 value={formData.password}
-                                                onChange={handleChange}
-                                                className="border p-2 rounded w-full"
+                                                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                                className={`border p-2 rounded w-full `}
                                                 placeholder="Contraseña"
                                             />
                                             <div
@@ -298,19 +341,20 @@ export default function Registro() {
                                                 onClick={togglePasswordVisibility}
                                             >
                                                 {showPassword ? (
-                                                    <EyeSlashIcon className="h-5 w-5 text-gray-500" />
+                                                    <EyeSlashIcon className="h-5 w-5 text-black"/>
                                                 ) : (
-                                                    <EyeIcon className="h-5 w-5 text-gray-500" />
+                                                    <EyeIcon className="h-5 w-5 text-black"/>
                                                 )}
                                             </div>
                                         </div>
+                                        <p className="text-sm text-gray-600 text-justify text-wrap">La contraseña debe tener como mínimo 1 número, 1 caracter especial (@$!%*?&.), 1 mayúscula y minúscula y 8 caracteres</p>
                                         <div className="relative">
                                             <input
                                                 name="confirmarContrasena"
                                                 type={showConfirmPassword ? "text" : "password"}
                                                 value={formData.confirmarContrasena}
-                                                onChange={handleChange}
-                                                className="border p-2 rounded w-full"
+                                                onChange={(e) => setFormData({ ...formData, confirmarContrasena: e.target.value })}
+                                                className={`border p-2 rounded w-full`}
                                                 placeholder="Confirmar contraseña"
                                             />
                                             <div
@@ -318,9 +362,9 @@ export default function Registro() {
                                                 onClick={toggleConfirmPasswordVisibility}
                                             >
                                                 {showConfirmPassword ? (
-                                                    <EyeSlashIcon className="h-5 w-5 text-(--verde-azulado)" />
+                                                    <EyeSlashIcon className="h-5 w-5 text-black"/>
                                                 ) : (
-                                                    <EyeIcon className="h-5 w-5 text-gray-500" />
+                                                    <EyeIcon className="h-5 w-5 text-black"/>
                                                 )}
                                             </div>
                                         </div>

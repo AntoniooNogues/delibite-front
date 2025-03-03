@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import React, {useEffect, useState} from 'react';
-import {useSearchParams} from 'next/navigation';
+import React, { Suspense, useCallback, useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import ErrorPage from "@pages/Error";
 import Navbar from "@/components/Navbar";
 import axiosClient from '@/lib/axiosClient';
 import axios from 'axios';
-import type {Notificaciones} from '@/interfaces/Notificaciones';
+import type { Notificaciones } from '@/interfaces/Notificaciones';
 import NotificacionComponent from "@/components/Notificacion";
-import type {LineaPedido, Valoracion} from '@/interfaces/Valoraciones';
+import type { LineaPedido, Valoracion } from '@/interfaces/Valoraciones';
 import Loading from "@/components/Loading";
 import Rating from '@mui/material/Rating';
 import Image from "next/image";
 import Footer from "@/components/Footer";
 
-export default function ValoracionesPage() {
+function ValoracionesContent() {
     const searchParams = useSearchParams();
     const codigo = searchParams ? searchParams.get('codigo') : null;
     const [notificacion, setNotificacion] = useState<Notificaciones>();
@@ -24,12 +24,7 @@ export default function ValoracionesPage() {
     const [loading, setLoading] = useState(true);
     const [pedidoID, setPedidoID] = useState<number | null>(null);
 
-    useEffect(() => {
-        fetchData();
-        setPedidoID(platos.map((plato) => plato.pedido_id)[0]);
-    }, []);
-
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             const response = await axiosClient.post(`/valoraciones/verificar`, { codigo });
             setPlatos(response.data);
@@ -54,15 +49,16 @@ export default function ValoracionesPage() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [codigo]);
+
+    useEffect(() => {
+        fetchData();
+        setPedidoID(platos.map((plato) => plato.pedido_id)[0]);
+    }, [fetchData, platos]);
 
     const [valoraciones, setValoraciones] = useState<Record<number, Valoracion>>({});
 
-
-
-
-
-    const handleValoracionChange = (platoId: number, key: keyof Valoracion, value: any) => {
+    const handleValoracionChange = (platoId: number, key: keyof Valoracion, value: string | number) => {
         if (pedidoID === null) return;
         setValoraciones((prev) => {
             return {
@@ -76,8 +72,6 @@ export default function ValoracionesPage() {
             };
         });
     };
-
-
 
     return (
         <main>
@@ -147,7 +141,7 @@ export default function ValoracionesPage() {
                                         setTimeout(() => {
                                             window.location.href = "/";
                                         }, 2000);
-                                    } catch (error) {
+                                    } catch {
                                         setNotificacion({ titulo: "Ha ocurrido un error ", mensaje: "No se han podido valorar los platos del pedido", code: 500, tipo: "error" });
                                     }
                                 }}
@@ -167,5 +161,13 @@ export default function ValoracionesPage() {
                 />
             )}
         </main>
+    );
+}
+
+export default function ValoracionesPage() {
+    return (
+        <Suspense fallback={<Loading />}>
+            <ValoracionesContent />
+        </Suspense>
     );
 }

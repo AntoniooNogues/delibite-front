@@ -47,16 +47,22 @@ export default function SideBarAdmin({className}: SideBarAdminProps) {
                            href="/administracion">
                             <span className="text-lg font-medium">Inicio</span>
                         </Link>
-                        <Link className={`flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-[--oxley-800] hover:text-[--oxley-50] ${pathname === '/administracion/usuarios' ? 'bg-[--primary-dark]' : ''}`}
-                           href="/administracion/usuarios">
-                            <span className="text-lg font-medium">Usuarios</span>
-                        </Link>
+                        {usuario?.roles.includes('ROLE_ADMINISTRADOR') ? (
+                            <Link className={`flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-[--oxley-800] hover:text-[--oxley-50] ${pathname === '/administracion/usuarios' ? 'bg-[--primary-dark]' : ''}`}
+                                  href="/administracion/usuarios">
+                                <span className="text-lg font-medium">Usuarios</span>
+                            </Link>
+                        ) : (
+                            <span className="flex items-center w-full h-12 px-3 mt-2 rounded bg-[--oxley-300] text-gray-500 cursor-not-allowed">
+                                <span className="text-lg font-medium">Usuarios</span>
+                            </span>
+                        )}
                         <Link className={`flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-[--oxley-800] hover:text-[--oxley-50] ${pathname === '/administracion/platos' ? 'bg-[--primary-dark]' : ''}`}
                            href="/administracion/platos">
                             <span className="text-lg font-medium">Platos</span>
                         </Link>
                         <Link className={`flex items-center w-full h-12 px-3 mt-2 text-[--oxley-50] rounded ${pathname === '/administracion/pedidos' ? 'bg-[--primary-dark]' : ''}`}
-                           href="/administracion/">
+                           href="/administracion/pedidos">
                             <span className="text-lg font-medium">Pedidos</span>
                         </Link>
                     </div>
@@ -66,11 +72,11 @@ export default function SideBarAdmin({className}: SideBarAdminProps) {
                             <span className="text-lg font-medium">Packs</span>
                         </Link>
                         <Link className={`flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-[--oxley-800] hover:text-[--oxley-50] ${pathname === '/administracion/valoraciones' ? 'bg-[--primary-dark]' : ''}`}
-                           href="/administracion/">
+                           href="/administracion/valoraciones">
                             <span className="text-lg font-medium">Valoraciones</span>
                         </Link>
                         <Link className={`flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-[--oxley-800] hover:text-[--oxley-50] ${pathname === '/administracion/suscripciones' ? 'bg-[--primary-dark]' : ''}`}
-                           href="/administracion/">
+                           href="/administracion/suscripciones">
                             <span className="text-lg font-medium">Suscripciones</span>
                         </Link>
                     </div>

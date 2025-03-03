@@ -118,7 +118,7 @@ export default function DetallesCarrito() {
                             <hr/>
                             <div className="space-y-2 mt-2">
                                 {Object.keys(carrito).length > 0 ? (
-                                    Object.entries(carrito).map(([id, {nombre, precio, cantidad, img, tipo}], i) => {
+                                    Object.entries(carrito).map(([id, {nombre, precio, cantidad, img}], i) => {
                                         return (
                                             <div
                                                 key={id}
