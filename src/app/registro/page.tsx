@@ -13,7 +13,6 @@ import { Notificaciones } from '@/interfaces/Notificaciones';
 import axios from "axios";
 import Link from "next/link";
 
-// Definir la interfaz para los datos del formulario
 interface FormData {
     nombre: string;
     apellidos: string;
@@ -47,6 +46,7 @@ export default function Registro() {
         confirmarContrasena: "",
         imagen: "",
     });
+
     const handleSubmit = async () => {
         const formDataToSend = new FormData();
         Object.entries(formData).forEach(([key, value]) => {
@@ -128,12 +128,12 @@ export default function Registro() {
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 
-    // Manejo de cambios en los inputs
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
 
         validateField(e.target.name, e.target.value);
     };
+
     function nextStep() {
         setStep((prev) => (prev < 4 ? prev + 1 : prev));
     }
@@ -148,16 +148,14 @@ export default function Registro() {
         setShowConfirmPassword(!showConfirmPassword);
     };
 
-
-
     return (
-        <div className="h-screen flex flex-col w-screen bg-(--gris-registro)">
-            <NavbarReducido/>
+        <div className="min-h-screen flex flex-col w-full bg-(--gris-registro)">
+            <NavbarReducido />
             <div className="flex-grow flex items-center justify-center shadow-lg">
-                <div className="flex justify-center items-stretch">
-                    <div className="bg-(--verde-azulado-80) w-1/4 p-8 rounded-l-lg text-white">
+                <div className="flex flex-col md:flex-row justify-center items-stretch w-full max-w-6xl">
+                    <div className="bg-(--verde-azulado-80) w-full md:w-1/3 p-8 rounded-t-lg md:rounded-l-lg md:rounded-tr-none text-white">
                         <div className="mb-2">
-                            <span className="text-4xl" style={{fontFamily: 'Limelight, sans-serif'}}>delibite</span>
+                            <span className="text-4xl" style={{ fontFamily: 'Limelight, sans-serif' }}>delibite</span>
                         </div>
                         <div className="pt-8">
                             <h3 className="text-2xl">Come saludable, vive mejor</h3>
@@ -176,9 +174,8 @@ export default function Registro() {
                             </p>
                         </div>
                     </div>
-                    <div className="bg-white p-8  rounded-r-lg w-2/4 max-w-4xl">
+                    <div className="bg-white p-8 rounded-b-lg md:rounded-r-lg md:rounded-bl-none w-full md:w-2/3 max-w-4xl">
 
-                        {/* Barra de progreso */}
                         <div className="flex justify-between mb-6">
                             {[1, 2, 3, 4].map((num) => (
                                 <div
@@ -193,18 +190,18 @@ export default function Registro() {
                                 </div>
                             ))}
                         </div>
-                        {/* Contenido dinámico por paso con animación */}
+
                         <motion.div
                             key={step}
-                            initial={{opacity: 0, x: 50}}
-                            animate={{opacity: 1, x: 0}}
-                            exit={{opacity: 0, x: -50}}
-                            transition={{duration: 0.3}}
+                            initial={{ opacity: 0, x: 50 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: -50 }}
+                            transition={{ duration: 0.3 }}
                         >
                             {step === 1 && (
                                 <div>
                                     <h2 className="text-xl font-bold mb-4">Datos personales</h2>
-                                    <div className="grid grid-cols-2 gap-6">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <input
                                             name="nombre"
                                             value={formData.nombre}
@@ -301,9 +298,9 @@ export default function Registro() {
                                                 onClick={togglePasswordVisibility}
                                             >
                                                 {showPassword ? (
-                                                    <EyeSlashIcon className="h-5 w-5 text-gray-500"/>
+                                                    <EyeSlashIcon className="h-5 w-5 text-gray-500" />
                                                 ) : (
-                                                    <EyeIcon className="h-5 w-5 text-gray-500"/>
+                                                    <EyeIcon className="h-5 w-5 text-gray-500" />
                                                 )}
                                             </div>
                                         </div>
@@ -321,9 +318,9 @@ export default function Registro() {
                                                 onClick={toggleConfirmPasswordVisibility}
                                             >
                                                 {showConfirmPassword ? (
-                                                    <EyeSlashIcon className="h-5 w-5 text-(--verde-azulado)"/>
+                                                    <EyeSlashIcon className="h-5 w-5 text-(--verde-azulado)" />
                                                 ) : (
-                                                    <EyeIcon className="h-5 w-5 text-gray-500"/>
+                                                    <EyeIcon className="h-5 w-5 text-gray-500" />
                                                 )}
                                             </div>
                                         </div>
@@ -335,7 +332,7 @@ export default function Registro() {
                                 <div className="">
                                     <h2 className="text-xl font-bold mb-4">Selecciona tus alérgenos</h2>
                                     <Alergenos selectedAlergenos={selectedAlergenos}
-                                               setSelectedAlergenos={setSelectedAlergenos}/>
+                                               setSelectedAlergenos={setSelectedAlergenos} />
                                 </div>
                             )}
 
@@ -343,7 +340,7 @@ export default function Registro() {
                                 <div>
                                     <h2 className="text-xl font-bold mb-4">Confirmación</h2>
                                     <p>Revisa tu información antes de enviar el formulario.</p>
-                                    <div className="mt-4 grid grid-cols-2 gap-2">
+                                    <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-2">
                                         {Object.entries(formData)
                                             .filter(([key]) => key !== "confirmarContrasena" && key !== "imagen")
                                             .map(([key, value]) => (
@@ -357,7 +354,6 @@ export default function Registro() {
                             )}
                         </motion.div>
 
-                        {/* Botones de navegación */}
                         <div className="flex justify-between mt-6">
                             {step > 1 && (
                                 <button
