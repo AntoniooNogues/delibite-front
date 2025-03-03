@@ -32,6 +32,7 @@ export default function Registro() {
     const [step, setStep] = useState<number>(1);
     const router = useRouter();
     const [notificacion, setNotificacion] = useState<Notificaciones>();
+    const [loading, setLoading] = useState<boolean>(false);
     const [formData, setFormData] = useState<FormData>({
         nombre: "",
         apellidos: "",
@@ -65,15 +66,15 @@ export default function Registro() {
             console.log(jsonObject);
             const respuesta = await axiosClient.post("/usuario/registro/" , jsonObject);
             setNotificacion({ titulo: respuesta.data.titulo, mensaje: respuesta.data.mensaje, code: respuesta.data.code, tipo: respuesta.data.code });
-            setTimeout(() => {
-                router.push("/verificar-cuenta/");
-            }, 2500);
+            setLoading(true);
         }catch (error){
             if (axios.isAxiosError(error) && error.response) {
                 setNotificacion({ titulo: error.response.data.titulo, mensaje: error.response.data.mensaje , code: error.response.data.code, tipo: error.response.data.tipo });
             } else {
                 setNotificacion({ titulo: 'Error', mensaje: 'Error al crear el plato: Error desconocido', code: 500, tipo: 'error' });
             }
+        }finally {
+            router.push("/verificar-cuenta");
         }
     };
 
@@ -199,232 +200,242 @@ export default function Registro() {
     return (
         <div className="min-h-screen flex flex-col w-full bg-(--gris-registro)">
             <NavbarReducido />
-            <div className="flex-grow flex items-center justify-center shadow-lg">
-                <div className="flex flex-col md:flex-row justify-center items-stretch w-full max-w-6xl">
-                    <div className="bg-(--verde-azulado-80) w-full md:w-1/3 p-8 rounded-t-lg md:rounded-l-lg md:rounded-tr-none text-white">
-                        <div className="mb-2">
-                            <span className="text-4xl" style={{ fontFamily: 'Limelight, sans-serif' }}>delibite</span>
-                        </div>
-                        <div className="pt-8">
-                            <h3 className="text-2xl">Come saludable, vive mejor</h3>
-                            <p className="text-md text-justify pt-4">
-                                Regístrate en Delibite y descubre nuestra selección de platos saludables
-                                y packs diseñados para tu bienestar. Comidas deliciosas,
-                                nutritivas y listas para disfrutar.
-                                ¡Simplifica tu día y cuida de tu salud con cada bocado!
-                            </p>
-                        </div>
-                        <div className="pt-8 mt-auto">
-                            <p className="text-sm">Si ya dispones de una cuenta, pulsa aqui.
-                                <Link href="/login" className="text-black">
-                                    &nbsp;Iniciar Sesión.
-                                </Link>
-                            </p>
-                        </div>
-                    </div>
-                    <div className="bg-white p-8 rounded-b-lg md:rounded-r-lg md:rounded-bl-none w-full md:w-2/3 max-w-4xl">
-
-                        <div className="flex justify-between mb-6">
-                            {[1, 2, 3, 4].map((num) => (
-                                <div
-                                    key={num}
-                                    className={`flex items-center justify-center w-10 h-10 rounded-full text-lg font-semibold border-2 ${
-                                        step >= num
-                                            ? "bg-(--verde-azulado) text-white border-gray-400 shadow-lg"
-                                            : "bg-gray-200 border-gray-400"
-                                    }`}
-                                >
-                                    {num}
-                                </div>
-                            ))}
-                        </div>
-
-                        <motion.div
-                            key={step}
-                            initial={{ opacity: 0, x: 50 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -50 }}
-                            transition={{ duration: 0.3 }}
-                        >
-                            {step === 1 && (
-                                <div>
-                                    <h2 className="text-xl font-bold mb-4">Datos personales</h2>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <input
-                                            name="nombre"
-                                            value={formData.nombre}
-                                            onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
-                                            className={`border p-2 rounded w-full`}
-                                            placeholder="Nombre"
-                                        />
-                                        <input
-                                            name="apellidos"
-                                            value={formData.apellidos}
-                                            onChange={(e) => setFormData({ ...formData, apellidos: e.target.value })}
-                                            className={`border p-2 rounded w-full`}
-                                            placeholder="Apellidos"
-                                        />
-                                        <input
-                                            name="email"
-                                            type="email"
-                                            value={formData.email}
-                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                            className={`border p-2 rounded w-full`}
-                                            placeholder="Correo electrónico"
-                                        />
-                                        <input
-                                            name="dni"
-                                            value={formData.dni}
-                                            onChange={(e) => setFormData({ ...formData, dni: e.target.value })}
-                                            className={`border p-2 rounded w-full`}
-                                            maxLength={9}
-                                            placeholder="DNI"
-                                        />
-                                        <input
-                                            name="telefono"
-                                            value={formData.telefono}
-                                            onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
-                                            className={`border p-2 rounded w-full`}
-                                            maxLength={9}
-                                            placeholder="Teléfono"
-                                        />
-                                        <input
-                                            name="fecha_nacimiento"
-                                            type="date"
-                                            value={formData.fecha_nacimiento}
-                                            onChange={(e) => setFormData({ ...formData, fecha_nacimiento: e.target.value })}
-                                            className={`border p-2 rounded w-full`}
-                                            max={new Date(new Date().setFullYear(new Date().getFullYear() - 18)).toISOString().split('T')[0]}
-                                        />
-                                        <input
-                                            name="direccion"
-                                            value={formData.direccion}
-                                            onChange={(e) => setFormData({ ...formData, direccion: e.target.value })}
-                                            className={`border p-2 rounded w-full`}
-                                            placeholder="Dirección"
-                                        />
-                                        <input
-                                            name="codigo_postal"
-                                            value={formData.codigo_postal}
-                                            onChange={(e) => setFormData({ ...formData, codigo_postal: e.target.value })}
-                                            className={`border p-2 rounded w-full`}
-                                            maxLength={5}
-                                            placeholder="Código postal"
-                                        />
-                                    </div>
-                                </div>
-                            )}
-
-                            {step === 2 && (
-                                <div>
-                                    <h2 className="text-xl font-bold mb-4">Detalles de cuenta</h2>
-                                    <div className="grid grid-cols-1 gap-4">
-                                        <input
-                                            name="username"
-                                            type="text"
-                                            value={formData.username}
-                                            onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                                            className={`border p-2 rounded w-full`}
-                                            placeholder="Nombre de usuario"
-                                        />
-                                        <div className="relative">
-                                            <input
-                                                name="password"
-                                                type={showPassword ? "text" : "password"}
-                                                value={formData.password}
-                                                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                                className={`border p-2 rounded w-full `}
-                                                placeholder="Contraseña"
-                                            />
-                                            <div
-                                                className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
-                                                onClick={togglePasswordVisibility}
-                                            >
-                                                {showPassword ? (
-                                                    <EyeSlashIcon className="h-5 w-5 text-black"/>
-                                                ) : (
-                                                    <EyeIcon className="h-5 w-5 text-black"/>
-                                                )}
-                                            </div>
-                                        </div>
-                                        <p className="text-sm text-gray-600 text-justify text-wrap">La contraseña debe tener como mínimo 1 número, 1 caracter especial (@$!%*?&.), 1 mayúscula y minúscula y 8 caracteres</p>
-                                        <div className="relative">
-                                            <input
-                                                name="confirmarContrasena"
-                                                type={showConfirmPassword ? "text" : "password"}
-                                                value={formData.confirmarContrasena}
-                                                onChange={(e) => setFormData({ ...formData, confirmarContrasena: e.target.value })}
-                                                className={`border p-2 rounded w-full`}
-                                                placeholder="Confirmar contraseña"
-                                            />
-                                            <div
-                                                className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
-                                                onClick={toggleConfirmPasswordVisibility}
-                                            >
-                                                {showConfirmPassword ? (
-                                                    <EyeSlashIcon className="h-5 w-5 text-black"/>
-                                                ) : (
-                                                    <EyeIcon className="h-5 w-5 text-black"/>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-
-                            {step === 3 && (
-                                <div className="">
-                                    <h2 className="text-xl font-bold mb-4">Selecciona tus alérgenos</h2>
-                                    <Alergenos selectedAlergenos={selectedAlergenos}
-                                               setSelectedAlergenos={setSelectedAlergenos} />
-                                </div>
-                            )}
-
-                            {step === 4 && (
-                                <div>
-                                    <h2 className="text-xl font-bold mb-4">Confirmación</h2>
-                                    <p>Revisa tu información antes de enviar el formulario.</p>
-                                    <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-2">
-                                        {Object.entries(formData)
-                                            .filter(([key]) => key !== "confirmarContrasena" && key !== "imagen")
-                                            .map(([key, value]) => (
-                                                <div key={key} className="mb-2">
-                                                    <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong>
-                                                    &nbsp;{key === "password" ? value.slice(0, 0) + "****" : value}
-                                                </div>
-                                            ))}
-                                    </div>
-                                </div>
-                            )}
-                        </motion.div>
-
-                        <div className="flex justify-between mt-6">
-                            {step > 1 && (
-                                <button
-                                    onClick={prevStep}
-                                    className="px-4 py-2 bg-gray-400 text-white rounded
-                                    hover:bg-gray-500 active:bg-gray-600 hover:text-white transition transform active:scale-95 hover:scale-105"
-                                >
-                                    Atrás
-                                </button>
-                            )}
-                            {step < 4 ? (
-                                <button
-                                    onClick={nextStep}
-                                    className="px-4 py-2 bg-(--verde-azulado) text-white rounded drop-shadow-xl ml-auto
-                                    hover:bg-(--oxley-500) active:bg-(--oxley-700) hover:text-white transition transform active:scale-95 hover:scale-105"
-                                >
-                                    Siguiente
-                                </button>
-                            ) : (
-                                <button  onClick={handleSubmit} className=" px-4 py-2 rounded-lg text-white bg-(--verde-azulado) hover:bg-(--oxley-500) active:bg-(--oxley-700) hover:text-white transition transform active:scale-95 hover:scale-105">
-                                    Finalizar
-                                </button>
-                            )}
-                        </div>
+            {loading ?
+            <div>
+                <div className="fixed inset-0 flex items-center justify-center  bg-opacity-50 z-50">
+                    <div className="flex items-center justify-center px-10 py-6 rounded-lg w-1/3">
+                        <div className="w-20 h-20 border-4 border-t-4 border-gray-200 rounded-full animate-spin border-t-(--verde-azulado)"/>
                     </div>
                 </div>
             </div>
+            : (
+                    <div className="flex-grow flex items-center justify-center shadow-lg">
+                        <div className="flex flex-col md:flex-row justify-center items-stretch w-full max-w-6xl">
+                            <div className="bg-(--verde-azulado-80) w-full md:w-1/3 p-8 rounded-t-lg md:rounded-l-lg md:rounded-tr-none text-white">
+                                <div className="mb-2">
+                                    <span className="text-4xl" style={{ fontFamily: 'Limelight, sans-serif' }}>delibite</span>
+                                </div>
+                                <div className="pt-8">
+                                    <h3 className="text-2xl">Come saludable, vive mejor</h3>
+                                    <p className="text-md text-justify pt-4">
+                                        Regístrate en Delibite y descubre nuestra selección de platos saludables
+                                        y packs diseñados para tu bienestar. Comidas deliciosas,
+                                        nutritivas y listas para disfrutar.
+                                        ¡Simplifica tu día y cuida de tu salud con cada bocado!
+                                    </p>
+                                </div>
+                                <div className="pt-8 mt-auto">
+                                    <p className="text-sm">Si ya dispones de una cuenta, pulsa aqui.
+                                        <Link href="/login" className="text-black">
+                                            &nbsp;Iniciar Sesión.
+                                        </Link>
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="bg-white p-8 rounded-b-lg md:rounded-r-lg md:rounded-bl-none w-full md:w-2/3 max-w-4xl">
+
+                                <div className="flex justify-between mb-6">
+                                    {[1, 2, 3, 4].map((num) => (
+                                        <div
+                                            key={num}
+                                            className={`flex items-center justify-center w-10 h-10 rounded-full text-lg font-semibold border-2 ${
+                                                step >= num
+                                                    ? "bg-(--verde-azulado) text-white border-gray-400 shadow-lg"
+                                                    : "bg-gray-200 border-gray-400"
+                                            }`}
+                                        >
+                                            {num}
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <motion.div
+                                    key={step}
+                                    initial={{ opacity: 0, x: 50 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: -50 }}
+                                    transition={{ duration: 0.3 }}
+                                >
+                                    {step === 1 && (
+                                        <div>
+                                            <h2 className="text-xl font-bold mb-4">Datos personales</h2>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                <input
+                                                    name="nombre"
+                                                    value={formData.nombre}
+                                                    onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
+                                                    className={`border p-2 rounded w-full`}
+                                                    placeholder="Nombre"
+                                                />
+                                                <input
+                                                    name="apellidos"
+                                                    value={formData.apellidos}
+                                                    onChange={(e) => setFormData({ ...formData, apellidos: e.target.value })}
+                                                    className={`border p-2 rounded w-full`}
+                                                    placeholder="Apellidos"
+                                                />
+                                                <input
+                                                    name="email"
+                                                    type="email"
+                                                    value={formData.email}
+                                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                                    className={`border p-2 rounded w-full`}
+                                                    placeholder="Correo electrónico"
+                                                />
+                                                <input
+                                                    name="dni"
+                                                    value={formData.dni}
+                                                    onChange={(e) => setFormData({ ...formData, dni: e.target.value })}
+                                                    className={`border p-2 rounded w-full`}
+                                                    maxLength={9}
+                                                    placeholder="DNI"
+                                                />
+                                                <input
+                                                    name="telefono"
+                                                    value={formData.telefono}
+                                                    onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
+                                                    className={`border p-2 rounded w-full`}
+                                                    maxLength={9}
+                                                    placeholder="Teléfono"
+                                                />
+                                                <input
+                                                    name="fecha_nacimiento"
+                                                    type="date"
+                                                    value={formData.fecha_nacimiento}
+                                                    onChange={(e) => setFormData({ ...formData, fecha_nacimiento: e.target.value })}
+                                                    className={`border p-2 rounded w-full`}
+                                                    max={new Date(new Date().setFullYear(new Date().getFullYear() - 18)).toISOString().split('T')[0]}
+                                                />
+                                                <input
+                                                    name="direccion"
+                                                    value={formData.direccion}
+                                                    onChange={(e) => setFormData({ ...formData, direccion: e.target.value })}
+                                                    className={`border p-2 rounded w-full`}
+                                                    placeholder="Dirección"
+                                                />
+                                                <input
+                                                    name="codigo_postal"
+                                                    value={formData.codigo_postal}
+                                                    onChange={(e) => setFormData({ ...formData, codigo_postal: e.target.value })}
+                                                    className={`border p-2 rounded w-full`}
+                                                    maxLength={5}
+                                                    placeholder="Código postal"
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {step === 2 && (
+                                        <div>
+                                            <h2 className="text-xl font-bold mb-4">Detalles de cuenta</h2>
+                                            <div className="grid grid-cols-1 gap-4">
+                                                <input
+                                                    name="username"
+                                                    type="text"
+                                                    value={formData.username}
+                                                    onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                                                    className={`border p-2 rounded w-full`}
+                                                    placeholder="Nombre de usuario"
+                                                />
+                                                <div className="relative">
+                                                    <input
+                                                        name="password"
+                                                        type={showPassword ? "text" : "password"}
+                                                        value={formData.password}
+                                                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                                        className={`border p-2 rounded w-full `}
+                                                        placeholder="Contraseña"
+                                                    />
+                                                    <div
+                                                        className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                                                        onClick={togglePasswordVisibility}
+                                                    >
+                                                        {showPassword ? (
+                                                            <EyeSlashIcon className="h-5 w-5 text-black"/>
+                                                        ) : (
+                                                            <EyeIcon className="h-5 w-5 text-black"/>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <p className="text-sm text-gray-600 text-justify text-wrap">La contraseña debe tener como mínimo 1 número, 1 caracter especial (@$!%*?&.), 1 mayúscula y minúscula y 8 caracteres</p>
+                                                <div className="relative">
+                                                    <input
+                                                        name="confirmarContrasena"
+                                                        type={showConfirmPassword ? "text" : "password"}
+                                                        value={formData.confirmarContrasena}
+                                                        onChange={(e) => setFormData({ ...formData, confirmarContrasena: e.target.value })}
+                                                        className={`border p-2 rounded w-full`}
+                                                        placeholder="Confirmar contraseña"
+                                                    />
+                                                    <div
+                                                        className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                                                        onClick={toggleConfirmPasswordVisibility}
+                                                    >
+                                                        {showConfirmPassword ? (
+                                                            <EyeSlashIcon className="h-5 w-5 text-black"/>
+                                                        ) : (
+                                                            <EyeIcon className="h-5 w-5 text-black"/>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {step === 3 && (
+                                        <div className="">
+                                            <h2 className="text-xl font-bold mb-4">Selecciona tus alérgenos</h2>
+                                            <Alergenos selectedAlergenos={selectedAlergenos}
+                                                       setSelectedAlergenos={setSelectedAlergenos} />
+                                        </div>
+                                    )}
+
+                                    {step === 4 && (
+                                        <div>
+                                            <h2 className="text-xl font-bold mb-4">Confirmación</h2>
+                                            <p>Revisa tu información antes de enviar el formulario.</p>
+                                            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-2">
+                                                {Object.entries(formData)
+                                                    .filter(([key]) => key !== "confirmarContrasena" && key !== "imagen")
+                                                    .map(([key, value]) => (
+                                                        <div key={key} className="mb-2">
+                                                            <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong>
+                                                            &nbsp;{key === "password" ? value.slice(0, 0) + "****" : value}
+                                                        </div>
+                                                    ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </motion.div>
+
+                                <div className="flex justify-between mt-6">
+                                    {step > 1 && (
+                                        <button
+                                            onClick={prevStep}
+                                            className="px-4 py-2 bg-gray-400 text-white rounded
+                                    hover:bg-gray-500 active:bg-gray-600 hover:text-white transition transform active:scale-95 hover:scale-105"
+                                        >
+                                            Atrás
+                                        </button>
+                                    )}
+                                    {step < 4 ? (
+                                        <button
+                                            onClick={nextStep}
+                                            className="px-4 py-2 bg-(--verde-azulado) text-white rounded drop-shadow-xl ml-auto
+                                    hover:bg-(--oxley-500) active:bg-(--oxley-700) hover:text-white transition transform active:scale-95 hover:scale-105"
+                                        >
+                                            Siguiente
+                                        </button>
+                                    ) : (
+                                        <button  onClick={handleSubmit} className=" px-4 py-2 rounded-lg text-white bg-(--verde-azulado) hover:bg-(--oxley-500) active:bg-(--oxley-700) hover:text-white transition transform active:scale-95 hover:scale-105">
+                                            Finalizar
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
             {notificacion && (
                 <NotificacionComponent
                     Notificaciones={notificacion}
