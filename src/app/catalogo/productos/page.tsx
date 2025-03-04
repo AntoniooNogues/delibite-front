@@ -23,9 +23,7 @@ import {CarritoItem} from "@/interfaces/CarritoItem";
 
 const CategoriaLista = ({ titulo, items, subheader }: { titulo: string; items: Catalogo[]; subheader: string }) => {
     const [cantidad, setCantidad] = useState<{ [key: number]: number }>({});
-    // Sync with carrito cookie on mount and when it changes
     useEffect(() => {
-        // Initial sync from cookie
         const syncFromCookie = () => {
             const carrito = Cookies.get("carrito");
             if (carrito) {
@@ -46,7 +44,6 @@ const CategoriaLista = ({ titulo, items, subheader }: { titulo: string; items: C
             }
         };
 
-        // Listen for changes from other components
         const handleCarritoUpdate = (event: CustomEvent) => {
             const carritoObj = event.detail;
             const newCantidad: { [key: number]: number } = {};
@@ -60,13 +57,10 @@ const CategoriaLista = ({ titulo, items, subheader }: { titulo: string; items: C
             setCantidad(newCantidad);
         };
 
-        // Initial sync
         syncFromCookie();
 
-        // Set up event listener
         window.addEventListener("actualizacionCarrito", handleCarritoUpdate as EventListener);
 
-        // Set up interval to check for cookie changes
         const intervalId = setInterval(syncFromCookie, 1000);
 
         return () => {
@@ -82,21 +76,17 @@ const CategoriaLista = ({ titulo, items, subheader }: { titulo: string; items: C
                 delete newCantidad[id];
             }
 
-            // Retrieve existing cookie data
             const carrito = Cookies.get("carrito");
             const carritoObj = carrito ? JSON.parse(carrito) : {};
 
-            // Update the carrito object
             if (value > 0) {
                 carritoObj[id] = { nombre, precio, cantidad: value, img, tipo };
             } else {
                 delete carritoObj[id];
             }
 
-            // Save updated carrito object to cookies
             Cookies.set("carrito", JSON.stringify(carritoObj), { expires: 7 });
 
-            // Dispatch custom event to notify other components
             const event = new CustomEvent("actualizacionCarrito", { detail: carritoObj });
             setTimeout(() => {
                 window.dispatchEvent(event);
