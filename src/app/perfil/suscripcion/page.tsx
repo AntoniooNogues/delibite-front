@@ -9,6 +9,14 @@ import { ArrowLeft } from "lucide-react";
 import { format, parseISO } from 'date-fns';
 import Image from 'next/image';
 
+interface Plato {
+    id: number;
+    nombre: string;
+    imagen: string;
+    cantidad: number;
+    precio: number;
+}
+
 interface Suscripcion {
     numPlatos: number;
     fechaRenovacion: {
@@ -18,6 +26,7 @@ interface Suscripcion {
     };
     total: number;
     estado: number;
+    platos: Plato[];
 }
 
 const SuscripcionPage: React.FC = () => {
@@ -116,24 +125,51 @@ const SuscripcionPage: React.FC = () => {
                     <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Modifica tu suscripción</h2>
                 </div>
                 {suscripcion && (
-                    <div className="flex flex-col md:flex-row w-full justify-center items-center">
+                    <div className="flex flex-col md:flex-row w-full justify-center items-center space-x-8">
                         <div className={`space-y-4 ${suscripcion.estado === 2 ? 'opacity-50' : ''}`}>
-                            <p className="text-lg"><span className="font-semibold">Número de platos:</span> {suscripcion.numPlatos}</p>
-                            <p className="text-lg"><span className="font-semibold">Fecha de renovación:</span> {formatDate(suscripcion.fechaRenovacion)}</p>
-                            <p className="text-lg"><span className="font-semibold">Total:</span> {suscripcion.total.toFixed(2)}€</p>
-                            <p className="text-lg">
+                            <p className="text-2xl text-gray-700"><span className="font-semibold">Número de platos:</span> {suscripcion.numPlatos}</p>
+                            <p className="text-2xl text-gray-700"><span className="font-semibold">Fecha de renovación:</span> {formatDate(suscripcion.fechaRenovacion)}</p>
+                        </div>
+                        <div className={`space-y-4 ${suscripcion.estado === 2 ? 'opacity-50' : ''}`}>
+                            <p className="text-2xl text-gray-700"><span
+                                className="font-semibold">Total:</span> {suscripcion.total.toFixed(2)}€</p>
+                            <p className="text-2xl text-gray-700">
                                 <span className="font-semibold">Estado:</span>
-                                <span className={`ml-2 inline-block w-3 h-3 rounded-full ${suscripcion.estado === 1 ? 'bg-green-500' : 'bg-orange-500'}`}></span>
+                                <span
+                                    className={`ml-2 inline-block w-3 h-3 rounded-full ${suscripcion.estado === 1 ? 'bg-green-500' : 'bg-orange-500'}`}></span>
                             </p>
                         </div>
-                        <div className="mt-4 md:mt-0 md:ml-8">
-                            <Image
-                                src="/arrozt.jpg"
-                                alt="Arrozt"
-                                width={300}
-                                height={200}
-                                className="object-cover rounded-xl"
-                            />
+                    </div>
+                )}
+                {suscripcion && suscripcion.platos && suscripcion.platos.length > 0 && (
+                    <div className="mt-8 w-full">
+                        {suscripcion.estado === 2
+                            ? <h3 className="text-xl font-semibold mb-4 ps-10">Platos en tu última suscripción</h3>
+                            : <h3 className="text-xl font-semibold mb-4">Platos en tu suscripción actual</h3>
+                        }
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {suscripcion.platos.map((plato) => (
+                                <div
+                                    key={plato.id}
+                                    className="rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow"
+                                >
+                                    <div className="w-full h-40 relative">
+                                        <Image
+                                            src={plato.imagen.startsWith('http') ? plato.imagen : `/images/${plato.imagen}`}
+                                            alt={plato.nombre}
+                                            fill
+                                            className="object-cover"
+                                        />
+                                    </div>
+                                    <div className="p-4">
+                                        <h4 className="font-semibold text-lg text-gray-700">{plato.nombre}</h4>
+                                        <div className="flex justify-between mt-2 text-gray-700">
+                                            <span>Cantidad: {plato.cantidad}</span>
+                                            <span>{plato.precio}€</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 )}
