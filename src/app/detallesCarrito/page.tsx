@@ -13,6 +13,8 @@ import { useTokenExpirado } from "@/hooks/useTokenExpirado";
 import NotificacionComponent from "@/components/Notificacion";
 import {Notificaciones} from "@/interfaces/Notificaciones";
 import {CarritoItem} from "@/interfaces/CarritoItem";
+import { format, addDays, isTuesday, isFriday, isAfter } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 export default function DetallesCarrito() {
     const [carrito, setCarrito] = useState<{ [key: number]: CarritoItem }>({});
@@ -85,8 +87,20 @@ export default function DetallesCarrito() {
     const [mostrarFormularioPago, setMostrarFormularioPago] = useState(false);
     const handleFinalizarCompra = () => {
         if (totalCarrito === 0) {
-            setNotificacionState({ titulo: "Error", mensaje: "No hay productos en el carrito para finalizar la compra", code: 500, tipo: "error" });
-        }else{
+            setNotificacionState({
+                titulo: "Error",
+                mensaje: "No hay productos en el carrito para finalizar la compra",
+                code: 500,
+                tipo: "error"
+            });
+        } else if (!fechaEntrega) {
+            setNotificacionState({
+                titulo: "Error",
+                mensaje: "Selecciona una fecha de entrega",
+                code: 400,
+                tipo: "error"
+            });
+        } else {
             setMostrarFormularioPago(true);
         }
     };
@@ -105,6 +119,27 @@ export default function DetallesCarrito() {
     };
     const precioEnvio = calcularEnvio();
     const totalConEnvio = totalCarrito > 0 ? totalCarrito + precioEnvio : 0;
+    const [fechaEntrega, setFechaEntrega] = useState<string>("");
+
+    const obtenerFechasDisponibles = () => {
+        const fechasDisponibles = [];
+        const currentDate = new Date();
+
+        for (let i = 0; i < 21; i++) {
+            const date = addDays(currentDate, i);
+
+            if ((isTuesday(date) || isFriday(date)) && isAfter(date, currentDate)) {
+                fechasDisponibles.push({
+                    value: format(date, 'yyyy-MM-dd'),
+                    label: format(date, "EEEE, d 'de' MMMM", { locale: es })
+                });
+            }
+        }
+
+        return fechasDisponibles;
+    };
+
+    const fechasDisponibles = obtenerFechasDisponibles();
     return (
         <div>
             <div className="min-h-screen">
@@ -201,7 +236,7 @@ export default function DetallesCarrito() {
                                 </DialogActions>
                             </Dialog>
                         </div>
-                        <div className="w-full lg:w-1/3 bg-white p-6 rounded-2xl shadow-lg max-h-86">
+                        <div className="w-full lg:w-1/3 bg-white p-6 rounded-2xl shadow-lg ">
                         <span className="text-2xl">
                             Resumen del pedido
                         </span>
@@ -232,6 +267,21 @@ export default function DetallesCarrito() {
                                         <option value="Francia">Francia</option>
                                     </select>
                                 </div>
+                                <div className="flex flex-col mt-4">
+                                    <p className="mb-2">Fecha de entrega:</p>
+                                    <select
+                                        value={fechaEntrega}
+                                        onChange={(e) => setFechaEntrega(e.target.value)}
+                                        className="p-2 border rounded w-full"
+                                    >
+                                        <option value="">Selecciona una fecha de entrega</option>
+                                        {fechasDisponibles.map(fecha => (
+                                            <option key={fecha.value} value={fecha.value}>
+                                                {fecha.label}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
                                 <div className="flex justify-between text-xl mt-8">
                                     <p className="font-bold">Total: </p>
                                     <p className="font-bold">{(totalConEnvio).toFixed(2)}</p>
@@ -250,7 +300,7 @@ export default function DetallesCarrito() {
                 </motion.div>
             </div>
             {mostrarFormularioPago &&
-                <FormularioPago setMostrarFormularioPago={setMostrarFormularioPago} totalConEnvio={totalConEnvio}  />}
+                <FormularioPago setMostrarFormularioPago={setMostrarFormularioPago} totalConEnvio={totalConEnvio} fechaEntrega={fechaEntrega}/>}
             <Footer></Footer>
 
             {notificacionState && (
