@@ -31,21 +31,17 @@ const PlatoDetalle = ({ plato, valoraciones, detallesValoraciones }: { plato: Pl
                 delete newCantidad[id];
             }
 
-            // Retrieve existing cookie data
             const carrito = Cookies.get("carrito");
             const carritoObj = carrito ? JSON.parse(carrito) : {};
 
-            // Update the carrito object
             if (value > 0) {
                 carritoObj[id] = { nombre, precio, cantidad: value, url };
             } else {
                 delete carritoObj[id];
             }
 
-            // Save updated carrito object to cookies
             Cookies.set("carrito", JSON.stringify(carritoObj), { expires: 7 });
 
-            // Dispatch custom event to notify other components
             const event = new CustomEvent("actualizacionCarrito", { detail: carritoObj });
             setTimeout(() => {
                 window.dispatchEvent(event);
@@ -268,7 +264,7 @@ export default function PlatoDetalleComponent() {
                 if (axios.isAxiosError(error) && error.response) {
                     setNotificacion({ titulo: error.response.data.titulo, mensaje: error.response.data.mensaje, code: error.response.data.code, tipo: error.response.data.tipo });
                 } else {
-                    setNotificacion({ titulo: 'Error', mensaje: 'Error al crear el plato: Error desconocido', code: 500, tipo: 'error' });
+                    setNotificacion({ titulo: 'Error', mensaje: 'Error al cargar el plato: Error desconocido', code: 500, tipo: 'error' });
                 }
             }
         };
@@ -289,9 +285,8 @@ export default function PlatoDetalleComponent() {
             } catch (error) {
                 if (axios.isAxiosError(error) && error.response) {
                     setNotificacion({ titulo: error.response.data.titulo, mensaje: error.response.data.mensaje, code: error.response.data.code, tipo: error.response.data.tipo });
-                } else {
-                    setNotificacion({ titulo: 'Error', mensaje: 'Error al crear el plato: Error desconocido', code: 500, tipo: 'error' });
                 }
+                setNotificacion({ titulo: 'Error', mensaje: 'Error al mostrar las valoraciones: Error desconocido', code: 500, tipo: 'error' });
             }
         };
 

@@ -96,7 +96,6 @@ export default function Personalizar() {
                         setSelectedAlergenos={setSelectedAlergenos}
                     />
 
-                    {/* Lista de alérgenos seleccionados */}
                     {selectedAlergenos.length > 0 && (
                         <div className="mt-6">
                             <h3 className="text-xl font-semibold mb-2">Seleccionados:</h3>

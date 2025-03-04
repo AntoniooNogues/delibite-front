@@ -78,9 +78,9 @@ const FormularioPlato = ({ plato, open, handleClose, modo }: {
         } catch (error) {
             if (axios.isAxiosError(error) && error.response) {
                 setNotificacion({ titulo: error.response.data.titulo, mensaje: error.response.data.mensaje , code: error.response.data.code, tipo: error.response.data.tipo });
-            } else {
-                setNotificacion({ titulo: 'Error', mensaje: 'Error al crear el plato: Error desconocido', code: 500, tipo: 'error' });
             }
+            setNotificacion({ titulo: 'Error', mensaje: 'Error al editar el plato: Error desconocido', code: 500, tipo: 'error' });
+
         }
     };
 
@@ -100,9 +100,9 @@ const FormularioPlato = ({ plato, open, handleClose, modo }: {
         } catch (error) {
             if (axios.isAxiosError(error) && error.response) {
                 setNotificacion({ titulo: error.response.data.titulo, mensaje: error.response.data.mensaje , code: error.response.data.code, tipo: error.response.data.tipo });
-            } else {
-                setNotificacion({ titulo: 'Error', mensaje: 'Error al crear el plato: Error desconocido', code: 500, tipo: 'error' });
             }
+            setNotificacion({ titulo: 'Error', mensaje: 'Error al crear el plato: Error desconocido', code: 500, tipo: 'error' });
+
         }
     };
 
