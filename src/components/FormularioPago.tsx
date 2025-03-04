@@ -15,9 +15,10 @@ import {useRouter} from "next/navigation";
 interface FormularioPagoProps {
     setMostrarFormularioPago: (value: boolean) => void;
     totalConEnvio: number;
+    fechaEntrega: string;
 }
 
-export default function FormularioPago({ setMostrarFormularioPago, totalConEnvio }: FormularioPagoProps) {
+export default function FormularioPago({ setMostrarFormularioPago, totalConEnvio, fechaEntrega }: FormularioPagoProps) {
     const [formData, setFormData] = useState({
         cardNumber: "",
         expiryDate: "",
@@ -65,6 +66,7 @@ export default function FormularioPago({ setMostrarFormularioPago, totalConEnvio
         const datosPago = {
             carrito: carrito ? JSON.parse(carrito) : {},
             totalConEnvio,
+            fechaEntrega
         };
 
         try {
