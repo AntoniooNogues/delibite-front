@@ -19,25 +19,61 @@ import Carrito from "@/components/Carrito";
 import Cookies from "js-cookie";
 import Footer from "@/components/Footer";
 import { useTokenExpirado } from "@/hooks/useTokenExpirado";
+import {CarritoItem} from "@/interfaces/CarritoItem";
 
 const CategoriaLista = ({ titulo, items, subheader }: { titulo: string; items: Catalogo[]; subheader: string }) => {
     const [cantidad, setCantidad] = useState<{ [key: number]: number }>({});
-
+    // Sync with carrito cookie on mount and when it changes
     useEffect(() => {
-        loadCantidadFromCookies();
-    }, []);
+        // Initial sync from cookie
+        const syncFromCookie = () => {
+            const carrito = Cookies.get("carrito");
+            if (carrito) {
+                try {
+                    const carritoObj = JSON.parse(carrito);
+                    const newCantidad: { [key: number]: number } = {};
 
-    const loadCantidadFromCookies = () => {
-        const carrito = Cookies.get("carrito");
-        const carritoObj = carrito ? JSON.parse(carrito) : {};
-        const newCantidad = Object.keys(carritoObj).reduce((acc, id) => {
-            if (carritoObj[id].tipo === 'plato') {
-                acc[parseInt(id)] = carritoObj[id].cantidad;
+                    Object.entries(carritoObj).forEach(([id, item]) => {
+                        if (typeof item === 'object' && item !== null && 'cantidad' in item) {
+                            newCantidad[Number(id)] = (item as CarritoItem).cantidad;
+                        }
+                    });
+
+                    setCantidad(newCantidad);
+                } catch (error) {
+                    console.error("Error parsing carrito cookie:", error);
+                }
             }
-            return acc;
-        }, {} as { [key: number]: number });
-        setCantidad(newCantidad);
-    };
+        };
+
+        // Listen for changes from other components
+        const handleCarritoUpdate = (event: CustomEvent) => {
+            const carritoObj = event.detail;
+            const newCantidad: { [key: number]: number } = {};
+
+            Object.entries(carritoObj).forEach(([id, item]) => {
+                if (typeof item === 'object' && item !== null && 'cantidad' in item) {
+                    newCantidad[Number(id)] = (item as CarritoItem).cantidad;
+                }
+            });
+
+            setCantidad(newCantidad);
+        };
+
+        // Initial sync
+        syncFromCookie();
+
+        // Set up event listener
+        window.addEventListener("actualizacionCarrito", handleCarritoUpdate as EventListener);
+
+        // Set up interval to check for cookie changes
+        const intervalId = setInterval(syncFromCookie, 1000);
+
+        return () => {
+            window.removeEventListener("actualizacionCarrito", handleCarritoUpdate as EventListener);
+            clearInterval(intervalId);
+        };
+    }, []);
 
     const handleCantidadChange = (id: number, nombre: string, precio: number, value: number, img: string, tipo: 'plato' | 'suscripcion') => {
         setCantidad(prev => {
