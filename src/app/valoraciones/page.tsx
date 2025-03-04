@@ -13,6 +13,7 @@ import Loading from "@/components/Loading";
 import Rating from '@mui/material/Rating';
 import Image from "next/image";
 import Footer from "@/components/Footer";
+import {useTokenExpirado} from "@/hooks/useTokenExpirado";
 
 function ValoracionesContent() {
     const searchParams = useSearchParams();
@@ -23,6 +24,7 @@ function ValoracionesContent() {
     const [platos, setPlatos] = useState<LineaPedido[]>([]);
     const [loading, setLoading] = useState(true);
     const [pedidoID, setPedidoID] = useState<number | null>(null);
+    const notificacionToken = useTokenExpirado();
 
     const fetchData = useCallback(async () => {
         try {
@@ -54,7 +56,7 @@ function ValoracionesContent() {
     useEffect(() => {
         fetchData();
         setPedidoID(platos.map((plato) => plato.pedido_id)[0]);
-    }, [fetchData, platos]);
+    }, [pedidoID]);
 
     const [valoraciones, setValoraciones] = useState<Record<number, Valoracion>>({});
 
@@ -157,6 +159,12 @@ function ValoracionesContent() {
             {notificacion && (
                 <NotificacionComponent
                     Notificaciones={notificacion}
+                    onClose={() => setNotificacion(undefined)}
+                />
+            )}
+            {notificacionToken && (
+                <NotificacionComponent
+                    Notificaciones={notificacionToken}
                     onClose={() => setNotificacion(undefined)}
                 />
             )}
