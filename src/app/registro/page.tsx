@@ -1,6 +1,5 @@
 "use client";
 import "../globals.css"
-import NavbarReducido from "@/components/NavbarReducido";
 import Alergenos from "@/components/Alergenos";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
@@ -12,6 +11,7 @@ import NotificacionComponent from "@/components/Notificacion";
 import { Notificaciones } from '@/interfaces/Notificaciones';
 import axios from "axios";
 import Link from "next/link";
+import NavbarReducido from "@/components/NavbarReducido";
 
 interface FormData {
     nombre: string;
@@ -198,7 +198,7 @@ export default function Registro() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col w-full bg-(--gris-registro)">
+        <div className="min-h-screen flex flex-col w-full bg-(--gris-registro) max-md:space-y-6">
             <NavbarReducido />
             {loading ?
             <div>
