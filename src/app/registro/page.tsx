@@ -130,6 +130,16 @@ export default function Registro() {
                     errors.push('Debes ser mayor de edad para registrarte.');
                     camposResaltar.push("fecha_nacimiento");
                 }
+                try {
+                    await axiosClient.get(`/usuario/comprobar-email/${formData.email}`);
+                } catch (error) {
+                    if (axios.isAxiosError(error) && error.response) {
+                        if (error.response.status === 409) {
+                            errors.push('El email de usuario ya está en uso.');
+                            camposResaltar.push("email");
+                        }
+                    }
+                }
                 break;
             case 2:
 
@@ -155,11 +165,6 @@ export default function Registro() {
                             camposResaltar.push("username");
                         }
                     }
-                }
-                break;
-            case 3:
-                if (selectedAlergenos.length === 0) {
-                    errors.push('Por favor, seleccione al menos un alérgeno.');
                 }
                 break;
             default:
