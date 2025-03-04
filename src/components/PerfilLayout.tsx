@@ -6,7 +6,7 @@ export default function PerfilLayout(props: { children: React.ReactNode }) {
     return (
         <div className="h-screen space-y-4">
             <Navbar></Navbar>
-            <div className="flex justify-center p-5 m-0 rounded-2xl mb-4">
+            <div className="flex justify-center p-5 max-sm:p-0 m-0 rounded-2xl mb-4">
                 <div className="w-5/6">
                     {props.children}
                 </div>
