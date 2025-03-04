@@ -128,27 +128,27 @@ export default function Suscripcion() {
                 <div className="w-full lg:w-1/2 flex justify-center">
                     <Image src={"/pasta.jpg"} alt={"Pancakes"} width={700} height={400} className="rounded-2xl"></Image>
                 </div>
-                <div className="w-full lg:w-1/2 flex flex-col items-center justify-center space-y-4 mt-4 lg:mt-0">
-                    <h2 className="text-3xl lg:text-5xl font-semibold text-(--primary-dark)">Tú decides qué
+                <div className="w-full lg:w-1/2 flex flex-col items-center justify-center space-y-8 px-8 py-3 mt-4 lg:mt-0">
+                    <h2 className="text-xl lg:text-5xl font-semibold text-(--primary-dark)">Tú decides qué
                         disfrutar</h2>
-                    <h3 className="text-xl lg:text-2xl text-(--verde-azulado) text-center">Elige los platos que más te
-                        gusten para tu primer día de suscripción y disfruta de una experiencia culinaria única</h3>
-                    <div className="text-lg lg:text-xl space-y-1">
+                    {/*<h3 className="text-lg lg:text-2xl text-(--verde-azulado) text-center">Elige los platos que más te*/}
+                    {/*    gusten para tu primer día de suscripción y disfruta de una experiencia culinaria única</h3>*/}
+                    <div className="text-md lg:text-xl space-y-1">
                         <div className="flex gap-2 items-center">
                             <UserRoundPen className="text-red-400"/>
-                            <p>Cada semana recibirás un menú único pensado para ti</p>
+                            <p className="text-gray-600">Cada semana recibirás un menú único pensado para ti</p>
                         </div>
                         <div className="flex gap-2 items-center">
                             <Pen className="text-red-400"/>
-                            <p>Siempre podrás ajustarlo a tu gusto</p>
+                            <p className="text-gray-600">Siempre podrás ajustarlo a tu gusto</p>
                         </div>
                         <div className="flex gap-2 items-center">
                             <ArrowUp10 className="text-red-400"/>
-                            <p>Tú decides cuántos platos recibir cada semana</p>
+                            <p className="text-gray-600">Tú decides cuántos platos recibir cada semana</p>
                         </div>
                     </div>
                     <div className="text-center text-lg mt-4">
-                        <p>Sin ataduras</p>
+                        <p className="text-gray-800">Sin ataduras</p>
                         <p className="text-green-700">Pausa o cancela cuando quieras</p>
                     </div>
                 </div>

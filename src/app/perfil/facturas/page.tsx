@@ -25,7 +25,7 @@ const FacturaPage: React.FC = () => {
         };
 
         fetchPedidos();
-    }, []);
+    }, [pedidos]);
 
     const handleDescargar = async (pedidoId: number) => {
         try {
