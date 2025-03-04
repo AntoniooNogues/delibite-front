@@ -155,7 +155,7 @@ export default function Login() {
                                     </div>
                                 </div>
                                 <div className="mt-2 text-center">
-                                    <a href="#" className="text-base">¿Olvidaste tu contraseña?</a>
+                                    <a href="/cambiar-password" className="text-base">¿Olvidaste tu contraseña?</a>
                                 </div>
                                 <button
                                     onClick={Submit}
