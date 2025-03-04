@@ -79,7 +79,7 @@ export default function VerificarCuenta() {
             const data = { email, codigo: code };
             await axiosClient.post("/usuario/verificar-codigo", data);
             setStep(3);
-        } catch (error: any) {
+        } catch (error) {
             if (axios.isAxiosError(error) && error.response) {
                 setNotificacion({
                     titulo: error.response.data.titulo,
@@ -126,7 +126,7 @@ export default function VerificarCuenta() {
                 Cookies.remove('token');
                 router.push("/login");
             }, 2500);
-        } catch (error: any) {
+        } catch (error) {
             if (axios.isAxiosError(error) && error.response) {
                 setNotificacion({
                     titulo: error.response.data.titulo,

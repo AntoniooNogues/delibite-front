@@ -1,6 +1,5 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { EyeSlashIcon } from "@heroicons/react/16/solid";
