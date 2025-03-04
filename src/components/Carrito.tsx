@@ -18,7 +18,8 @@ export default function Carrito() {
         const updateCarrito = () => {
             const carritoGuardado = Cookies.get("carrito");
             if (carritoGuardado) {
-                setCarrito(JSON.parse(carritoGuardado));
+                const carritoObj = JSON.parse(carritoGuardado);
+                setCarrito(carritoObj);
             }
         };
 
@@ -31,32 +32,45 @@ export default function Carrito() {
         };
     }, []);
 
+    useEffect(() => {
+        if (Object.keys(carrito).length > 0) {
+            setCantidad(() => {
+                const cantidadObj = Object.fromEntries(
+                    Object.entries(carrito).map(([id, item]) => [id, (item as CarritoItem).cantidad])
+                );
+
+                console.log("Actualizando cantidad1:", cantidadObj);
+                return { ...cantidadObj };
+            });
+        }
+    }, [carrito]);
+
+
     const handleCantidadChange = (id: number, nombre: string, precio: number, value: number, img: string) => {
-        setCantidad(prev => {
-            const newCantidad = { ...prev, [id]: value };
-            if (newCantidad[id] <= 0) {
-                delete newCantidad[id];
-            }
-
-            const carrito = Cookies.get("carrito");
-            const carritoObj = carrito ? JSON.parse(carrito) : {};
-
+        setCarrito(prev => {
+            const newCarrito = { ...prev };
             if (value > 0) {
-                carritoObj[id] = { nombre, precio, cantidad: value, img };
+                newCarrito[id] = { id, nombre, precio, cantidad: value, img, tipo: 'plato' };
             } else {
-                delete carritoObj[id];
+                delete newCarrito[id];
             }
 
-            Cookies.set("carrito", JSON.stringify(carritoObj), { expires: 7 });
+            Cookies.set("carrito", JSON.stringify(newCarrito), { expires: 7 });
 
-            const event = new CustomEvent("actualizacionCarrito", { detail: carritoObj });
+            const event = new CustomEvent("actualizacionCarrito", { detail: newCarrito });
             setTimeout(() => {
-                window.dispatchEvent(event)
+                window.dispatchEvent(event);
             }, 5);
 
-            return newCantidad;
+            return newCarrito;
         });
+
+        setCantidad(prev => ({
+            ...prev,
+            [id]: value
+        }));
     };
+
 
     const emptyCarrito = () => {
         setCarrito({});
@@ -103,15 +117,15 @@ export default function Carrito() {
                 {/* Mostrar productos */}
                 <div className="mt-4 space-y-2 overflow-y-auto max-h-128 scroll">
                     {Object.keys(carrito).length > 0 ? (
-                        Object.entries(carrito).map(([id, { nombre, precio, cantidad }]) => (
+                        Object.entries(carrito).map(([id, { nombre, precio, cantidad, img }]) => (
                             <div key={id} className="flex flex-col justify-between p-2 border-b">
                                 <div>
                                     <p>{nombre}</p>
                                     <p>{cantidad}x {precio}€ = {(cantidad * precio).toFixed(2)}€</p>
                                 </div>
                                 <CantidadControl
-                                    cantidadInicial={cantidad1[Number(id)] || 0}
-                                    handleCantidadChange={(value) => handleCantidadChange(Number(id), nombre, precio, value,'')}
+                                    cantidadInicial={cantidad1[Number(id)] ?? 0}
+                                    handleCantidadChange={(value) => handleCantidadChange(Number(id), nombre, precio, value, img)}
                                     width={30}
                                     height={30}
                                 />

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { PlusCircleIcon } from '@heroicons/react/20/solid';
 import { MinusCircleIcon } from "@heroicons/react/20/solid";
 
@@ -13,6 +13,10 @@ interface CantidadControlProps {
 
 const CantidadControl: React.FC<CantidadControlProps> = ({cantidadInicial, handleCantidadChange, width, height }) => {
     const [cantidad, setCantidad] = useState(cantidadInicial);
+
+    useEffect(() => {
+        setCantidad(cantidadInicial);
+    }, [cantidadInicial]);
 
     const incrementar = () => {
         const nuevaCantidad = cantidad + 1;
