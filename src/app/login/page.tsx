@@ -12,6 +12,7 @@ import { Notificaciones } from '@/interfaces/Notificaciones';
 import axios from "axios";
 import Cookies from "js-cookie";
 import Link from "next/link";
+import NavbarReducido from "@/components/NavbarReducido";
 
 interface UserFormData {
     username: string;
@@ -80,8 +81,8 @@ export default function Login() {
     };
 
     return (
-        <div className="bg-(--gris-registro) min-h-screen flex flex-col">
-            <Navbar/>
+        <div className="bg-(--gris-registro) min-h-screen flex flex-col max-md:space-y-6">
+            <NavbarReducido/>
             {loading ?
                 <div>
                     <div className="fixed inset-0 flex items-center justify-center  bg-opacity-50 z-50">
