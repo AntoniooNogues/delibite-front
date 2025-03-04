@@ -30,21 +30,17 @@ export default function Packs() {
                 delete newCantidad[id];
             }
 
-            // Retrieve existing cookie data
             const carrito = Cookies.get("carrito");
             const carritoObj = carrito ? JSON.parse(carrito) : {};
 
-            // Update the carrito object
             if (value > 0) {
                 carritoObj[id] = { nombre, precio, cantidad: value };
             } else {
                 delete carritoObj[id];
             }
 
-            // Save updated carrito object to cookies
             Cookies.set("carrito", JSON.stringify(carritoObj), { expires: 7 });
 
-            // Dispatch custom event to notify other components
             const event = new CustomEvent("actualizacionCarrito", { detail: carritoObj });
             window.dispatchEvent(event);
 
