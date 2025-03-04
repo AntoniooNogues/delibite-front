@@ -81,9 +81,9 @@ export default function FormularioPago({ setMostrarFormularioPago, totalConEnvio
         } catch (error) {
             if (axios.isAxiosError(error) && error.response) {
                 setNotificacion({ titulo: error.response.data.titulo, mensaje: error.response.data.mensaje , code: error.response.data.code, tipo: error.response.data.tipo });
-            } else {
-                setNotificacion({ titulo: 'Error', mensaje: 'Error al crear el plato: Error desconocido', code: 500, tipo: 'error' });
             }
+            setNotificacion({ titulo: 'Error', mensaje: 'Error al realizar pedido: Error desconocido', code: 500, tipo: 'error' });
+
         } finally {
             setIsLoading(false);
         }
