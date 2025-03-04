@@ -38,35 +38,57 @@ export default function Login() {
     const Submit = async () => {
         if (!formData.username || !formData.password) {
             setNotificacion({
-                titulo: 'Error', mensaje: 'Por favor, rellene todos los campos.', code: 400, tipo: 'error'
+                titulo: 'Error',
+                mensaje: 'Por favor, rellene todos los campos.',
+                code: 400,
+                tipo: 'error'
             });
             return;
-        }else {
-            try {
-                const respuesta = await axiosClient.post('/login_check', formData);
-                if (respuesta && respuesta.data.token) {
-                    Cookies.set('token', respuesta.data.token);
-                }
-                setNotificacion({titulo: 'Éxito', mensaje: 'Inicio de sesión exitoso', code: 200, tipo: 'success'});
-                setLoading(true);
-            } catch (error) {
-                if (axios.isAxiosError(error) && error.response) {
+        }
+
+        setLoading(true);
+        try {
+            const respuesta = await axiosClient.post('/login_check', formData);
+            if (respuesta && respuesta.data.token) {
+                Cookies.set('token', respuesta.data.token);
+                setNotificacion({
+                    titulo: 'Éxito',
+                    mensaje: 'Inicio de sesión exitoso',
+                    code: 200,
+                    tipo: 'success'
+                });
+
+                setTimeout(() => {
+                    router.push('/');
+                }, 1500);
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
+                if (error.response.data.message === "Invalid credentials.") {
+                    setNotificacion({
+                        titulo: 'Error de autenticación',
+                        mensaje: 'Credenciales incorrectas. Por favor, verifica tu nombre de usuario y contraseña.',
+                        code: error.response.data.code || 401,
+                        tipo: 'error'
+                    });
+                } else if (error.response.data.titulo) {
                     setNotificacion({
                         titulo: error.response.data.titulo,
                         mensaje: error.response.data.mensaje,
                         code: error.response.data.code,
                         tipo: error.response.data.tipo
                     });
+                } else {
+                    setNotificacion({
+                        titulo: 'Error',
+                        mensaje: error.response.data.message || 'Ha ocurrido un error',
+                        code: error.response.data.code || error.response.status,
+                        tipo: 'error'
+                    });
                 }
-                setNotificacion({
-                    titulo: 'Error',
-                    mensaje: 'Error al realizar el login: Error desconocido',
-                    code: 500,
-                    tipo: 'error'
-                });
-            }finally {
-                router.push(`/`);
             }
+        } finally {
+            setLoading(false);
         }
     };
 
