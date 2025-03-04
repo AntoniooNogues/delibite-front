@@ -19,59 +19,77 @@ import Carrito from "@/components/Carrito";
 import Cookies from "js-cookie";
 import Footer from "@/components/Footer";
 import { useTokenExpirado } from "@/hooks/useTokenExpirado";
+import {CarritoItem} from "@/interfaces/CarritoItem";
 
 const CategoriaLista = ({ titulo, items, subheader }: { titulo: string; items: Catalogo[]; subheader: string }) => {
     const [cantidad, setCantidad] = useState<{ [key: number]: number }>({});
-
     useEffect(() => {
-        const carritoGuardado = Cookies.get("carrito");
-        if (carritoGuardado) {
-            const carrito = JSON.parse(carritoGuardado);
-            const initialCantidad = Object.fromEntries(
-                Object.entries(carrito).map(([id, item]) => [parseInt(id), (item as { cantidad: number }).cantidad])
-            );
-            setCantidad(initialCantidad);
-        }
-        const handleCarritoUpdate = (event: CustomEvent) => {
-            const carrito = event.detail;
-            const updateCantidad = Object.fromEntries(
-                Object.entries(carrito).map(([id, item]) => [parseInt(id), (item as { cantidad: number }).cantidad])
-            );
-            setCantidad(updateCantidad);
+        const syncFromCookie = () => {
+            const carrito = Cookies.get("carrito");
+            if (carrito) {
+                try {
+                    const carritoObj = JSON.parse(carrito);
+                    const newCantidad: { [key: number]: number } = {};
+
+                    Object.entries(carritoObj).forEach(([id, item]) => {
+                        if (typeof item === 'object' && item !== null && 'cantidad' in item) {
+                            newCantidad[Number(id)] = (item as CarritoItem).cantidad;
+                        }
+                    });
+
+                    setCantidad(newCantidad);
+                } catch (error) {
+                    console.error("Error parsing carrito cookie:", error);
+                }
+            }
         };
+
+        const handleCarritoUpdate = (event: CustomEvent) => {
+            const carritoObj = event.detail;
+            const newCantidad: { [key: number]: number } = {};
+
+            Object.entries(carritoObj).forEach(([id, item]) => {
+                if (typeof item === 'object' && item !== null && 'cantidad' in item) {
+                    newCantidad[Number(id)] = (item as CarritoItem).cantidad;
+                }
+            });
+
+            setCantidad(newCantidad);
+        };
+
+        syncFromCookie();
+
         window.addEventListener("actualizacionCarrito", handleCarritoUpdate as EventListener);
+
+        const intervalId = setInterval(syncFromCookie, 1000);
+
         return () => {
             window.removeEventListener("actualizacionCarrito", handleCarritoUpdate as EventListener);
+            clearInterval(intervalId);
         };
     }, []);
 
-
-
-    const handleCantidadChange = (id: number, nombre: string, precio: number, value: number) => {
+    const handleCantidadChange = (id: number, nombre: string, precio: number, value: number, img: string, tipo: 'plato' | 'suscripcion') => {
         setCantidad(prev => {
             const newCantidad = { ...prev, [id]: value };
             if (newCantidad[id] <= 0) {
                 delete newCantidad[id];
             }
 
-            // Retrieve existing cookie data
             const carrito = Cookies.get("carrito");
             const carritoObj = carrito ? JSON.parse(carrito) : {};
 
-            // Update the carrito object
             if (value > 0) {
-                carritoObj[id] = { nombre, precio, cantidad: value };
+                carritoObj[id] = { nombre, precio, cantidad: value, img, tipo };
             } else {
                 delete carritoObj[id];
             }
 
-            // Save updated carrito object to cookies
             Cookies.set("carrito", JSON.stringify(carritoObj), { expires: 7 });
 
-            // Dispatch custom event to notify other components
             const event = new CustomEvent("actualizacionCarrito", { detail: carritoObj });
             setTimeout(() => {
-                window.dispatchEvent(event)
+                window.dispatchEvent(event);
             }, 5);
 
             return newCantidad;
@@ -130,9 +148,8 @@ const CategoriaLista = ({ titulo, items, subheader }: { titulo: string; items: C
                             <div className="mt-auto flex flex-row justify-between items-center ">
                                 <p className="text-left text-gray-700 text-[22px] font-medium ">{item.precio}€</p>
                                 <CantidadControl
-                                    itemId={item.plato_id}
                                     cantidadInicial={cantidad[item.plato_id] || 0}
-                                    handleCantidadChange={(value) => handleCantidadChange(item.plato_id, item.nombre, item.precio, value)}
+                                    handleCantidadChange={(value) => handleCantidadChange(item.plato_id, item.nombre, item.precio, value, item.url, 'plato')}
                                     width={35}
                                     height={35}
                                 />
@@ -314,22 +331,32 @@ export default function Catalogo() {
     return (
         <main>
             <Navbar />
-            <div className="p-4">
-                <div className="mb-8">
-                    <h1 className="text-4xl text-center py-4 my-2 text-gray-700">Selecciona los platos de tu primer menú.</h1>
-                    <p className="text-xl text-center text-gray-600">Los platos cambian de manera semanal y están disponibles solo hasta el sábado a las 17:30 h.</p>
+            {loading ?
+                <div className="relative h-screen">
+                    <Loading />
                 </div>
-                {loading ? <Loading /> : (
-                    <>
-                        <Filtros setSelectedGoal={setSelectedGoal} priceMax={precioMaximo} priceMin={precioMinimo} setPriceRange={setPriceRange} />
-                        <div>
-                            <CategoriaLista titulo="Principales" items={principales} subheader={"Disfruta de nuestros platos saludables, equilibrados y deliciosos, diseñados para nutrirte y hacerte sentir bien cada semana."} />
-                            <CategoriaLista titulo="Postres" items={postres} subheader={"Endulza tu semana con nuestros postres saludables, sin culpas y llenos de sabor, perfectos para darte un gusto balanceado."} />
-                        </div>
-                    </>
-                )}
-            </div>
-            <Footer />
+            : (
+                <div>
+                    <motion.div initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.4 }}  className="my-10 text-center py-16 bg-gradient-to-t from-(--oxley-700) to-(--verde-azulado-80) text-white">
+                        <h1 className="text-5xl font-bold">Menú Semanal</h1>
+                        <h3 className="text-2xl text-center py-4 my-2 ">Selecciona los platos de tu primer menú.</h3>
+                        <p className="text-xl text-center">Los platos cambian de manera semanal y están disponibles solo hasta el sábado a las 17:30 h.</p>
+                    </motion.div>
+                    <div className="p-4">
+
+                        <>
+                            <Filtros setSelectedGoal={setSelectedGoal} priceMax={precioMaximo} priceMin={precioMinimo} setPriceRange={setPriceRange} />
+                            <div>
+                                <CategoriaLista titulo="Principales" items={principales} subheader={"Disfruta de nuestros platos saludables, equilibrados y deliciosos, diseñados para nutrirte y hacerte sentir bien cada semana."} />
+                                <CategoriaLista titulo="Postres" items={postres} subheader={"Endulza tu semana con nuestros postres saludables, sin culpas y llenos de sabor, perfectos para darte un gusto balanceado."} />
+                            </div>
+                        </>
+
+                    </div>
+                    <Footer />
+                    <Carrito />
+                </div>
+            )}
             {notificacion && (
                 <NotificacionComponent
                     Notificaciones={notificacion}
@@ -342,8 +369,6 @@ export default function Catalogo() {
                     onClose={() => setNotificacion(undefined)}
                 />
             )}
-
-            <Carrito></Carrito>
         </main>
     );
 }

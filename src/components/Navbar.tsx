@@ -13,7 +13,7 @@ import {jwtDecode} from "jwt-decode";
 import Link from "next/link";
 
 const navigation = [
-    { name: "Suscripción", explicacion: "Gestiona tu suscripción", href: "#", current: false },
+    { name: "Suscripción", explicacion: "Gestiona tu suscripción", href: "/suscripcion", current: false },
     { name: "Catálogo", explicacion: "Explora nuestro catálogo",  href: "/catalogo/productos", current: false },
     { name: "Packs", explicacion: "Descubre nuestros packs",  href: "/packs", current: false },
 ];
@@ -71,7 +71,7 @@ export default function Navbar() {
                             <XMarkIcon className="hidden size-6 group-data-open:block" aria-hidden="true" />
                         </PopoverButton>
                     </div>
-                    <div className="hidden lg:flex space-x-5 ml-2">
+                    <div className="hidden lg:flex md:space-x-2 space-x-5 ml-2">
                         {navigation.map((item) => (
                             <a
                                 key={item.name}

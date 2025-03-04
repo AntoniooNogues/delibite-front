@@ -6,24 +6,25 @@ import { HomeInterface } from "@/interfaces/Administracion-Interfaces";
 import { motion } from 'framer-motion';
 import Loading from "@/components/Loading";
 import axiosClient from "@/lib/axiosClient";
-import ErrorPage from "@/pages/[_error]";
+import ErrorPage from "@pages/Error";
 import NotificacionComponent from "@/components/Notificacion";
 import { Notificaciones } from "@/interfaces/Notificaciones";
 import axios from "axios";
 import {ClockIcon, ShoppingCartIcon, StarIcon, UserGroupIcon, UserIcon} from "@heroicons/react/20/solid";
 import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+const COLORS = ['#fe0902', '#0E4595'];
 export default function Home() {
     const { token, error } = useAuth();
     const [datos, setData] = useState<HomeInterface | null>(null);
     const [notificacion, setNotificacion] = useState<Notificaciones>();
-    
+
 
     useEffect(() => {
         const fetchDataAndSetState = async () => {
             try {
                 const response = await axiosClient.get<HomeInterface>('/administracion/home');
+                console.log(response.data);
                 setData(response.data);
             } catch (error) {
                 if (axios.isAxiosError(error) && error.response) {
@@ -40,95 +41,103 @@ export default function Home() {
         }
     }, [token]);
 
-    const tipoPlatoData = datos?.tipo_plato_mas_vendido.map((item, index) => ({
-        name: `Tipo ${index + 1}`,
-        value: item,
-    })) || [];
-
-    const modoEmpleoData = datos?.modo_empleo_mas_vendido.map((item, index) => ({
-        name: `Modo ${index + 1}`,
-        value: item,
-    })) || [];
-
     if (error) {
-        return <ErrorPage errorCode={error.errorCode} title={error.title} message={error.message} url={error.url} color={2}/>;
+        return <ErrorPage errorCode={error.errorCode} title={error.title} message={error.message} url={error.url} color={2} textoBoton={"Ir al login"}/>;
     }
 
     if (notificacion && notificacion.code === 401) {
-        return <ErrorPage errorCode={"401"} title="No autorizado" message="No tienes autorización para acceder a este recurso." url="/administracion/login" color={2}/>;
+        return <ErrorPage errorCode={"401"} title="No autorizado" message="No tienes autorización para acceder a este recurso." url="/administracion/login" color={2} textoBoton={"Ir al login"}/>;
     }
 
     return (
         <AdminLayout>
             {datos ? (
-                <div className="w-full max-w-4xl mx-auto p-5">
-                    <motion.ul
-                        className="space-y-4 text-gray-300 bg-(--oxley-700) text-lg p-4 rounded-2xl"
+                <div className="w-full mx-auto p-5 space-y-6">
+                    <div className="flex flex-row gap-4">
+                        <div className="flex flex-col justify-center items-center p-6 bg-[#2E5C4F] rounded-2xl shadow-lg w-1/2">
+                            <p className="text-white text-lg font-semibold mb-4">Tipo de plato más vendido (principales o postres):</p>
+                            <PieChart width={400} height={400}>
+                                <Pie
+                                    data={datos.tipo_plato_mas_vendido}
+                                    cx="50%"
+                                    cy="50%"
+                                    outerRadius={120}
+                                    fill="#8884d8"
+                                    dataKey="value"
+                                    label={({ x, y, value }) => (
+                                        <text x={x} y={y} fill="#FEFEFE" textAnchor="middle" dominantBaseline="central">
+                                            {value}
+                                        </text>
+                                    )}
+                                >
+                                    {datos.tipo_plato_mas_vendido.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                    ))}
+                                </Pie>
+                                <Tooltip />
+                                <Legend formatter={(value) => <span style={{ color: '#FEFEFE' }}>{value}</span>} />
+                            </PieChart>
+                        </div>
+
+                        <div className="flex flex-col justify-center items-center p-6 bg-[#2E5C4F] rounded-2xl shadow-lg w-1/2">
+                            <p className="text-white text-lg font-semibold mb-4">Tipo de plato más vendido (frío o caliente):</p>
+                            <PieChart width={400} height={400}>
+                                <Pie
+                                    data={datos.modo_empleo_mas_vendido}
+                                    cx="50%"
+                                    cy="50%"
+                                    outerRadius={120}
+                                    fill="#8884d8"
+                                    dataKey="value"
+                                    label={({ x, y, value }) => (
+                                        <text x={x} y={y} fill="#FEFEFE" textAnchor="middle" dominantBaseline="central">
+                                            {value}
+                                        </text>
+                                    )}
+                                >
+                                    {datos.modo_empleo_mas_vendido.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                    ))}
+                                </Pie>
+                                <Tooltip />
+                                <Legend formatter={(value) => <span style={{ color: '#FEFEFE' }}>{value}</span>} />
+                            </PieChart>
+                        </div>
+                    </div>
+
+                    <motion.div
+                        className="grid grid-cols-2 gap-4 bg-[#2E5C4F] p-6 rounded-2xl shadow-lg text-white"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5 }}>
-                        <li className="flex items-center gap-3">
-                            <UserGroupIcon className="w-6 h-6 text-blue-500" />
-                            <span className=" text-gray-200">Usuarios totales:</span> {datos.num_usuarios}
-                        </li>
-                        <li className="flex items-center gap-3">
-                            <ShoppingCartIcon className="w-6 h-6 text-green-500" />
-                            <span className=" text-gray-200">Pedidos totales:</span> {datos.pedidos_totales}
-                        </li>
-                        <li className="flex items-center gap-3">
-                            <StarIcon className="w-6 h-6 text-yellow-500" />
-                            <span className=" text-gray-200">Valoración media de platos:</span> {datos.valoracion_media_platos}
-                        </li>
-                        <li className="flex items-center gap-3">
-                            <ClockIcon className="w-6 h-6 text-red-500" />
-                            <span className=" text-gray-200">Usuarios activos últimos 7 días:</span> {datos.usuarios_activos_ultimos_7_dias}
-                        </li>
-                        <li className="flex items-center gap-3">
-                            <UserIcon   className="w-6 h-6 text-red-500" />
-                            <span className=" text-gray-200">Suscripciones activas:</span> {datos.suscripciones_activas}
-                        </li>
+                        transition={{ duration: 0.5 }}
+                    >
+                        <div className="flex items-center gap-3 bg-[#3B6B62] p-4 rounded-xl shadow-md">
+                            <UserGroupIcon className="w-7 h-7 text-stone-900" />
+                            <span className="text-lg">Usuarios totales:</span> <span className="font-semibold">{datos.num_usuarios}</span>
+                        </div>
 
+                        <div className="flex items-center gap-3 bg-[#3B6B62] p-4 rounded-xl shadow-md">
+                            <ShoppingCartIcon className="w-7 h-7 text-emerald-500" />
+                            <span className="text-lg">Pedidos totales:</span> <span className="font-semibold">{datos.pedidos_totales}</span>
+                        </div>
 
-                    </motion.ul>
-                    <div className="flex justify-center items-center p-5">
-                        <PieChart width={400} height={400}>
-                            <Pie
-                                data={tipoPlatoData}
-                                cx="50%"
-                                cy="50%"
-                                outerRadius={120}
-                                fill="#8884d8"
-                                dataKey="value"
-                                label
-                            >
-                                {tipoPlatoData.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                ))}
-                            </Pie>
-                            <Tooltip />
-                            <Legend />
-                        </PieChart>
-                    </div>
-                    <div className="flex justify-center items-center p-5">
-                        <PieChart width={400} height={400}>
-                            <Pie
-                                data={modoEmpleoData}
-                                cx="50%"
-                                cy="50%"
-                                outerRadius={120}
-                                fill="#8884d8"
-                                dataKey="value"
-                                label
-                            >
-                                {modoEmpleoData.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                ))}
-                            </Pie>
-                            <Tooltip />
-                            <Legend />
-                        </PieChart>
-                    </div>
+                        <div className="flex items-center gap-3 bg-[#3B6B62] p-4 rounded-xl shadow-md">
+                            <StarIcon className="w-7 h-7 text-yellow-500" />
+                            <span className="text-lg">Valoración media de platos:</span> <span className="font-semibold">{datos.valoracion_media_platos}</span>
+                        </div>
+
+                        <div className="flex items-center gap-3 bg-[#3B6B62] p-4 rounded-xl shadow-md">
+                            <ClockIcon className="w-7 h-7 text-lime-500" />
+                            <span className="text-lg">Usuarios activos últimos 7 días:</span> <span className="font-semibold">{datos.usuarios_activos_ultimos_7_dias}</span>
+                        </div>
+
+                        <div className="flex items-center gap-3 bg-[#3B6B62] p-4 rounded-xl shadow-md col-span-2">
+                            <UserIcon className="w-7 h-7 text-purple-500" />
+                            <span className="text-lg">Suscripciones activas:</span> <span className="font-semibold">{datos.suscripciones_activas}</span>
+                        </div>
+                    </motion.div>
                 </div>
+
             ) : (
                 <Loading />
             )}

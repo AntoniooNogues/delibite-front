@@ -24,6 +24,7 @@ export const useAuth = () => {
                 message: "Debes iniciar sesión para acceder.",
                 url: "/login",
                 color: 1,
+                textoBoton: "Ir al inicio de sesion",
             });
             router.push("/login");
             return;
@@ -40,6 +41,7 @@ export const useAuth = () => {
                     message: "No tienes permisos para acceder a esta página.",
                     url: "/login",
                     color: 1,
+                    textoBoton: "Ir al inicio de sesion",
                 });
                 router.push("/login");
             }
@@ -51,6 +53,7 @@ export const useAuth = () => {
                 message: "Debes iniciar sesión para acceder.",
                 url: "/login",
                 color: 1,
+                textoBoton: "Ir al inicio de sesion",
             });
             router.push("/login");
         }

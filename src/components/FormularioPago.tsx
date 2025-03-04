@@ -9,14 +9,16 @@ import Cookies from "js-cookie";
 import {Notificaciones} from "@/interfaces/Notificaciones";
 import NotificacionComponent from "@/components/Notificacion";
 import ProtectedRouteCliente from "@/components/ProtectedRouteCliente";
+import {useRouter} from "next/navigation";
 
 
 interface FormularioPagoProps {
     setMostrarFormularioPago: (value: boolean) => void;
     totalConEnvio: number;
+    fechaEntrega: string;
 }
 
-export default function FormularioPago({ setMostrarFormularioPago, totalConEnvio }: FormularioPagoProps) {
+export default function FormularioPago({ setMostrarFormularioPago, totalConEnvio, fechaEntrega }: FormularioPagoProps) {
     const [formData, setFormData] = useState({
         cardNumber: "",
         expiryDate: "",
@@ -25,6 +27,7 @@ export default function FormularioPago({ setMostrarFormularioPago, totalConEnvio
         paypalEmail: "",
         paypalPassword: "",
     });
+    const router = useRouter();
 
     const [isFlipped, setIsFlipped] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState("card");
@@ -63,6 +66,7 @@ export default function FormularioPago({ setMostrarFormularioPago, totalConEnvio
         const datosPago = {
             carrito: carrito ? JSON.parse(carrito) : {},
             totalConEnvio,
+            fechaEntrega
         };
 
         try {
@@ -71,15 +75,15 @@ export default function FormularioPago({ setMostrarFormularioPago, totalConEnvio
             console.log(respuesta.data);
             setTimeout(() => {
                 setMostrarFormularioPago(false);
-                window.location.reload();
+                router.push("/")
             }, 2500);
             Cookies.remove("carrito");
         } catch (error) {
             if (axios.isAxiosError(error) && error.response) {
                 setNotificacion({ titulo: error.response.data.titulo, mensaje: error.response.data.mensaje , code: error.response.data.code, tipo: error.response.data.tipo });
-            } else {
-                setNotificacion({ titulo: 'Error', mensaje: 'Error al crear el plato: Error desconocido', code: 500, tipo: 'error' });
             }
+            setNotificacion({ titulo: 'Error', mensaje: 'Error al realizar pedido: Error desconocido', code: 500, tipo: 'error' });
+
         } finally {
             setIsLoading(false);
         }
