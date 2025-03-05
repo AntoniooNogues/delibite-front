@@ -32,8 +32,10 @@ export default function Perfil() {
         const fetchSubscription = async () => {
             try {
                 const respuesta = await axiosClient.get('/suscripcion/validar');
-                if (respuesta) {
+                if (respuesta.data.message === 'El usuario tiene una suscripción activa') {
                     setHasSubscription(true);
+                } else {
+                    setHasSubscription(false);
                 }
             } catch (error) {
                 if (axios.isAxiosError(error) && error.response) {
