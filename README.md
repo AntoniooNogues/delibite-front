@@ -2,6 +2,10 @@
 
 ¡Bienvenido a **Delibite**, una plataforma web diseñada para la compra de comida preparada y gestionada de forma personalizada!
 
+
+![preview-delibite](https://github.com/user-attachments/assets/a84abb5e-185f-42c2-a4fb-28bcfd6d1970)
+
+
 ## 🚀 Características principales
 
 ### Gestión de usuarios
