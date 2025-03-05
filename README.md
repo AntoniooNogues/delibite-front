@@ -35,39 +35,38 @@
 - Valora los platos del pedido entregado (0-5 estrellas).
 - Deja descripciones detalladas sobre tu experiencia.
 
+## 🌐 Acceso a la plataforma
+Puedes acceder a la versión desplegada de **Delibite** en el siguiente enlace:  
+🔗 [Delibite en Vercel](https://delibite.vercel.app/)
+
 ## 🛠️ Requisitos técnicos
 - **Symfony**: Framework principal para el backend.
-- **Base de datos**: MySQL o PostgreSQL.
+- **Tailwind**: Framework css.
+- **Base de datos**: MySQL .
 - **PHP**: Versión 8.0 o superior.
 
-## 📖 Cómo usar para un proyecto React 19
+## 📖 Cómo usar para un proyecto React 19 en local
 
 1. **Clonar el repositorio**
   ```bash
-  git clone https://github.com/tuusuario/delibite.git
-  cd delibite
-  ```
-2. **Instalar dependencias**
-Primero, asegúrate de tener Node.js y npm instalados. Luego, instala las dependencias del proyecto.
+  git clone https://github.com/AntoniooNogues/delibite-front.git
+  cd delibite-front
+   ```
+    
+2. **Instalar dependencias**  
+  Asegúrate de tener Node.js y npm instalados. Luego, instala las dependencias del proyecto.
   ```bash
   npm install
-  ```
-3. **Configurar variables de entorno (.env)**
-Crea un archivo .env en la raíz del proyecto y configura las variables necesarias, como la API base, clave de la base de datos, o cualquier otra configuración que tu aplicación necesite. Por ejemplo:
-  ```bash
-  REACT_APP_API_URL="http://localhost:5000/api"
-  ```
-4. **Ejecutar el servidor de desarrollo**
-Inicia el servidor de desarrollo de React:
+   ```
+
+3. **Ejecutar el servidor de desarrollo** 
+  Inicia el servidor de desarrollo de React:
   ```bash
   npm start
-  ```
-Esto levantará el servidor de desarrollo de React en http://localhost:3000.
-
-
+```
+  Esto levantará el servidor de desarrollo en http://localhost:3000. También es necesario el repositorio del back-end https://github.com/Rodrigorjc/Delibite-Back.git.
 
 ## 📝 Créditos
-Proyecto desarrollado por:  
-- **Antonio Nogues Gómez** - [anogues23@sgmail.com](mailto:anogues23@gmail.com)  
-- **Rodrigo Jaén Cobos** - [rjaenc18@gmail.com](mailto:rjaenc18@gmail.com)
-
+Proyecto desarrollado por:
+- Antonio Nogues Gómez - [anogues23@gmail.com](mailto:anogues23@gmail.com)
+- Rodrigo Jaén Cobos - [rjaenc18@gmail.com](mailto:rjaenc18@gmail.com)
